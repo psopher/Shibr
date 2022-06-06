@@ -1,3 +1,3 @@
 # Shibr
 
-#dev
+#development
