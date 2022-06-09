@@ -12,7 +12,7 @@ class Profile(models.Model):
   school = models.CharField(max_length=50, default=None, blank=True)
   gender = models.CharField(max_length=30, default=None, blank=True)
   images = ArrayField(
-      models.TextField(max_length=100, blank=True),
+      models.TextField(max_length=200, blank=True),
       size=6,
   )
 
@@ -27,4 +27,4 @@ class Profile(models.Model):
 
   # Appearance in Django system
   def __str__(self): 
-    return f"{self.name} {self.age} {self.id}"
+    return f"{self.name} {self.id}"
