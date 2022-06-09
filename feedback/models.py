@@ -3,13 +3,14 @@ from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 class Feedback(models.Model):
-  right_swipe = models.BooleanField(default=False)
-  best_image = models.CharField(max_length=300, default="https://res.cloudinary.com/drgegagha/image/upload/v1654722349/shibr/no-good-images_ttpmrv.png")
+  
+  # Feedback
+  best_image_index = models.IntegerField(default=None)
   best_image_comments = ArrayField(
       models.CharField(max_length=30, blank=True),
       size=20,
   )
-  worst_image = models.CharField(max_length=300, default="https://res.cloudinary.com/drgegagha/image/upload/v1654722349/shibr/no-bad-images_uqs6qe.png")
+  worst_image_index = models.IntegerField(default=None)
   worst_image_comments = ArrayField(
       models.CharField(max_length=30, blank=True),
       size=20,
@@ -22,4 +23,13 @@ class Feedback(models.Model):
   bio_bad_comments = ArrayField(
       models.CharField(max_length=30, blank=True),
       size=20,
+  )
+
+  # Relationship Fields
+  swipe_id = models.ForeignKey(
+    'swipes.Swipe',
+    related_name='feedback',
+    on_delete=models.CASCADE,
+    blank=True,
+    null=True
   )

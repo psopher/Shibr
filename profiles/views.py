@@ -3,13 +3,13 @@ from psycopg2 import IntegrityError
 from rest_framework.views import APIView 
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError, PermissionDenied
 from django.template import loader
 
 # custom imports
 from .models import Profile # model will be used to query the db
 from .serializers.common import ProfileSerializer
-# from .serializers.populated import PopulatedProfileSerializer
+from .serializers.populated import PopulatedProfileSerializer
 
 # import permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -27,7 +27,7 @@ class ProfileListView(APIView):
     # in this controller we want to get all the items inside the profiles table and return it as a response
     # get all objects using all() method
     profiles = Profile.objects.all()
-    serialized_profiles = ProfileSerializer(profiles, many=True)
+    serialized_profiles = PopulatedProfileSerializer(profiles, many=True)
     print('searlized data ->', serialized_profiles.data)
     # print('PROFILES ->', profiles())
     return Response(serialized_profiles.data, status=status.HTTP_200_OK)
@@ -54,6 +54,7 @@ class ProfileListView(APIView):
       return Response( {'detail': str(e) }, status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 class ProfileDetailView(APIView):
+  permission_classes = (IsAuthenticatedOrReadOnly, ) # one-tuple requires trailing comma
 
   # CUSTOM FUNCTION
   # Find a specific profile and make sure it exists
@@ -71,7 +72,7 @@ class ProfileDetailView(APIView):
   def get(self, _request, pk):
     profile = self.get_profile(pk)
     print('Profile -> ', profile)
-    serialized_profile = ProfileSerializer(profile)
+    serialized_profile = PopulatedProfileSerializer(profile)
     return Response(serialized_profile.data, status.HTTP_200_OK)
 
 
@@ -79,10 +80,19 @@ class ProfileDetailView(APIView):
   def put(self, request, pk):
       profile_to_update = self.get_profile(pk=pk)
 
+      print('PROFILE OWNER ID -> ', profile_to_update.owner)
+      print('REQUEST USER ID ->', request.user)
+      if profile_to_update.owner != request.user:
+        print('WE CANNOT UPDATE OUR RECORD')
+        raise PermissionDenied()
+      print('WE CAN UPDATE OUR RECORD')
+
       deserialized_profile = ProfileSerializer(instance=profile_to_update, data=request.data)
       
       try:
         deserialized_profile.is_valid()
+        print(deserialized_profile.errors)
+
         deserialized_profile.save()
         return Response(deserialized_profile.data, status.HTTP_202_ACCEPTED)    
       except Exception as e:
@@ -93,8 +103,14 @@ class ProfileDetailView(APIView):
 
   # DELETE - Remove 1 item from the profiles table
   # Take the pk from the data capture and find the profile to delete
-  def delete(self, _request, pk):
+  def delete(self, request, pk):
     profile_to_delete = self.get_profile(pk)
+    print('PROFILE OWNER ID -> ', profile_to_delete.owner)
+    print('REQUEST USER ID ->', request.user)
+    if profile_to_delete.owner != request.user:
+      print('WE CANNOT DELETE OUR RECORD')
+      raise PermissionDenied()
+    print('WE CAN DELETE OUR RECORD')
     profile_to_delete.delete()
 
     return Response(status=status.HTTP_204_NO_CONTENT)

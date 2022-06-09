@@ -14,6 +14,11 @@ from .models import Feedback
 class FeedbackListView(APIView):
   permission_classes = (IsAuthenticated, )
 
+  def get(self, _request):
+    feedback = Feedback.objects.all()
+    serialized_feedback = FeedbackSerializer(feedback, many=True)
+    return Response(serialized_feedback.data)
+
   def post(self, request):
     print('request ->', request.data)
     print('request user id ->', request.user.id)
@@ -31,7 +36,7 @@ class FeedbackListView(APIView):
 
 
 # Endpoint: /feedback/:id
-# Methods: DELETE
+# Methods: GET, PUT, DELETE
 class FeedbackDetailView(APIView):
   permission_classes = (IsAuthenticated, )
 
@@ -44,14 +49,35 @@ class FeedbackDetailView(APIView):
       print(e)
       raise NotFound({ 'detail': str(e) })
 
+  # GET
+  def get(self, _request, pk):
+    feedback = self.get_feedback(pk)
+    print('Feedback -> ', feedback)
+    serialized_feedback = FeedbackSerializer(feedback)
+    return Response(serialized_feedback.data, status.HTTP_200_OK)
+
+  # PUT
+  def put(self, request, pk):
+    feedback_to_update = self.get_feedback(pk=pk)
+
+    deserialized_feedback = FeedbackSerializer(instance=feedback_to_update, data=request.data)
+    
+    try:
+      deserialized_feedback.is_valid()
+      deserialized_feedback.save()
+      return Response(deserialized_feedback.data, status.HTTP_202_ACCEPTED)    
+    except Exception as e:
+      print(e)
+      return Response({ 'detail': str(e) }, status.HTTP_422_UNPROCESSABLE_ENTITY)
+
   def delete(self, request, pk):
     print ('PK -> ', pk)
     feedback_to_delete = self.get_feedback(pk)
-    print('FEEDBACK OWNER ID -> ', feedback_to_delete.owner)
+    # print('FEEDBACK OWNER ID -> ', feedback_to_delete.owner)
     print('REQUEST USER ID ->', request.user)
-    if feedback_to_delete.owner != request.user:
-      print('WE CANNOT DELETE OUR RECORD')
-      raise PermissionDenied()
+    # if feedback_to_delete.owner != request.user:
+    #   print('WE CANNOT DELETE OUR RECORD')
+    #   raise PermissionDenied()
     print('WE CAN DELETE OUR RECORD')
     feedback_to_delete.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
