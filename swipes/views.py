@@ -63,14 +63,7 @@ class SwipeListView(APIView):
     # print('request user ->', request.user)
     # print('request user id ->', request.user.id)
 
-    # swiper = self.get_user(swipe_data['swiper_id'])
-    # serialized_swiper = PopulatedUserSerializer(swiper)
-    # serialized_swiper_matches = serialized_swiper['matches']
-    # print('serialized swiper matches value ->', serialized_swiper_matches.value)
-
     swipe_data = request.data
-    # print('swipe data ->', swipe_data)
-    # print('swipe data.right_swipe ->', swipe_data['right_swipe'])
 
     # If it's a right swipe, check to see if it's a match
     # Add the match if it's a new one
@@ -82,44 +75,32 @@ class SwipeListView(APIView):
       profile_owner_id = profile.owner.id
 
       # Check to see if the two have already matched
-      swiper = self.get_user(swipe_data['swiper_id'])
+      swiper = self.get_user(swipe_data['swiper_id']) # get user id for swiper
       serialized_swiper = PopulatedUserSerializer(swiper)
-      serialized_swiper_matches = serialized_swiper['matches']
-      print('serialized swiper matches value ->', serialized_swiper_matches.value)
-      print('profile_owner_id ->', profile_owner_id)
+      serialized_swiper_matches = serialized_swiper['matches'] # get matches for swiper
+      # print('serialized swiper matches value ->', serialized_swiper_matches.value)
 
       def check_already_matched (match_item):
-        print('match item match user 0 id ->', match_item['matched_users'][0]['id'])
-        print('match item match user 1 id ->', match_item['matched_users'][1]['id'])
-        print('match item type ->', type(match_item))
-        print('profile owner id ->', profile_owner_id)
-
         first_matched_user = match_item['matched_users'][0]['id']
         second_matched_user = match_item['matched_users'][1]['id']
-        
         if profile_owner_id == first_matched_user or profile_owner_id == second_matched_user:
           return True
         else:
           return False
       
       matched_list = list(filter(check_already_matched, serialized_swiper_matches.value))
-      # print("matched list -> ", matched_list)
       print("matched list length -> ", len(matched_list))
 
       if len(matched_list) == 0:
         
-        print("THIS RUNS")
         swiped_user = self.get_user(profile_owner_id)
         serialized_swiped_user = PopulatedUserSerializer(swiped_user)
         swiped_user_swipes = serialized_swiped_user['swipes']
-        # print('swiped_user_swipes value ->', swiped_user_swipes.value)
-        # print('swiped_user_swipes type ->', type(swiped_user_swipes.value))
         
+        # Checks to see if the current swipe garners a match
         def check_match_exists(swipe):
           print('is right swipe ->', swipe['right_swipe'])
           if swipe['right_swipe']:
-            # print('swiped profile', swipe['swiped_profile_id'])
-            # print('swiped profile id', swipe['swiped_profile_id']['id'])
             swipe_profile = self.get_profile(swipe['swiped_profile_id']['id'])
             swipe_profile_owner_id = swipe_profile.owner.id
             print('swipe profile owner id ->', swipe_profile_owner_id)
@@ -137,20 +118,17 @@ class SwipeListView(APIView):
         match_swipes = list(filter(check_match_exists, swiped_user_swipes.value))
         print('match swipes length ->', len(match_swipes))
 
+        # If a match should be created, this will run
         if len(match_swipes) > 0:
           exchange_social = False
 
-          # print('serialized swiped user give social -> ', serialized_swiped_user['give_social'].value)
-
           if serialized_swiped_user['give_social'].value & serialized_swiper['give_social'].value:
-            print('THIS RUNS!!!!!!')
             exchange_social = True
 
           match_data = {
             'exchange_social_media': exchange_social,
             'matched_users': [profile_owner_id, swipe_data['swiper_id']]
           }
-          print('match data ->', match_data)
 
           match_to_add = MatchSerializer(data=match_data)
           match_to_add.is_valid()
