@@ -8,21 +8,149 @@ from .serializers.common import SwipeSerializer
 from .serializers.populated import PopulatedSwipeSerializer
 from .models import Swipe
 
+from profiles.models import Profile
+from profiles.serializers.common import ProfileSerializer
+from profiles.serializers.populated import PopulatedProfileSerializer
+from matches.serializers.common import MatchSerializer
+
+from jwt_auth.serializers.populated import PopulatedUserSerializer
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+
+
 # GET, POST : /swipes/
 class SwipeListView(APIView):
   permission_classes = (IsAuthenticated, )
+  # CUSTOM FUNCTIONS
 
+  # Find a specific profile and make sure it exists
+  def get_profile(self, pk):
+    try:
+      return Profile.objects.get(pk=pk)
+    except Profile.DoesNotExist as e:
+      print(e)
+      raise NotFound({ 'detail': str(e) })
+
+  # Find a specific user and make sure it exists
+  def get_user(self, pk):
+    try:
+      return User.objects.get(pk=pk)
+    except User.DoesNotExist as e:
+      print(e)
+      raise NotFound({ 'detail': str(e) })
+
+  # Find a specific swipe and make sure it exists
+  def get_swipe(self, pk):
+    try:
+      return Swipe.objects.get(pk=pk)
+    except Swipe.DoesNotExist as e:
+      print(e)
+      raise NotFound({ 'detail': str(e) })
 
   def get(self, _request):
     swipes = Swipe.objects.all()
     serialized_swipes = PopulatedSwipeSerializer(swipes, many=True)
     return Response(serialized_swipes.data)
 
+
   def post(self, request):
-    print('request ->', request.data)
-    print('request user id ->', request.user.id)
-    request.data['owner'] = request.user.id
+    # print('request ->', request.data)
+    # print('request user ->', request.user)
+    # print('request user id ->', request.user.id)
+
+    swiper = self.get_user(request.user.id)
+    serialized_swiper = PopulatedUserSerializer(swiper)
+    serialized_swiper_matches = serialized_swiper['matches']
+    # print('serialized swiper matches value ->', serialized_swiper_matches.value)
+
+    swipe_data = request.data
+    # print('swipe data ->', swipe_data)
+    # print('swipe data.right_swipe ->', swipe_data['right_swipe'])
+
+    # If it's a right swipe, check to see if it's a match
+    # Add the match if it's a new one
+    if swipe_data['right_swipe']:
+
+      # GET Owner of swiped profile
+      swiped_profile_id = swipe_data['swiped_profile_id']
+      profile = self.get_profile(swiped_profile_id)
+      profile_owner_id = profile.owner.id
+
+      # Check to see if the two have already matched
+      swiper = self.get_user(request.user.id)
+      serialized_swiper = PopulatedUserSerializer(swiper)
+      serialized_swiper_matches = serialized_swiper['matches']
+      print('serialized swiper matches value ->', serialized_swiper_matches.value)
+      print('profile_owner_id ->', profile_owner_id)
+
+      def check_already_matched (match_item):
+        print('match item match user 0 id ->', match_item['matched_users'][0]['id'])
+        print('match item match user 1 id ->', match_item['matched_users'][1]['id'])
+        print('match item type ->', type(match_item))
+        print('profile owner id ->', profile_owner_id)
+
+        first_matched_user = match_item['matched_users'][0]['id']
+        second_matched_user = match_item['matched_users'][1]['id']
+        
+
+
+        if profile_owner_id == first_matched_user or profile_owner_id == second_matched_user:
+          return True
+        else:
+          return False
+      
+      matched_list = list(filter(check_already_matched, serialized_swiper_matches.value))
+      # print("matched list -> ", matched_list)
+      print("matched list length -> ", len(matched_list))
+
+      if len(matched_list) == 0:
+        
+        print("THIS RUNS")
+        swiped_user = self.get_user(profile_owner_id)
+        serialized_swiped_user = PopulatedUserSerializer(swiped_user)
+        swiped_user_swipes = serialized_swiped_user['swipes']
+        # print('swiped_user_swipes value ->', swiped_user_swipes.value)
+        # print('swiped_user_swipes type ->', type(swiped_user_swipes.value))
+        
+        def check_match_exists(swipe):
+          # print('swiped profile', swipe['swiped_profile_id'])
+          # print('swiped profile id', swipe['swiped_profile_id']['id'])
+          swipe_profile = self.get_profile(swipe['swiped_profile_id']['id'])
+          swipe_profile_owner_id = swipe_profile.owner.id
+          # print('swipe profile owner id ->', swipe_profile_owner_id)
+          
+          if swipe_profile_owner_id == request.user.id:
+            return True
+          else:
+            return False
+
+        match_swipes = list(filter(check_match_exists, swiped_user_swipes.value))
+        # print('match swipes length ->', len(match_swipes))
+
+        if len(match_swipes) > 0:
+          exchange_social = False
+
+          # print('serialized swiped user give social -> ', serialized_swiped_user['give_social'].value)
+
+          if serialized_swiped_user['give_social'].value & serialized_swiper['give_social'].value:
+            print('THIS RUNS!!!!!!')
+            exchange_social = True
+
+          match_data = {
+            'exchange_social_media': exchange_social,
+            'matched_users': [profile_owner_id, request.user.id]
+          }
+          
+          # print('request ->', match_data)
+          match_to_add = MatchSerializer(data=match_data)
+          match_to_add.is_valid()
+          match_to_add.save()
+          print('MATCH WAS ADDED!!!')
+
+    # Posting the swipe
     swipe_to_add = SwipeSerializer(data=request.data)
+    # print('swipe to add ->', swipe_to_add)
     try:
       swipe_to_add.is_valid(True)
       swipe_to_add.save()
@@ -39,14 +167,14 @@ class SwipeListView(APIView):
 class SwipeDetailView(APIView):
   permission_classes = (IsAuthenticated, )
 
-  # CUSTOM FUNCTION
-  # Find a specific swipe and make sure it exists
-  def get_swipe(self, pk):
-    try:
-      return Swipe.objects.get(pk=pk)
-    except Swipe.DoesNotExist as e:
-      print(e)
-      raise NotFound({ 'detail': str(e) })
+  # # CUSTOM FUNCTION
+  # # Find a specific swipe and make sure it exists
+  # def get_swipe(self, pk):
+  #   try:
+  #     return Swipe.objects.get(pk=pk)
+  #   except Swipe.DoesNotExist as e:
+  #     print(e)
+  #     raise NotFound({ 'detail': str(e) })
 
   # GET
   def get(self, _request, pk):
