@@ -5,23 +5,23 @@ from django.contrib.postgres.fields import ArrayField
 class Feedback(models.Model):
   
   # Feedback
-  best_image_index = models.IntegerField(default=None)
+  best_image_index = models.IntegerField(null=True, blank=True)
   best_image_comments = ArrayField(
-      models.CharField(max_length=30, blank=True),
+      models.CharField(max_length=30, null=True, blank=True),
       size=20,
   )
-  worst_image_index = models.IntegerField(default=None)
+  worst_image_index = models.IntegerField(null=True, blank=True)
   worst_image_comments = ArrayField(
-      models.CharField(max_length=30, blank=True),
+      models.CharField(max_length=30, null=True, blank=True),
       size=20,
   )
-  bio_overall = models.CharField(max_length=30, default=None)
+  bio_overall = models.CharField(max_length=30, null=True, blank=True)
   bio_good_comments = ArrayField(
-      models.CharField(max_length=30, blank=True),
+      models.CharField(max_length=30, null=True, blank=True),
       size=20,
   )
   bio_bad_comments = ArrayField(
-      models.CharField(max_length=30, blank=True),
+      models.CharField(max_length=30, null=True, blank=True),
       size=20,
   )
 

@@ -7,13 +7,6 @@ class Swipe(models.Model):
   right_swipe = models.BooleanField(default=False)
 
   # Relationship Fields
-  match_id = models.ForeignKey(
-    'matches.Match',
-    related_name='swipes',
-    on_delete=models.CASCADE,
-    blank=True,
-    null=True
-  )
   swiper_id = models.ForeignKey(
     'jwt_auth.User',
     related_name='swipes',

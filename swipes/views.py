@@ -22,8 +22,8 @@ User = get_user_model()
 # GET, POST : /swipes/
 class SwipeListView(APIView):
   permission_classes = (IsAuthenticated, )
+  
   # CUSTOM FUNCTIONS
-
   # Find a specific profile and make sure it exists
   def get_profile(self, pk):
     try:
@@ -48,20 +48,24 @@ class SwipeListView(APIView):
       print(e)
       raise NotFound({ 'detail': str(e) })
 
+
+  # GET all swipes
   def get(self, _request):
     swipes = Swipe.objects.all()
     serialized_swipes = PopulatedSwipeSerializer(swipes, many=True)
     return Response(serialized_swipes.data)
 
 
+  # POST a swipe
+  # Also add a match if the swipe garners a match
   def post(self, request):
     # print('request ->', request.data)
     # print('request user ->', request.user)
     # print('request user id ->', request.user.id)
 
-    swiper = self.get_user(request.user.id)
-    serialized_swiper = PopulatedUserSerializer(swiper)
-    serialized_swiper_matches = serialized_swiper['matches']
+    # swiper = self.get_user(swipe_data['swiper_id'])
+    # serialized_swiper = PopulatedUserSerializer(swiper)
+    # serialized_swiper_matches = serialized_swiper['matches']
     # print('serialized swiper matches value ->', serialized_swiper_matches.value)
 
     swipe_data = request.data
@@ -78,7 +82,7 @@ class SwipeListView(APIView):
       profile_owner_id = profile.owner.id
 
       # Check to see if the two have already matched
-      swiper = self.get_user(request.user.id)
+      swiper = self.get_user(swipe_data['swiper_id'])
       serialized_swiper = PopulatedUserSerializer(swiper)
       serialized_swiper_matches = serialized_swiper['matches']
       print('serialized swiper matches value ->', serialized_swiper_matches.value)
@@ -93,8 +97,6 @@ class SwipeListView(APIView):
         first_matched_user = match_item['matched_users'][0]['id']
         second_matched_user = match_item['matched_users'][1]['id']
         
-
-
         if profile_owner_id == first_matched_user or profile_owner_id == second_matched_user:
           return True
         else:
@@ -114,19 +116,26 @@ class SwipeListView(APIView):
         # print('swiped_user_swipes type ->', type(swiped_user_swipes.value))
         
         def check_match_exists(swipe):
-          # print('swiped profile', swipe['swiped_profile_id'])
-          # print('swiped profile id', swipe['swiped_profile_id']['id'])
-          swipe_profile = self.get_profile(swipe['swiped_profile_id']['id'])
-          swipe_profile_owner_id = swipe_profile.owner.id
-          # print('swipe profile owner id ->', swipe_profile_owner_id)
-          
-          if swipe_profile_owner_id == request.user.id:
-            return True
+          print('is right swipe ->', swipe['right_swipe'])
+          if swipe['right_swipe']:
+            # print('swiped profile', swipe['swiped_profile_id'])
+            # print('swiped profile id', swipe['swiped_profile_id']['id'])
+            swipe_profile = self.get_profile(swipe['swiped_profile_id']['id'])
+            swipe_profile_owner_id = swipe_profile.owner.id
+            print('swipe profile owner id ->', swipe_profile_owner_id)
+            print('request user id ->', swipe_data['swiper_id'])
+            
+            if swipe_profile_owner_id == swipe_data['swiper_id']:
+              print("TRUE RUNS")
+              return True
+            else:
+              print("FALSE RUNS")
+              return False
           else:
             return False
 
         match_swipes = list(filter(check_match_exists, swiped_user_swipes.value))
-        # print('match swipes length ->', len(match_swipes))
+        print('match swipes length ->', len(match_swipes))
 
         if len(match_swipes) > 0:
           exchange_social = False
@@ -139,12 +148,13 @@ class SwipeListView(APIView):
 
           match_data = {
             'exchange_social_media': exchange_social,
-            'matched_users': [profile_owner_id, request.user.id]
+            'matched_users': [profile_owner_id, swipe_data['swiper_id']]
           }
-          
-          # print('request ->', match_data)
+          print('match data ->', match_data)
+
           match_to_add = MatchSerializer(data=match_data)
           match_to_add.is_valid()
+          print(match_to_add.errors)
           match_to_add.save()
           print('MATCH WAS ADDED!!!')
 
@@ -167,14 +177,14 @@ class SwipeListView(APIView):
 class SwipeDetailView(APIView):
   permission_classes = (IsAuthenticated, )
 
-  # # CUSTOM FUNCTION
-  # # Find a specific swipe and make sure it exists
-  # def get_swipe(self, pk):
-  #   try:
-  #     return Swipe.objects.get(pk=pk)
-  #   except Swipe.DoesNotExist as e:
-  #     print(e)
-  #     raise NotFound({ 'detail': str(e) })
+  # CUSTOM FUNCTION
+  # Find a specific swipe and make sure it exists
+  def get_swipe(self, pk):
+    try:
+      return Swipe.objects.get(pk=pk)
+    except Swipe.DoesNotExist as e:
+      print(e)
+      raise NotFound({ 'detail': str(e) })
 
   # GET
   def get(self, _request, pk):
@@ -210,12 +220,12 @@ class SwipeDetailView(APIView):
     print ('PK -> ', pk)
     swipe_to_delete = self.get_swipe(pk)
     
-    print('SWIPE OWNER ID -> ', swipe_to_delete.swiper_id)
-    print('REQUEST USER ID ->', request.user)
-    if swipe_to_delete.swiper_id != request.user:
-      print('WE CANNOT DELETE OUR RECORD')
-      raise PermissionDenied()
-    print('WE CAN DELETE OUR RECORD')
+    # print('SWIPE OWNER ID -> ', swipe_to_delete.swiper_id)
+    # print('REQUEST USER ID ->', request.user)
+    # if swipe_to_delete.swiper_id != request.user:
+    #   print('WE CANNOT DELETE OUR RECORD')
+    #   raise PermissionDenied()
+    # print('WE CAN DELETE OUR RECORD')
 
     swipe_to_delete.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
