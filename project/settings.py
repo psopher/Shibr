@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'jwt_auth',
     'profiles',
     'feedback',
-    'swipes'
+    'swipes',
+    'matches'
 ]
 
 MIDDLEWARE = [

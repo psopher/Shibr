@@ -5,10 +5,15 @@ class Swipe(models.Model):
 
   # Swipe Data
   right_swipe = models.BooleanField(default=False)
-  is_match = models.BooleanField(default=False)
-  exchange_social_media = models.BooleanField(default=False)
 
   # Relationship Fields
+  match_id = models.ForeignKey(
+    'matches.Match',
+    related_name='swipes',
+    on_delete=models.CASCADE,
+    blank=True,
+    null=True
+  )
   swiper_id = models.ForeignKey(
     'jwt_auth.User',
     related_name='swipes',

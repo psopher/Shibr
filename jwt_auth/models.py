@@ -21,14 +21,8 @@ class User(AbstractUser):
   sc = models.CharField(max_length=30, blank=True)
   tw = models.CharField(max_length=30, blank=True)
 
-  # Relationship Fields
-  current_profile = models.ForeignKey(
-    'profiles.Profile',
-    related_name='users',
-    blank=True,
-    null=True,
-    on_delete=models.CASCADE,
-  )
+  # Relational (Profile ID for Current Profile)
+  current_profile = models.IntegerField(null=True, blank=True)
 
   # Appearance in Django System
   def __str__(self):

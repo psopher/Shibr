@@ -21,5 +21,6 @@ urlpatterns = [
     path('api/auth/', include('jwt_auth.urls')),
     path('api/profiles/', include('profiles.urls')),
     path('api/feedback/', include('feedback.urls')),
-    path('api/swipes/', include('swipes.urls'))
+    path('api/swipes/', include('swipes.urls')),
+    path('api/matches/', include('matches.urls'))
 ]
