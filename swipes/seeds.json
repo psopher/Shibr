@@ -1,0 +1,83 @@
+[
+{
+  "model": "swipes.swipe",
+  "pk": 1,
+  "fields": {
+    "right_swipe": true,
+    "swiper_id": 1,
+    "swiped_profile_id": 2
+  }
+},
+{
+  "model": "swipes.swipe",
+  "pk": 2,
+  "fields": {
+    "right_swipe": false,
+    "swiper_id": 2,
+    "swiped_profile_id": 1
+  }
+},
+{
+  "model": "swipes.swipe",
+  "pk": 3,
+  "fields": {
+    "right_swipe": true,
+    "swiper_id": 2,
+    "swiped_profile_id": 1
+  }
+},
+{
+  "model": "swipes.swipe",
+  "pk": 4,
+  "fields": {
+    "right_swipe": true,
+    "swiper_id": 29,
+    "swiped_profile_id": 1
+  }
+},
+{
+  "model": "swipes.swipe",
+  "pk": 5,
+  "fields": {
+    "right_swipe": true,
+    "swiper_id": 27,
+    "swiped_profile_id": 1
+  }
+},
+{
+  "model": "swipes.swipe",
+  "pk": 6,
+  "fields": {
+    "right_swipe": true,
+    "swiper_id": 25,
+    "swiped_profile_id": 1
+  }
+},
+{
+  "model": "swipes.swipe",
+  "pk": 7,
+  "fields": {
+    "right_swipe": true,
+    "swiper_id": 30,
+    "swiped_profile_id": 2
+  }
+},
+{
+  "model": "swipes.swipe",
+  "pk": 8,
+  "fields": {
+    "right_swipe": true,
+    "swiper_id": 28,
+    "swiped_profile_id": 2
+  }
+},
+{
+  "model": "swipes.swipe",
+  "pk": 9,
+  "fields": {
+    "right_swipe": true,
+    "swiper_id": 26,
+    "swiped_profile_id": 2
+  }
+}
+]

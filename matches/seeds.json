@@ -1,0 +1,13 @@
+[
+{
+  "model": "matches.match",
+  "pk": 1,
+  "fields": {
+    "exchange_social_media": true,
+    "matched_users": [
+      1,
+      2
+    ]
+  }
+}
+]
