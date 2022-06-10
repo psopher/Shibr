@@ -9,7 +9,7 @@
     "school": "Puppy Academy",
     "gender": "Male",
     "images": "[\"https://res.cloudinary.com/drgegagha/image/upload/v1654545550/shibr/miso-1_kr24o5.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545550/shibr/miso-5_ywdtxm.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545549/shibr/miso-6_ymddyt.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545549/shibr/miso-3_ytkavn.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545548/shibr/miso-4_wkvklu.png\"]",
-    "owner": 31
+    "owner": 1
   }
 },
 {
@@ -22,7 +22,7 @@
     "school": "Paris Puppy School",
     "gender": "Female",
     "images": "[\"https://res.cloudinary.com/drgegagha/image/upload/v1654545163/shibr/miki-4_zjoc9p.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545163/shibr/miki-1_t5q8uz.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545164/shibr/miki-6_lrw6tu.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545164/shibr/miki-3_b6yhhg.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545163/shibr/miki-5_dwk0uz.png\"]",
-    "owner": 3
+    "owner": 2
   }
 },
 {
@@ -35,7 +35,7 @@
     "school": "Untrained",
     "gender": "Male",
     "images": "[\"https://res.cloudinary.com/drgegagha/image/upload/v1654545175/shibr/otan-6_emfcui.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545175/shibr/otan-3_vvvxwa.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545175/shibr/otan-2_c3aanm.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545176/shibr/otan-5_akmb7x.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545176/shibr/otan-1_fkxkky.png\"]",
-    "owner": 4
+    "owner": 3
   }
 },
 {
@@ -48,7 +48,7 @@
     "school": "Berlin Puppy Academy",
     "gender": "Male",
     "images": "[\"https://res.cloudinary.com/drgegagha/image/upload/v1654545199/shibr/kiko-2_ha84cg.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545196/shibr/kiko-1_rq5hkt.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545195/shibr/kiko-6_gt6zxa.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545197/shibr/kiko-5_r4ggnt.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545196/shibr/kiko-3_xrenqe.png\"]",
-    "owner": 5
+    "owner": 4
   }
 },
 {
@@ -61,7 +61,7 @@
     "school": "Puppy University of Stockholm",
     "gender": "Female",
     "images": "[\"https://res.cloudinary.com/drgegagha/image/upload/v1654545210/shibr/akira-6_qcppew.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545213/shibr/akira-4_x1eifv.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545210/shibr/akira-1_xhblre.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545211/shibr/akira-5_xhu3nr.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545210/shibr/akira-3_jei2qq.png\"]",
-    "owner": 2
+    "owner": 5
   }
 },
 {
