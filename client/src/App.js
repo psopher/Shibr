@@ -45,7 +45,7 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
 
-            {/* Plant routes */}
+            {/* Analytics routes */}
             <Route path="/analytics/:userId" element={<OverallAnalytics />} />
             <Route path="/analytics/:userId/matches" element={<SocialMediaMatches />} />
             <Route path="/analytics/profile/:profileId" element={<SingleProfileAnalytics />} />
