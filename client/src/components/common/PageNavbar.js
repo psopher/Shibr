@@ -116,7 +116,7 @@ const PageNavbar  = ({ mode, setMode }) => {
               {/* Profile image */}
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mr: 3, boxShadow: 2 }}>
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, ml: 2, mr: 3, boxShadow: 2 }}>
                     <Avatar alt={payload.username} src={payload.profilePicture} />
                   </IconButton>
                 </Tooltip>
