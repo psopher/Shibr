@@ -20,7 +20,7 @@ User = get_user_model()
 class RegisterView(APIView):
 
   def post(self, request):
-    print('REQUEST BODY -> ', request)
+    print('REQUEST BODY -> ', request.data)
     user_to_add = UserSerializer(data=request.data)
 
     try:

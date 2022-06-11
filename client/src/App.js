@@ -1,16 +1,66 @@
-import { useEffect } from 'react'
-import axios from 'axios'
+import { React, useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import getDesignTokens from './helpers/theme.js'
+
+// Import Components
+import PageNavbar from './components/common/PageNavbar'
+import Home from './components/Home'
+import OverallAnalytics from './components/analytics/OverallAnalytics'
+import SingleProfileAnalytics from './components/analytics/SingleProfileAnalytics'
+import NotFound from './components/common/NotFound'
+import UserAccount from './components/user/UserAccount'
+import NewProfile from './components/user/NewProfile'
+import Settings from './components/user/Settings'
+
+// Auth components
+import Register from './components/auth/Register'
+import Login from './components/auth/Login'
+
+//MUI
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import Box from '@mui/material/Box'
 
 const App = () => {
-  useEffect(() => {
-    const getData = async () => {
-      const { data } = await axios.get('/api/profiles/') // * <-- replace with your endpoint
-      console.log(data)
-    }
-    getData()
-  })
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const { data } = await axios.get('/api/profiles/') // * <-- replace with your endpoint
+  //     console.log(data)
+  //   }
+  //   getData()
+  // })
+  const [mode, setMode] = useState('light')
+  const darkTheme = createTheme(getDesignTokens(mode))
 
-  return <h1>Hello World</h1>
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <Box id='wrapper-box' bgcolor='background.default' color='text.primary'>
+        <BrowserRouter>
+          <PageNavbar setMode={setMode} mode={mode} />
+          <Routes>
+            {/* Homepage */}
+            <Route path="/" element={<Home />} />
+
+            {/* Auth routes - starting with register */}
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+
+            {/* Plant routes */}
+            <Route path="/analytics/:userId" element={<OverallAnalytics />} />
+            <Route path="/analytics/profile/:profileId" element={<SingleProfileAnalytics />} />
+
+            {/* User routes */}
+            <Route path="/account/:userId" element={<UserAccount />} />
+            <Route path="/account/:userId/new-profile" element={<NewProfile />} />
+            <Route path="/account/:userId/settings" element={<Settings />} />
+
+
+            {/* The following path matches any path specified, so it needs to come last */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </Box>
+    </ThemeProvider>
+  )
 }
 
 export default App

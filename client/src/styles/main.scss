@@ -1,3 +1,33 @@
 * {
   box-sizing: border-box;
 }
+
+#root {
+  height: 100vh;
+}
+
+#wrapper-box {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Lato', 'Saira', 'Oxygen', 'Raleway', 'Arial';
+  padding: 0;
+}
+
+img {
+  width: 100%;
+}
+
+.styled {
+  border: 2px solid blue;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  &:hover {
+    text-decoration: underline;
+  }
+}
