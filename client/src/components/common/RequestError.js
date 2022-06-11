@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 
 const RequestError = () => {
   return (
-    <Container sx={{ height: '85vh', width: '100vw', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+    <Container sx={{ height: '70vh', width: '100vw', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
       <Box component='img' src={shibaTail} alt='sad plant gif' sx={{ width: 150 }} />
       <Typography variant='h4'>Error! Could not fetch data!</Typography>
       <Typography as={Link} to="/" sx={{ textDecoration: 'underline' }}>Back to Home</Typography>

@@ -6,6 +6,7 @@ import getDesignTokens from './helpers/theme.js'
 import PageNavbar from './components/common/PageNavbar'
 import Home from './components/Home'
 import OverallAnalytics from './components/analytics/OverallAnalytics'
+import SocialMediaMatches from './components/analytics/SocialMediaMatches'
 import SingleProfileAnalytics from './components/analytics/SingleProfileAnalytics'
 import NotFound from './components/common/NotFound'
 import UserAccount from './components/user/UserAccount'
@@ -46,7 +47,9 @@ const App = () => {
 
             {/* Plant routes */}
             <Route path="/analytics/:userId" element={<OverallAnalytics />} />
+            <Route path="/analytics/:userId/matches" element={<SocialMediaMatches />} />
             <Route path="/analytics/profile/:profileId" element={<SingleProfileAnalytics />} />
+            <Route path="/analytics/profile/:profileId/matches" element={<SocialMediaMatches />} />
 
             {/* User routes */}
             <Route path="/account/:userId" element={<UserAccount />} />
