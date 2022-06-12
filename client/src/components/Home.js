@@ -94,7 +94,7 @@ const Home = () => {
               // Feedback View
               <>
                 <Container width='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream' }} >
+                  <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream', pl: 4, pr: 4 }} >
                     <Box
                       component='form'
                       sx={{
@@ -121,8 +121,9 @@ const Home = () => {
               :
               // Swipe View
               <>
-                <Container sx={{ pb: 4 }}>
-                  <Container maxWidth='xs' sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: 4, mt: 2 }}>
+                <Container maxWidth='xs' sx={{ pb: 4, pt: 4 }}>
+                  {/* <Container > */}
+                  <Paper sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'cream', boxShadow: 4, borderRadius: 8 }} >
                     {/* Image List */}
                     {getImageList(profiles[0], 1, 1, 1, 4, true)}
 
@@ -145,8 +146,8 @@ const Home = () => {
                         </IconButton>
                       </Box>
                     </Box>
-
-                  </Container >
+                  </Paper>
+                  {/* </Container > */}
                 </Container>
               </>
 

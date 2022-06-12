@@ -13,7 +13,8 @@ const getDesignTokens = (mode) => ({
           secondary: grey[900],
         },
         background: {
-          paper: '#fff',
+          default: '#e1e1e1',
+          paper: '#ffffff',
         },
       }
       : {
