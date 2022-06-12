@@ -18,9 +18,13 @@ import LightModeIcon from '@mui/icons-material/LightMode'
 
 // Import logo image
 import logo from '../../images/logo.png'
+import logoShibr from '../../images/logo-shibr.png'
+import logoShibrW from '../../images/logo-shibr-w.png'
+import logoShibrInulytics from '../../images/logo-shibr-inulytics.png'
+import logoShibrInulyticsW from '../../images/logo-shibr-inulytics-w.png'
 import profPicDefault from '../../images/prof-pic-default.png'
 import { getPayload, userIsAuthenticated } from '../../helpers/auth'
-import { getProfPicFromLocalStorage } from '../../helpers/imageHandling'
+import { getProfPicFromLocalStorage } from '../../helpers/storage'
 
 
 const pagesNoLogin = ['Login', 'Register']
@@ -90,18 +94,18 @@ const PageNavbar  = ({ mode, setMode }) => {
           <Container sx={{ display: 'flex', alignItems: 'flex-end' }}>
 
             {/* Icon image */}
-            <Box as={Link} to="/" sx={{ width: 25 }}>
-              <Box component='img' src={logo} alt="Logo" />
+            <Box as={Link} to="/" sx={{ width: 180 }}>
+              <Box component='img' src={logoShibrInulyticsW} alt="Logo" />
             </Box>
 
             {/* Shibr text */}
-            <Typography as={Link} to='/'
+            {/* <Typography as={Link} to='/'
               variant='h6'
               component='h1'
               sx={{ ml: 2, color: 'white', fontFamily: 'Aldrich',
                 fontWeight: 600, letterSpacing: 1, textDecoration: 'none' }}>
                   Shibr Inulytics
-            </Typography>
+            </Typography> */}
           </Container>
 
     
