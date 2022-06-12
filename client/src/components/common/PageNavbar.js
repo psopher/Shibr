@@ -18,7 +18,9 @@ import LightModeIcon from '@mui/icons-material/LightMode'
 
 // Import logo image
 import logo from '../../images/logo.png'
+import profPicDefault from '../../images/prof-pic-default.png'
 import { getPayload, userIsAuthenticated } from '../../helpers/auth'
+import { getProfPicFromLocalStorage } from '../../helpers/imageHandling'
 
 
 const pagesNoLogin = ['Login', 'Register']
@@ -36,6 +38,7 @@ const PageNavbar  = ({ mode, setMode }) => {
 
   // Payload
   const payload = getPayload()
+  const profPic = getProfPicFromLocalStorage()
 
   // Keeps track of menu
   const [anchorElUser, setAnchorElUser] = useState(null)
@@ -117,7 +120,7 @@ const PageNavbar  = ({ mode, setMode }) => {
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, ml: 2, mr: 3, boxShadow: 2 }}>
-                    <Avatar alt={payload.username} src={payload.profilePicture} />
+                    <Avatar alt="shiba profile pic" src={profPic ? profPic : profPicDefault} />
                   </IconButton>
                 </Tooltip>
                 <Menu
