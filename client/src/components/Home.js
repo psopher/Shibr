@@ -82,7 +82,7 @@ const Home = () => {
             // images
             <>
               <Container sx={{ pb: 4 }}>
-                <Container maxWidth='sm' sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: 4, mt: 2 }}>
+                <Container maxWidth='xs' sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: 4, mt: 2 }}>
                   {/* Image List */}
                   {getImageList(profiles[0], 1, 1, 1, 4, true)}
 

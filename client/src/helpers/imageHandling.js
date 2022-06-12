@@ -29,7 +29,7 @@ export const getImageList = (profile, xsColumns = 1, smColumns = 1, mdColumns = 
                   />
                 </Box>
                 {fromHome && index === 0 &&
-                  <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2, mb: 2 }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2, mb: 0 }}>
                     <Typography variant='h6' fontWeight={'bold'}>
                       {`${profile.name}, ${profile.age}`}
                     </Typography>
