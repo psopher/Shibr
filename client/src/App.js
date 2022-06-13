@@ -22,13 +22,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 
 const App = () => {
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const { data } = await axios.get('/api/profiles/') // * <-- replace with your endpoint
-  //     console.log(data)
-  //   }
-  //   getData()
-  // })
   const [mode, setMode] = useState('light')
   const darkTheme = createTheme(getDesignTokens(mode))
 

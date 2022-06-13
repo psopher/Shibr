@@ -3,7 +3,10 @@ import axios from 'axios'
 
 import Spinner from './utilities/Spinner.js'
 import RequestError from './common/RequestError'
-import { getImageList } from '../helpers/imageHandling'
+import { getProfile, profileBio } from '../helpers/viewProfile'
+import { goodPhotoFeedback, badPhotoFeedback, feedbackTypes, overallBioFeedback, goodBioFeedback, badBioFeedback } from '../helpers/formOptions'
+import { photoFeedback, bioFeedback } from '../helpers/formMethods'
+import { getFeedbackImageList } from '../helpers/imageHandling.js'
 
 //mui
 import Container from '@mui/material/Container'
@@ -57,14 +60,75 @@ const Home = () => {
     getData()
   }, [])
 
+  const handeImageSelect = (e) => {
+    e.stopPropagation()
+    // console.log('e.target ->', e.target)
+    // console.log('e.target.classList ->', e.target.classList)
+
+    const selectedIndex = parseInt(e.target.alt)
+    console.log('selected index ->', selectedIndex)
+
+    const photoClass = e.target.classList
+    // console.log('photo class ->', photoClass)
+    // console.log('photo class index 0 ->', photoClass[0])
+
+    const photos = document.body.querySelectorAll(`.${photoClass[0]}`)
+    console.log('photos ->', photos)
+    photos.forEach(photo => photo.classList.remove('styled'))
+
+    e.target.classList.toggle('styled')
+  }
+
+  const handlePhotoFeedbackSelect = (e) => {
+    console.log('handleFeedbackSelect Fires')
+    console.log('e.targe.textContent ->', e.target.textContent)
+    const feedbackClass = e.target.classList
+    // console.log('feedback class ->', feedbackClass)
+    // console.log('feedback class index 0 ->', feedbackClass[0])
+
+    // const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}`)
+    // console.log('feedback ->', feedback)
+    // feedback.forEach(comment => comment.classList.remove('styled'))
+
+    e.target.classList.toggle('styled')
+
+  }
+
+  const handleBioFeedbackSelect = (e) => {
+    console.log('handleBioFeedbackSelect Runs')
+    console.log('e.targe.textContent ->', e.target.textContent)
+    const feedbackClass = e.target.classList
+
+    if (e.target.textContent === 'I Like Nothing' || e.target.textContent === 'I Like Everything') {
+      const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}`)
+      console.log('feedback ->', feedback)
+      feedback.forEach(comment => comment.classList.remove('styled'))
+    } else {
+      const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}-end`)
+      console.log('feedback ->', feedback)
+      feedback.forEach(comment => comment.classList.remove('styled'))
+    }
+
+    // console.log('feedback class ->', feedbackClass)
+    // console.log('feedback class index 0 ->', feedbackClass[0])
+
+    // const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}`)
+    // console.log('feedback ->', feedback)
+    // feedback.forEach(comment => comment.classList.remove('styled'))
+
+    e.target.classList.toggle('styled')
+  }
+
   const handleLeftSwipe = (e) => {
     console.log('HANDLE LEFT SWIPE RUNS')
+    window.scrollTo(0, 0)
 
     setSwiped(true)
   }
 
   const handleRightSwipe = (e) => {
     console.log('HANDLE RIGHT SWIPE RUNS')
+    window.scrollTo(0, 0)
 
     setIsRightSwipe(true)
     setSwiped(true)
@@ -72,6 +136,7 @@ const Home = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    window.scrollTo(0, 0)
     
     if (karma < 5) {
       setKarma(karma + 1)
@@ -95,22 +160,56 @@ const Home = () => {
               <>
                 <Container width='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
                   <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream', pl: 4, pr: 4 }} >
+                    <Typography variant='h3' sx={{ pb: 2, textAlign: 'center' }}>My Inulysis</Typography>
                     <Box
                       component='form'
                       sx={{
                         width: '100%',
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center',
+                        alignItems: 'flex-start',
                       }}
                       onSubmit={handleSubmit}
                     >
-                      <Typography variant='h3' sx={{ pb: 2 }}>My Inulysis</Typography>
+                      {/* Photos */}
+                      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', mt: 2 }}>
+                        <Typography variant='h5' sx={{ pb: 0, textAlign: 'center' }}>Photos</Typography>
+                      </Box>
+
+                      {/* Best Images */}
+                      {getFeedbackImageList(profiles[0], 1, handeImageSelect)}
+
+                      {/* Good Image Feedback */}
+                      {photoFeedback(goodPhotoFeedback, 1, handlePhotoFeedbackSelect)}
+
+                      {/* Worst Images */}
+                      {getFeedbackImageList(profiles[0], 0, handeImageSelect)}
+
+                      {/* Bad Image Feedback */}
+                      {photoFeedback(badPhotoFeedback, 0, handlePhotoFeedbackSelect)}
+                      
+                      
+                      {/* Bio */}
+                      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', mt: 4 }}>
+                        <Typography variant='h5' sx={{ pb: 0, textAlign: 'center' }}>Bio</Typography>
+                      </Box>
+
+                      {/* Profile Bio */}
+                      {profileBio(profiles[0], 1)}
+
+                      {/* Overall Bio Feedback */}
+                      {bioFeedback(overallBioFeedback, feedbackTypes[0], handleBioFeedbackSelect)}
+
+                      {/* Good Bio Feedback */}
+                      {bioFeedback(goodBioFeedback, feedbackTypes[1], handleBioFeedbackSelect)}
+
+                      {/* Bad Bio Feedback */}
+                      {bioFeedback(badBioFeedback, feedbackTypes[2], handleBioFeedbackSelect)}
 
                       {/* Submit Button */}
                       <Grid container textAlign='center'>
                         <Grid item xs={12}>
-                          <Button variant="contained" type="submit"  sx={{ width: .5 }}>Submit</Button>
+                          <Button variant="contained" type="submit"  sx={{ width: .5, mt: 4 }}>Submit</Button>
                         </Grid>
                       </Grid>
 
@@ -125,29 +224,8 @@ const Home = () => {
                   {/* <Container > */}
                   <Paper sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'cream', boxShadow: 4, borderRadius: 8 }} >
                     {/* Image List */}
-                    {getImageList(profiles[0], 1, 1, 1, 4, true)}
-
-                    {/* Progress Bar */}
-                    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                      <LinearProgress variant="determinate" value={karma * 20} sx={{ width: 200, height: 10, border: 1, boxShadow: 4 }} />
-                    </Box>
-
-
-                    {/* Buttons */}
-                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', mt: 3, mb: 4 }}>
-                      <Box onClick={handleLeftSwipe} sx={{ ml: 6, mr: 6, boxShadow: 4, border: 2, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
-                        <IconButton aria-label="swipe-left" size="large" >
-                          <CloseOutlinedIcon fontSize="large" sx={{ color: 'secondary.main' }} />
-                        </IconButton>
-                      </Box>
-                      <Box onClick={handleRightSwipe} sx={{ ml: 6, mr: 6, boxShadow: 4, border: 2, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
-                        <IconButton aria-label="swipe-right" size="large" >
-                          <FavoriteOutlinedIcon fontSize="large" sx={{ color: 'primary.main' }} />
-                        </IconButton>
-                      </Box>
-                    </Box>
+                    {getProfile(profiles[0], karma, true, handleLeftSwipe, handleRightSwipe)}
                   </Paper>
-                  {/* </Container > */}
                 </Container>
               </>
 
