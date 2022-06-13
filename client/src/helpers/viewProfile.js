@@ -21,7 +21,7 @@ export const getProfile = (profile, karma = 0, fromHome = false, handleLeftSwipe
   return (
     <>
       <Container key={'1'} maxWidth='xs' sx={{ my: 4 }}>
-        <Box sx={{ marginLeft: '6px' }}>
+        <Box sx={{ marginLeft: '6px', borderRadius: 5 }}>
           <Masonry key={'2'} columns={{ xs: 1, sm: 1, md: 1 }} spacing={1}>
             {profile.images.map((image, index) => {
               return (

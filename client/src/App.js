@@ -37,6 +37,8 @@ const App = () => {
             {/* Auth routes - starting with register */}
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/add-profile" element={<NewProfile />} />
+            <Route path="/add-settings" element={<Settings />} />
 
             {/* Analytics routes */}
             <Route path="/analytics/:userId" element={<OverallAnalytics />} />
