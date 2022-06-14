@@ -43,6 +43,8 @@ const Login = () => {
       try {
         const { data } = await axios.post('api/auth/login/', formData)
         
+        console.log('token -> ', data.token)
+
         setTokenToLocalStorage(data.token)
         
         navigate('/')

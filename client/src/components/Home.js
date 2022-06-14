@@ -222,7 +222,7 @@ const Home = () => {
               <>
                 <Container maxWidth='xs' sx={{ pb: 4, pt: 4 }}>
                   {/* <Container > */}
-                  <Paper sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'cream', boxShadow: 4, borderRadius: 8 }} >
+                  <Paper sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'cream', boxShadow: 4, borderRadius: 4 }} >
                     {/* Image List */}
                     {getProfile(profiles[0], karma, true, handleLeftSwipe, handleRightSwipe)}
                   </Paper>

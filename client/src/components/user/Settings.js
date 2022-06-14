@@ -146,7 +146,7 @@ const Settings = () => {
 
 
                     {/* Give Social Media to Matches */}
-                    <Box sx={{ mt: 3, width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <Box sx={{ mt: 3, width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', mb: 1 }}>
                       <Typography variant='p' sx={{ ml: 1, mr: 3 }}>Give Social Media to Matches</Typography>
                       <FormControlLabel 
                         control={

@@ -97,15 +97,6 @@ const PageNavbar  = ({ mode, setMode }) => {
             <Box as={Link} to="/" sx={{ width: 180 }}>
               <Box component='img' src={logoShibrInulyticsW} alt="Logo" />
             </Box>
-
-            {/* Shibr text */}
-            {/* <Typography as={Link} to='/'
-              variant='h6'
-              component='h1'
-              sx={{ ml: 2, color: 'white', fontFamily: 'Aldrich',
-                fontWeight: 600, letterSpacing: 1, textDecoration: 'none' }}>
-                  Shibr Inulytics
-            </Typography> */}
           </Container>
 
     

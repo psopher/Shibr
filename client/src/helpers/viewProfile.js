@@ -26,7 +26,7 @@ export const getProfile = (profile, karma = 0, fromHome = false, handleLeftSwipe
             {profile.images.map((image, index) => {
               return (
                 <ImageListItem key={index} >
-                  <Box sx={{ boxShadow: 4, mt: 2 }}>
+                  <Box sx={{ boxShadow: 4, mt: 2, borderRadius: 4 }}>
                     <img
                       src={image}
                       alt={`image ${index}`}
@@ -44,13 +44,14 @@ export const getProfile = (profile, karma = 0, fromHome = false, handleLeftSwipe
       </Container>
 
       {/* Progress Bar */}
-      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+      {/* <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
         <LinearProgress variant="determinate" value={karma * 20} sx={{ width: 200, height: 10, border: 1, boxShadow: 4 }} />
-      </Box>
+      </Box> */}
+      {karmaBar(karma, 300)}
 
 
       {/* Buttons */}
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', mt: 3, mb: 4 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', mt: 4, mb: 4 }}>
         <Box onClick={handleLeftSwipe} sx={{ ml: 6, mr: 6, boxShadow: 4, border: 2, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
           <IconButton aria-label="swipe-left" size="large" >
             <CloseOutlinedIcon fontSize="large" sx={{ color: 'secondary.main' }} />
@@ -85,3 +86,12 @@ export const profileBio = (profile, fromFeedback = false) => {
   )
 }
 
+export const karmaBar = (karma = 0, width = 300) => {
+
+  return (
+    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+      <LinearProgress variant="determinate" value={karma * 20} sx={{ width: width, height: 10, border: 1, boxShadow: 4 }} />
+    </Box>
+  )
+
+}
