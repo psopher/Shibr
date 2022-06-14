@@ -65,3 +65,9 @@ export const genders = [
   'Male',
   'Female'
 ]
+
+export const interestedIn = [
+  'Alphas',
+  'Bitches',
+  'Both'
+]

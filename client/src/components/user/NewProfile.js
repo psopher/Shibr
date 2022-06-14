@@ -41,8 +41,6 @@ const NewProfile = () => {
     display: 'none',
   })
 
-  console.log('Input ->', Input)
-
   const user = getUserFromLocalStorage()
   console.log('user ->', user)
 
@@ -156,15 +154,6 @@ const NewProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     console.log('HANDLE SUBMIT RUNS')
-
-    // window.scrollTo(0, 0)
-    
-    // if (karma < 5) {
-    //   setKarma(karma + 1)
-    // }
-
-    // setSwiped(false)
-
   }
 
 
@@ -227,7 +216,7 @@ const NewProfile = () => {
                         value={age}
                         onChange={(e) => handleAgeChange(e, setAge, age)}
                         valueLabelDisplay="auto"
-                        name='height'
+                        name='age'
                         size="small"
                         min={0}
                         max={20}

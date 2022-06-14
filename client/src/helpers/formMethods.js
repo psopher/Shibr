@@ -101,3 +101,11 @@ export const handleAgeChange = (e, setAge, age) => {
   setAge( e.target.value )
 }
 
+// Handles sliding on the height/width sliders
+export const handleAgeRangeChange = (e, setAgeRange, ageRange) => {
+  // const { name, value } = e.target
+  console.log('handleAgeRangeChange runs')
+  console.log('e.target is ->', e.target.value)
+  setAgeRange([ ...e.target.value ])
+}
+
