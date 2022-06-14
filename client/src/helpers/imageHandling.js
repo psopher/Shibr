@@ -117,7 +117,7 @@ export const newProfileImageList = (imageArray, handeImageSelect, handleDeleteIm
 
   return (
     <>
-      <Container key={1000} maxWidth='xs' sx={{ mb: 2, mt: 1 }}>
+      <Container key={1000} maxWidth='xs' sx={{ mb: 0, mt: 1 }}>
         <Box key={1000} sx={{ marginLeft: '6px' }}>
           <Masonry key={'1000'} columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
             {imageArray.map((image, index) => {

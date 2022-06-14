@@ -9,6 +9,10 @@ import { getUserFromLocalStorage } from '../../helpers/storage.js'
 
 import { newProfileImageList } from '../../helpers/imageHandling'
 
+import { genders } from '../../helpers/formOptions'
+
+import { handleAgeChange } from '../../helpers/formMethods'
+
 //mui
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
@@ -20,6 +24,12 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Select from '@mui/material/Select'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Slider from '@mui/material/Slider'
 
 import { styled } from '@mui/material/styles'
 
@@ -59,6 +69,9 @@ const NewProfile = () => {
   // Form data passed by user
   const [ photos, setPhotos ] = useState(currentProfilePhotos)
   console.log('photos ->', photos)
+
+  const [ age, setAge ] = useState(10)
+  const [ gender, setGender ] = useState('')
 
   //loading and error state
   const [loading, setLoading] = useState(false)
@@ -166,7 +179,7 @@ const NewProfile = () => {
             <RequestError key={'error-key-12345'} />
             : 
             <>
-              <Container key={'container-key-0'} width='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Container key={'container-key-0'} width='sm' sx={{ display: 'flex', justifyContent: 'center', flexGrow: 1 }}>
                 <Paper key={'paper-key-0'} elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream', pl: 4, pr: 4 }} >
                   <Typography key={'type-key-0'} variant='h3' sx={{ pb: 2, textAlign: 'center' }}>My Profile</Typography>
                   <Box
@@ -181,8 +194,6 @@ const NewProfile = () => {
                     onSubmit={handleSubmit}
                   >
 
-
-
                     {/* This must be first input So that the file upload only fires when you press the button */}
                     <>
                       <Input key={'input-0'} type="text" autoFocus="autoFocus" />
@@ -191,12 +202,107 @@ const NewProfile = () => {
                     {/* Images */}
                     {newProfileImageList(photos, handeImageSelect, handleDeleteImage)}
 
+                    {/* Name */}
+                    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', mt: 1, mb: 1 }}>
+                      <TextField
+                        id='name'
+                        label='Name'
+                        variant='outlined'
+                        name='name'
+                        placeholder='Name * (max 50 characters)'
+                        inputProps={{ maxLength: 500 }}
+                        // value={formData.name}
+                        required
+                        // onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
+                        sx={{ width: '85%' }} 
+                      />
+                    </Box>
 
+                    {/* Age */}
+                    <Typography id="height-slider" gutterBottom sx={{ pl: '10%', mt: 2 }}>
+                      Age: {age}
+                    </Typography>
+                    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', mt: 0, mb: 2 }}>
+                      <Slider
+                        value={age}
+                        onChange={(e) => handleAgeChange(e, setAge, age)}
+                        valueLabelDisplay="auto"
+                        name='height'
+                        size="small"
+                        min={0}
+                        max={20}
+                        // marks
+                        step={1}
+                        sx={{ width: '80%', align: 'center' }}
+                      />
+                    </Box>
+
+                    {/* Gender */}
+                    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', mt: 1, mb: 1 }}>
+                      <FormControl required sx={{ width: '85%' }}>
+                        <InputLabel id="gender-label">Gender</InputLabel>
+                        <Select
+                          labelId="gender-label"
+                          id="gender"
+                          name='gender'
+                          value={gender}
+                          label='gender'
+                          required
+                          onChange={e => setGender(e.target.value) }
+                        >
+                          {genders.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
+                        </Select>
+                      </FormControl>
+                    </Box>
+
+
+                    {/* Training */}
+                    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', mt: 1, mb: 1 }}>
+                      <TextField
+                        id='training'
+                        label='Training'
+                        variant='outlined'
+                        name='training'
+                        placeholder='Training * (max 100 characters)'
+                        inputProps={{ maxLength: 100 }}
+                        // value={formData.name}
+                        // required
+                        // onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
+                        sx={{ width: '85%' }} 
+                      />
+                    </Box>
+
+
+                    {/* Bio Title */}
+                    {/* <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', mt: 0 }}>
+                      <Typography variant='h6' sx={{ pb: 0, pl: '7.5%' }}>Bio</Typography>
+                    </Box> */}
+
+
+                    {/* Bio Textfield */}
+                    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
+                      <TextField
+                        id='bio'
+                        label='Bio'
+                        placeholder='Bio * (max 500 characters)'
+                        variant='outlined'
+                        name='bio'
+                        inputProps={{ maxLength: 500 }}
+                        // value={formData.bio}
+                        required
+                        multiline
+                        minRows={4}
+                        maxRows={6}
+                        // onChange={handleChange}
+                        sx={{ width: '85%' }}
+                        // fullWidth 
+                      />
+                    </Box>
 
                     {/* Submit Button */}
                     <Grid key={'grid-key-0'} container textAlign='center'>
                       <Grid key={'grid-key-1'} item xs={12}>
-                        <Button key={'button-0'} variant="contained" type="submit"  sx={{ width: .5, mt: 4 }}>Create</Button>
+                        <Button key={'button-0'} variant="contained" type="submit"  sx={{ width: .5, mt: 4, mb: 2 }}>Create</Button>
                       </Grid>
                     </Grid>
 

@@ -60,3 +60,8 @@ export const badBioFeedback = [
   'Weird',
   'I Like Everything'
 ]
+
+export const genders = [
+  'Male',
+  'Female'
+]

@@ -92,3 +92,12 @@ export const bioFeedback = (feedbackArray = [], feedbackType = feedbackTypes[0],
     </>
   )
 }  
+
+// Handles sliding on the height/width sliders
+export const handleAgeChange = (e, setAge, age) => {
+  // const { name, value } = e.target
+  console.log('handleAgeChange runs')
+  console.log('e.target is ->', e.target.value)
+  setAge( e.target.value )
+}
+
