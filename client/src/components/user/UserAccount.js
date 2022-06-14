@@ -6,6 +6,7 @@ import Spinner from '../utilities/Spinner.js'
 import { getPayload, getTokenFromLocalStorage } from '../../helpers/auth'
 import { getImageList } from '../../helpers/imageHandling'
 import { karmaBar } from '../../helpers/viewProfile.js'
+import { getProfilesList } from '../../helpers/analytics.js'
 
 //mui
 import Container from '@mui/material/Container'
@@ -23,6 +24,7 @@ import IconButton from '@mui/material/IconButton'
 
 import AddIcon from '@mui/icons-material/Add'
 import SettingsIcon from '@mui/icons-material/Settings'
+import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
 
 import profPicDefault from '../../images/prof-pic-default.png'
 
@@ -86,6 +88,16 @@ const UserAccount = () => {
   const [accountCurrentProfile, setAccountCurrentProfile] = useState({ })
   const [accountProfiles, setAccountProfiles] = useState([ ])
   const [accountOverallStats, setAccountOverallStats] = useState([ ])
+
+  // More Options Button
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const open = Boolean(anchorEl)
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
   
   // Get User Data
   useEffect(() => {
@@ -160,7 +172,7 @@ const UserAccount = () => {
     <>
       <Container maxWidth='lg' sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
         <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream', pl: 4, pr: 4, borderRadius: 4 }} >
-          <Box sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 8 }}>
+          <Box sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 6 }}>
             {/* Profile Picture */}
             <Avatar alt={accountUser.username} src={accountCurrentProfile.images ? accountCurrentProfile.images[0] : profPicDefault } sx={{ width: 220, height: 220, boxShadow: 4 }} />
 
@@ -184,9 +196,6 @@ const UserAccount = () => {
             {/* Karma Bar */}
             <Box sx={{ mt: 2, mb: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
               {karmaBar(accountUser.karma, 300)}
-              {/* <Typography variant='p' sx={{ overflow: 'wrap', width: 300, mt: 1 }}>
-                *The higher your karma, the more often your profile appears to other people
-              </Typography> */}
               <Typography variant='p' sx={{ overflow: 'wrap', width: 300, mt: 1 }}>
                 *Increase your karma by swiping through other profiles
               </Typography>
@@ -224,9 +233,10 @@ const UserAccount = () => {
                 : accountProfiles.length > 0 ?
                   <>
                     {/* {getImageList(myPlants, 1, 2, 3, 4)} */}
-                    <Typography variant='p'>
+                    {/* <Typography variant='p'>
                       Profiles appear here
-                    </Typography>
+                    </Typography> */}
+                    {getProfilesList(accountProfiles, accountCurrentProfile.id, open, handleMenuOpen, handleClose, anchorEl)}
                   </>
                   :
                   <>
@@ -252,9 +262,9 @@ const UserAccount = () => {
                 : accountOverallStats.length > 0 ?
                   <>
                     {/* {getImageList(myPlants, 1, 2, 3, 4)} */}
-                    <Typography variant='p'>
+                    {/* <Typography variant='p'>
                       Inulytics appear here
-                    </Typography>
+                    </Typography> */}
                   </>
                   :
                   <>

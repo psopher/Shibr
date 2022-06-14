@@ -71,3 +71,13 @@ export const interestedIn = [
   'Bitches',
   'Both'
 ]
+
+export const moreCurrentProfileOptions = [
+  'View',
+  'Inulytics'
+]
+
+export const moreProfileOptions = [
+  'View',
+  'Inulytics'
+]
