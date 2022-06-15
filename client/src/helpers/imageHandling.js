@@ -22,6 +22,8 @@ import noGoodImages from '../images/no-good-images.png'
 import noBadImages from '../images/no-bad-images.png'
 import profPicDefault from '../images/prof-pic-default.png'
 
+import Spinner from '../components/utilities/Spinner.js'
+
 import { styled } from '@mui/material/styles'
 
 
@@ -35,7 +37,7 @@ export const getFeedbackImageList = (profile, bestPhotos = true, handeImageSelec
         </Typography>
       </Box>
       <Container key={'1'} maxWidth='xs' sx={{ mb: 2, mt: 1 }}>
-        <Box sx={{ marginLeft: '6px' }}>
+        <Box sx={{ width: 400 }}>
           <Masonry key={'2'} columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
             {profile.images.map((image, index) => {
               return (
@@ -179,4 +181,55 @@ export const newProfileImageList = (imageArray, handeImageSelect, handleDeleteIm
   )
 }
 
+
+
+
+export const profileStatsImageList = (profile) => {
+
+  console.log('profilestatsimagelist images ->', Object.keys(profile))
+
+  return (
+    <>
+      <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'start', mt: 0, mb: 2 }}>
+        <Typography variant='h5' sx={{ fontWeight: 'bold' }}>
+          Profile Performance
+        </Typography>
+      </Box>
+      <Container key={'135'} maxWidth='xs' sx={{ mb: 2, mt: 1 }}>
+        <Box sx={{ width: 300 }}>
+          <Masonry key={'2'} columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
+            {Object.keys(profile).length !== 0 && profile.images.length > 0 && profile.images.map((image, index) => {
+              return (
+                <ImageListItem key={index} >
+                  <Box
+                    key={index}
+                    sx={{ 
+                      boxShadow: 4, 
+                      mt: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: '#ebebeb',
+                      borderRadius: 5,
+                      // p: 1,
+                      fontFamily: 'Lato',
+                    }}>
+                    <img
+                      src={image}
+                      alt={index}
+                      value={index}
+                      loading='lazy'
+                      className={`photo-${index}`}
+                    />
+                  </Box>
+                </ImageListItem>
+              )
+            })}
+
+          </Masonry>
+        </Box>
+      </Container>
+    </>
+  )
+}
 

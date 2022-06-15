@@ -11,6 +11,7 @@ import SingleProfileAnalytics from './components/analytics/SingleProfileAnalytic
 import NotFound from './components/common/NotFound'
 import UserAccount from './components/user/UserAccount'
 import NewProfile from './components/user/NewProfile'
+import SingleProfile from './components/user/SingleProfile'
 import Settings from './components/user/Settings'
 
 // Auth components
@@ -51,6 +52,7 @@ const App = () => {
             <Route path="/account/:userId" element={<UserAccount />} />
             <Route path="/account/:userId/new-profile" element={<NewProfile />} />
             <Route path="/account/:userId/settings" element={<Settings />} />
+            <Route path="/account/:userId/:profileId" element={<SingleProfile />} />
 
 
             {/* The following path matches any path specified, so it needs to come last */}

@@ -40,9 +40,148 @@ const getRightSwipesNumber = (swipesArray) => {
   const rightSwipesArray = swipesArray.filter(swipe => swipe.right_swipe)
   return rightSwipesArray.length
 } 
-const getSwipesPercent = (sampleSize = 0, swipesNumber = 0) => {
-  return (swipesNumber / sampleSize) * 100
+
+const getBioFeedbackNumber = (swipesArray) => {
+  const goodBioArray = swipesArray.filter(swipe => swipe.feedback[0].bio_overall === 'Good')
+  const sosoBioArray = swipesArray.filter(swipe => swipe.feedback[0].bio_overall === 'So-So')
+  const badBioArray = swipesArray.filter(swipe => swipe.feedback[0].bio_overall === 'Bad')
+
+  const bioObj = { 
+    'good': goodBioArray.length, 
+    'soso': sosoBioArray.length, 
+    'bad': badBioArray.length,
+  }
+  return bioObj
+}
+
+const getSwipesPercent = (sampleSize = 0, totalSwipes = 0) => {
+  return (sampleSize / totalSwipes) * 100
 } 
+
+
+
+export const mostFrequentPhotos = (swipes, isBest = true, profiles) => {
+  
+  // console.log('swipes ->', swipes)
+  // console.log('isBest ->', isBest)
+  // console.log('profiles ->', profiles)
+  
+  const photosArray = []
+
+  for (let i = 0; i < swipes.length; i++) {
+    const profileWithPhoto = profiles.filter(profile => profile.id === swipes[i].swiped_profile_id)
+    // console.log('profile with photo ->', profileWithPhoto[0])
+    // console.log('best image index ->', swipes[i].feedback[0].best_image_index)
+    // console.log('worst image index ->', swipes[i].feedback[0].worst_image_index)
+    const imageOnProfile = profileWithPhoto[0].images[isBest ? swipes[i].feedback[0].best_image_index : swipes[i].feedback[0].worst_image_index]
+    // console.log('image on profile ->', imageOnProfile)
+    photosArray.push(imageOnProfile)
+
+  }
+
+  console.log('photos array', photosArray)
+
+  const photosObject = {}
+  for (let i = 0; i < photosArray.length; i++) {
+    if (photosObject[photosArray[i]]){
+      photosObject[photosArray[i]] = photosObject[photosArray[i]] + 1
+    } else {
+      photosObject[photosArray[i]] = 1
+    }
+  }
+
+  // console.log('photos object ->', photosObject)
+  const keysSorted = Object.keys(photosObject).sort((a,b) => photosObject[b] - photosObject[a])
+  // console.log('keys sorted ->', keysSorted)
+
+  return keysSorted
+}
+
+export const mostFrequentComments = (swipes, isBest = true, photo, profiles) => {
+  if (photo && photo !== 'undefined') {
+
+    const photosObject = {}
+    for (let i = 0; i < swipes.length; i++){
+      const profileWithPhoto = profiles.filter(profile => profile.id === swipes[i].swiped_profile_id)
+      const imageOnProfile = profileWithPhoto[0].images[isBest ? swipes[i].feedback[0].best_image_index : swipes[i].feedback[0].worst_image_index]
+
+      const imageComments = isBest ? swipes[i].feedback[0].best_image_comments : swipes[i].feedback[0].worst_image_comments
+
+      if (photosObject[imageOnProfile]) {
+        photosObject[imageOnProfile] = [ ...photosObject[imageOnProfile], ...imageComments ]
+      } else {
+        photosObject[imageOnProfile] = [ ...imageComments ]
+      }
+    }
+    // console.log('photos object ->', photosObject)
+    // console.log('specific photo comments ->', photosObject[photo])
+
+    const commentsObject = {}
+    for (let i = 0; i < photosObject[photo].length; i++) {
+      if (commentsObject[photosObject[photo][i]]){
+        commentsObject[photosObject[photo][i]] = commentsObject[photosObject[photo][i]] + 1
+      } else {
+        commentsObject[photosObject[photo][i]] = 1
+      }
+    }
+    // console.log('comments object ->', commentsObject)
+
+    const keysSorted = Object.keys(commentsObject).sort((a,b) => commentsObject[b] - commentsObject[a])
+
+    // console.log('comment keys sorted ->', keysSorted)
+
+    return keysSorted
+
+
+  } else {
+
+    return ['No Comments', 'No Comments', 'No Comments']
+
+  }
+}
+
+export const commentFrequency = (swipes, isBest = true, photo, profiles, comment) => {
+  if (photo && photo !== 'undefined' && comment !== 'No Comments') {
+
+    const photosObject = {}
+    for (let i = 0; i < swipes.length; i++){
+      const profileWithPhoto = profiles.filter(profile => profile.id === swipes[i].swiped_profile_id)
+      const imageOnProfile = profileWithPhoto[0].images[isBest ? swipes[i].feedback[0].best_image_index : swipes[i].feedback[0].worst_image_index]
+
+      const imageComments = isBest ? swipes[i].feedback[0].best_image_comments : swipes[i].feedback[0].worst_image_comments
+
+      if (photosObject[imageOnProfile]) {
+        photosObject[imageOnProfile] = [ ...photosObject[imageOnProfile], ...imageComments ]
+      } else {
+        photosObject[imageOnProfile] = [ ...imageComments ]
+      }
+    }
+    // console.log('photos object ->', photosObject)
+    // console.log('specific photo comments ->', photosObject[photo])
+
+    const commentsObject = {}
+    for (let i = 0; i < photosObject[photo].length; i++) {
+      if (commentsObject[photosObject[photo][i]]){
+        commentsObject[photosObject[photo][i]] = commentsObject[photosObject[photo][i]] + 1
+      } else {
+        commentsObject[photosObject[photo][i]] = 1
+      }
+    }
+    // console.log('comments object ->', commentsObject)
+
+
+
+    return commentsObject[comment]
+
+
+  } else {
+
+    return 0
+  }
+
+}
+
+
 export const getSocialMediaMatches = (matchesArray) => {
   const socialMatchesArray = matchesArray.filter(match => match.exchange_social_media)
   return matchesArray.filter(match => match.exchange_social_media)
@@ -56,7 +195,7 @@ export const getProfilesList = (profilesArray, currentProfileId = 0, open = fals
       <Stack key={'20'} spacing={0}>
         {profilesArray.map((profile, index) => {
           return (
-            <Box key={'200'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box key={'200'} sx={{ width: 300, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
               {/* Profile Picture */}
               <Avatar key={profile.id} alt={'profile picture'} src={profile.images ? profile.images[0] : profPicDefault } sx={{ boxShadow: 4, height: 76, width: 76 }} />
 
@@ -114,7 +253,7 @@ export const getProfilesList = (profilesArray, currentProfileId = 0, open = fals
                   >
                     {profile.id === currentProfileId ? 
                       moreCurrentProfileOptions.map((option) => (
-                        <MenuItem key={option} onClick={handleClose}>
+                        <MenuItem key={option} className={`${profile.id}`} onClick={handleClose}>
                           {option}
                         </MenuItem>
                       ))
@@ -143,36 +282,37 @@ export const getProfilesList = (profilesArray, currentProfileId = 0, open = fals
 export const overallUserAnalyticsHorizontal = (allSwipes) => {
 
   return (
-    <Stack key={'1'} spacing={0}>
-      <Box key={'1'} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Box key={'1'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-          <Typography key={'1'} sx={{ textDecoration: 'underline' }}>
+    <Stack key={'1asd'} spacing={0}>
+      <Box key={'1ew'} sx={{ width: 300, display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+        <Box key={'1sdfg'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <Typography key={'1hss'} sx={{ textDecoration: 'underline' }}>
             Sample
           </Typography>
-          <Typography key={'2'}>
+          <Typography key={'2areg'}>
             {allSwipes.length > 0 ? allSwipes.length : 0}
           </Typography>
         </Box>
-        <Box key={'2'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <Box key={'2arg'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography key={'1'} sx={{ textDecoration: 'underline' }}>
             Right Swipes
           </Typography>
-          <Typography key={'2'}>
+          <Typography key={'2hrrj'}>
             {allSwipes.length > 0 ? getRightSwipesNumber(allSwipes) : 0}
           </Typography>
         </Box>
-        <Box key={'3'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-          <Typography key={'1'} sx={{ textDecoration: 'underline' }}>
+        <Box key={'3eryj'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <Typography key={'1tyjr'} sx={{ textDecoration: 'underline' }}>
             Percentage
           </Typography>
-          <Typography key={'2'}>
+          <Typography key={'2eyj'}>
             {allSwipes.length > 0 ? getSwipesPercent(getRightSwipesNumber(allSwipes), allSwipes.length) : 0}%
           </Typography>
         </Box>
       </Box>
 
+
       {/* Line at bottom of  */}
-      <Divider key={'2'} sx={{ mt: 2 }} />
+      <Divider key={'2etr'} sx={{ mt: 2 }} />
 
     </Stack>
   )
@@ -203,15 +343,15 @@ export const photosFeedback = (imagesWithCommentsArray, isBest = true ) => {
   return (
     <Stack>
       
-      <Box key = {'10'} spacing={0} sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'center' }}>
+      <Box key = {`aoasid${isBest}`} spacing={0} sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'center' }}>
 
         <Typography key={'9'} variant='p' sx={{ mt: 0 }}>{isBest ? 'Best Photos:' : 'Worst Photos:'}</Typography>
         
-        <Box key={'8'} sx={{ width: 300, mt: 2, mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box key={'8'} sx={{ width: 300, mt: 2, mb: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           
           {imagesWithCommentsArray.map((imageWithComments, index) => {
             return (
-              <Box key={'1'} sx={{ width: 75, height: 75, display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'center' }}>
+              <Box key={`asdf${isBest}${index}`} sx={{ width: 75, height: 75, display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'center' }}>
                 <img
                   src={imageWithComments.image !== 'undefined' ? imageWithComments.image : isBest ? noGoodImages : noBadImages}
                   alt={index}
@@ -221,7 +361,7 @@ export const photosFeedback = (imagesWithCommentsArray, isBest = true ) => {
                   key={`image-${index}`}
                 />
 
-                <Box key={'1'} sx={{ textOverflow: 'clip', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                <Box key={`aoid${isBest}`} sx={{ textOverflow: 'clip', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                   <Typography sx={{ textAlign: 'center', fontSize: '1.2vw', width: 75, overflow: 'hidden', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 1 }}>
                     {imageWithComments.image && imageWithComments.comments[0] && imageWithComments.comments[1] !== 'No Comments' ?
                       `${imageWithComments.comments[0]} x ${imageWithComments.frequency[0]}`
@@ -263,19 +403,18 @@ export const bioFeedback = (swipes) => {
   return (
     <Stack key={'1'} spacing={0}>
       
-      <Box key = {'10'} spacing={0} sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'center' }}>
-
+      <Box key = {'10'} spacing={0} sx={{ mt: 3, display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'center' }}>
         <Typography key={'9'} variant='p' sx={{ mt: 0 }}>
           Bio:
         </Typography>
       </Box>
-      <Box key={'1'} sx={{ mt: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box key={'1'} sx={{ width: 300, mt: 1, mb: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
         <Box key={'1'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography key={'1'} sx={{ textDecoration: 'underline' }}>
             Good
           </Typography>
           <Typography key={'2'}>
-            {swipes.length > 0 ? getSwipesPercent(getRightSwipesNumber(swipes), swipes.length) : 0}%
+            {swipes.length > 0 ? getSwipesPercent(getBioFeedbackNumber(swipes).good, swipes.length) : 0}%
           </Typography>
         </Box>
         <Box key={'2'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
@@ -283,7 +422,7 @@ export const bioFeedback = (swipes) => {
             So-So
           </Typography>
           <Typography key={'2'}>
-            {swipes.length > 0 ? getSwipesPercent(getRightSwipesNumber(swipes), swipes.length) : 0}%
+            {swipes.length > 0 ? getSwipesPercent(getBioFeedbackNumber(swipes).soso, swipes.length) : 0}%
           </Typography>
         </Box>
         <Box key={'3'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
@@ -291,7 +430,7 @@ export const bioFeedback = (swipes) => {
             Bad
           </Typography>
           <Typography key={'2'}>
-            {swipes.length > 0 ? getSwipesPercent(getRightSwipesNumber(swipes), swipes.length) : 0}%
+            {swipes.length > 0 ? getSwipesPercent(getBioFeedbackNumber(swipes).bad, swipes.length) : 0}%
           </Typography>
         </Box>
       </Box>

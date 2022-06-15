@@ -1,13 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Feedback = () => {
+const SingleProfile = () => {
   return (
     <>
-      <h1>Feedback!</h1>
+      <h1>Single Profile!</h1>
       <Link to="/">Back to home</Link>
     </>
   )
 }
 
-export default Feedback
+export default SingleProfile

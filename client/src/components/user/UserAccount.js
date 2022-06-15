@@ -6,7 +6,7 @@ import Spinner from '../utilities/Spinner.js'
 import { getPayload, getTokenFromLocalStorage } from '../../helpers/auth'
 import { getImageList } from '../../helpers/imageHandling'
 import { karmaBar } from '../../helpers/viewProfile.js'
-import { getProfilesList, overallUserAnalyticsHorizontal, socialMediaMatches, photosFeedback, bioFeedback } from '../../helpers/analytics.js'
+import { getProfilesList, overallUserAnalyticsHorizontal, socialMediaMatches, photosFeedback, bioFeedback, mostFrequentPhotos, mostFrequentComments, commentFrequency } from '../../helpers/analytics.js'
 
 //mui
 import Container from '@mui/material/Container'
@@ -70,7 +70,7 @@ const UserAccount = () => {
   const navigate = useNavigate()
 
   //Params
-  const { username } = useParams()
+  const { userId } = useParams()
 
   //Payload
   const payload = getPayload()
@@ -99,130 +99,18 @@ const UserAccount = () => {
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget)
   }
-  const handleClose = () => {
+  const handleClose = (e) => {
     setAnchorEl(null)
-  }
-  
-
-
-
-  const mostFrequentPhotos = (swipes, isBest = true, profiles) => {
+    // console.log('handle close event target classList ->', e.target.classList[3])
+    const profileId = parseInt(e.target.classList[3])
+    const optionPressed = e.target.innerText
+    console.log('profile Id index ->', profileId)
+    console.log('option pressed ->', optionPressed)
     
-    // console.log('swipes ->', swipes)
-    // console.log('isBest ->', isBest)
-    // console.log('profiles ->', profiles)
-    
-    const photosArray = []
-
-    for (let i = 0; i < swipes.length; i++) {
-      const profileWithPhoto = profiles.filter(profile => profile.id === swipes[i].swiped_profile_id)
-      // console.log('profile with photo ->', profileWithPhoto[0])
-      // console.log('best image index ->', swipes[i].feedback[0].best_image_index)
-      // console.log('worst image index ->', swipes[i].feedback[0].worst_image_index)
-      const imageOnProfile = profileWithPhoto[0].images[isBest ? swipes[i].feedback[0].best_image_index : swipes[i].feedback[0].worst_image_index]
-      // console.log('image on profile ->', imageOnProfile)
-      photosArray.push(imageOnProfile)
-
-    }
-
-    console.log('photos array', photosArray)
-
-    const photosObject = {}
-    for (let i = 0; i < photosArray.length; i++) {
-      if (photosObject[photosArray[i]]){
-        photosObject[photosArray[i]] = photosObject[photosArray[i]] + 1
-      } else {
-        photosObject[photosArray[i]] = 1
-      }
-    }
-
-    // console.log('photos object ->', photosObject)
-    const keysSorted = Object.keys(photosObject).sort((a,b) => photosObject[b] - photosObject[a])
-    // console.log('keys sorted ->', keysSorted)
-
-    return keysSorted
-  }
-
-  const mostFrequentComments = (swipes, isBest = true, photo, profiles) => {
-    if (photo && photo !== 'undefined') {
-
-      const photosObject = {}
-      for (let i = 0; i < swipes.length; i++){
-        const profileWithPhoto = profiles.filter(profile => profile.id === swipes[i].swiped_profile_id)
-        const imageOnProfile = profileWithPhoto[0].images[isBest ? swipes[i].feedback[0].best_image_index : swipes[i].feedback[0].worst_image_index]
-
-        const imageComments = isBest ? swipes[i].feedback[0].best_image_comments : swipes[i].feedback[0].worst_image_comments
-
-        if (photosObject[imageOnProfile]) {
-          photosObject[imageOnProfile] = [ ...photosObject[imageOnProfile], ...imageComments ]
-        } else {
-          photosObject[imageOnProfile] = [ ...imageComments ]
-        }
-      }
-      // console.log('photos object ->', photosObject)
-      // console.log('specific photo comments ->', photosObject[photo])
-
-      const commentsObject = {}
-      for (let i = 0; i < photosObject[photo].length; i++) {
-        if (commentsObject[photosObject[photo][i]]){
-          commentsObject[photosObject[photo][i]] = commentsObject[photosObject[photo][i]] + 1
-        } else {
-          commentsObject[photosObject[photo][i]] = 1
-        }
-      }
-      // console.log('comments object ->', commentsObject)
-
-      const keysSorted = Object.keys(commentsObject).sort((a,b) => commentsObject[b] - commentsObject[a])
-
-      // console.log('comment keys sorted ->', keysSorted)
-
-      return keysSorted
-
-
+    if (optionPressed === 'View') {
+      navigate(`/account/${userId}/${profileId}`)
     } else {
-
-      return ['No Comments', 'No Comments', 'No Comments']
-
-    }
-  }
-
-  const commentFrequency = (swipes, isBest = true, photo, profiles, comment) => {
-    if (photo && photo !== 'undefined' && comment !== 'No Comments') {
-
-      const photosObject = {}
-      for (let i = 0; i < swipes.length; i++){
-        const profileWithPhoto = profiles.filter(profile => profile.id === swipes[i].swiped_profile_id)
-        const imageOnProfile = profileWithPhoto[0].images[isBest ? swipes[i].feedback[0].best_image_index : swipes[i].feedback[0].worst_image_index]
-
-        const imageComments = isBest ? swipes[i].feedback[0].best_image_comments : swipes[i].feedback[0].worst_image_comments
-
-        if (photosObject[imageOnProfile]) {
-          photosObject[imageOnProfile] = [ ...photosObject[imageOnProfile], ...imageComments ]
-        } else {
-          photosObject[imageOnProfile] = [ ...imageComments ]
-        }
-      }
-      // console.log('photos object ->', photosObject)
-      // console.log('specific photo comments ->', photosObject[photo])
-
-      const commentsObject = {}
-      for (let i = 0; i < photosObject[photo].length; i++) {
-        if (commentsObject[photosObject[photo][i]]){
-          commentsObject[photosObject[photo][i]] = commentsObject[photosObject[photo][i]] + 1
-        } else {
-          commentsObject[photosObject[photo][i]] = 1
-        }
-      }
-      // console.log('comments object ->', commentsObject)
-
-
-
-      return commentsObject[comment]
-
-
-    } else {
-
-      return 0
+      navigate(`/analytics/profile/${profileId}`)
     }
 
   }
@@ -287,7 +175,7 @@ const UserAccount = () => {
 
           const goodCommentsFrequency = []
           for (let i = 0; i < goodComments.length; i++) {
-            const frequencyOfComment = commentFrequency(accumulatedProfileStats, 1, bestPhotos[0], retrievedUser.profiles, goodComments[i])
+            const frequencyOfComment = commentFrequency(accumulatedProfileStats, 1, bestPhotos[p], retrievedUser.profiles, goodComments[i])
             goodCommentsFrequency.push(frequencyOfComment)
 
           }
@@ -316,7 +204,7 @@ const UserAccount = () => {
 
           const badCommentsFrequency = []
           for (let i = 0; i < badComments.length; i++) {
-            const frequencyOfComment = commentFrequency(accumulatedProfileStats, 0, worstPhotos[0], retrievedUser.profiles, badComments[i])
+            const frequencyOfComment = commentFrequency(accumulatedProfileStats, 0, worstPhotos[p], retrievedUser.profiles, badComments[i])
             badCommentsFrequency.push(frequencyOfComment)
 
           }

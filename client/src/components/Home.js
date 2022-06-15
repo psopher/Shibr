@@ -209,7 +209,7 @@ const Home = () => {
                       {/* Submit Button */}
                       <Grid container textAlign='center'>
                         <Grid item xs={12}>
-                          <Button variant="contained" type="submit"  sx={{ width: .5, mt: 4 }}>Submit</Button>
+                          <Button variant="contained" type="submit"  sx={{ width: .5, mt: 4, mb: 2 }}>Submit</Button>
                         </Grid>
                       </Grid>
 
