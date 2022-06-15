@@ -169,7 +169,7 @@ const NewProfile = () => {
             : 
             <>
               <Container key={'container-key-0'} width='sm' sx={{ display: 'flex', justifyContent: 'center', flexGrow: 1 }}>
-                <Paper key={'paper-key-0'} elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream', pl: 4, pr: 4 }} >
+                <Paper key={'paper-key-0'} elevation={6} sx={{ borderRadius: 5,m: 5, py: 3, backgroundColor: 'cream', pl: 4, pr: 4 }} >
                   <Typography key={'type-key-0'} variant='h3' sx={{ pb: 2, textAlign: 'center' }}>My Profile</Typography>
                   <Box
                     key={'box-key-0'}
@@ -179,6 +179,7 @@ const NewProfile = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'flex-start',
+                      borderRadius: 5,
                     }}
                     onSubmit={handleSubmit}
                   >

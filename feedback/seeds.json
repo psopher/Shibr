@@ -7,7 +7,7 @@
     "best_image_comments": "[\"fluffy\", \"smile\"]",
     "worst_image_index": 5,
     "worst_image_comments": "[\"too squinty\", \"uncool owner\"]",
-    "bio_overall": "So-so",
+    "bio_overall": "So-So",
     "bio_good_comments": "[\"school\", \"location\"]",
     "bio_bad_comments": "[\"bland\"]",
     "swipe_id": 1
@@ -21,7 +21,7 @@
     "best_image_comments": "[\"fluffy\", \"smile\"]",
     "worst_image_index": 5,
     "worst_image_comments": "[\"too squinty\", \"uncool owner\"]",
-    "bio_overall": "So-so",
+    "bio_overall": "So-So",
     "bio_good_comments": "[\"school\", \"location\"]",
     "bio_bad_comments": "[\"bland\"]",
     "swipe_id": 2
@@ -35,7 +35,7 @@
     "best_image_comments": "[\"fluffy\", \"smile\"]",
     "worst_image_index": 5,
     "worst_image_comments": "[\"too squinty\", \"uncool owner\"]",
-    "bio_overall": "So-so",
+    "bio_overall": "So-So",
     "bio_good_comments": "[\"school\", \"location\"]",
     "bio_bad_comments": "[\"bland\"]",
     "swipe_id": 3
@@ -49,7 +49,7 @@
     "best_image_comments": "[\"fluffy\", \"smile\"]",
     "worst_image_index": 5,
     "worst_image_comments": "[\"too squinty\", \"uncool owner\"]",
-    "bio_overall": "So-so",
+    "bio_overall": "So-So",
     "bio_good_comments": "[\"school\", \"location\"]",
     "bio_bad_comments": "[\"bland\"]",
     "swipe_id": 4
@@ -63,7 +63,7 @@
     "best_image_comments": "[\"fluffy\", \"smile\"]",
     "worst_image_index": 5,
     "worst_image_comments": "[\"too squinty\", \"uncool owner\"]",
-    "bio_overall": "So-so",
+    "bio_overall": "So-So",
     "bio_good_comments": "[\"school\", \"location\"]",
     "bio_bad_comments": "[\"bland\"]",
     "swipe_id": 5
@@ -77,7 +77,7 @@
     "best_image_comments": "[\"fluffy\", \"smile\"]",
     "worst_image_index": 5,
     "worst_image_comments": "[\"too squinty\", \"uncool owner\"]",
-    "bio_overall": "So-so",
+    "bio_overall": "So-So",
     "bio_good_comments": "[\"school\", \"location\"]",
     "bio_bad_comments": "[\"bland\"]",
     "swipe_id": 6
@@ -91,7 +91,7 @@
     "best_image_comments": "[\"fluffy\", \"smile\"]",
     "worst_image_index": 5,
     "worst_image_comments": "[\"too squinty\", \"uncool owner\"]",
-    "bio_overall": "So-so",
+    "bio_overall": "So-So",
     "bio_good_comments": "[\"school\", \"location\"]",
     "bio_bad_comments": "[\"bland\"]",
     "swipe_id": 7
@@ -101,11 +101,11 @@
   "model": "feedback.feedback",
   "pk": 8,
   "fields": {
-    "best_image_index": 4,
+    "best_image_index": 3,
     "best_image_comments": "[\"fluffy\", \"smile\"]",
-    "worst_image_index": 5,
+    "worst_image_index": 4,
     "worst_image_comments": "[\"too squinty\", \"uncool owner\"]",
-    "bio_overall": "So-so",
+    "bio_overall": "So-So",
     "bio_good_comments": "[\"school\", \"location\"]",
     "bio_bad_comments": "[\"bland\"]",
     "swipe_id": 8
@@ -115,11 +115,11 @@
   "model": "feedback.feedback",
   "pk": 9,
   "fields": {
-    "best_image_index": 4,
+    "best_image_index": 2,
     "best_image_comments": "[\"fluffy\", \"smile\"]",
-    "worst_image_index": 5,
+    "worst_image_index": 3,
     "worst_image_comments": "[\"too squinty\", \"uncool owner\"]",
-    "bio_overall": "So-so",
+    "bio_overall": "So-So",
     "bio_good_comments": "[\"school\", \"location\"]",
     "bio_bad_comments": "[\"bland\"]",
     "swipe_id": 9

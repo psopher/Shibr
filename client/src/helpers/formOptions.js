@@ -33,7 +33,7 @@ export const feedbackTypes = [
 
 export const overallBioFeedback = [
   'Good',
-  'So-so',
+  'So-So',
   'Bad'
 ]
 

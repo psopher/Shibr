@@ -44,7 +44,8 @@ const App = () => {
             <Route path="/analytics/:userId" element={<OverallAnalytics />} />
             <Route path="/analytics/:userId/matches" element={<SocialMediaMatches />} />
             <Route path="/analytics/profile/:profileId" element={<SingleProfileAnalytics />} />
-            <Route path="/analytics/profile/:profileId/matches" element={<SocialMediaMatches />} />
+            <Route path="/analytics/profile/:userId/matches" element={<SocialMediaMatches />} />
+            <Route path="/analytics/profile/:userId/:profileId/matches" element={<SocialMediaMatches />} />
 
             {/* User routes */}
             <Route path="/account/:userId" element={<UserAccount />} />
