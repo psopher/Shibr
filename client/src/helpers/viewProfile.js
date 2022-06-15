@@ -17,7 +17,7 @@ import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
 
-export const getProfile = (profile, karma = 0, fromHome = false, handleLeftSwipe, handleRightSwipe) => {
+export const getProfile = (profile, fromHome = false, karma = 0, handleLeftSwipe, handleRightSwipe) => {
   return (
     <>
       <Container key={'1'} maxWidth='xs' sx={{ my: 4 }}>
@@ -42,27 +42,28 @@ export const getProfile = (profile, karma = 0, fromHome = false, handleLeftSwipe
           </Masonry>
         </Box>
       </Container>
+      
+      {fromHome === true &&
+        <>
+          {/* Progress Bar */}
+          {karmaBar(karma, 300)}
 
-      {/* Progress Bar */}
-      {/* <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <LinearProgress variant="determinate" value={karma * 20} sx={{ width: 200, height: 10, border: 1, boxShadow: 4 }} />
-      </Box> */}
-      {karmaBar(karma, 300)}
 
-
-      {/* Buttons */}
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', mt: 4, mb: 4 }}>
-        <Box onClick={handleLeftSwipe} sx={{ ml: 6, mr: 6, boxShadow: 4, border: 2, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
-          <IconButton aria-label="swipe-left" size="large" >
-            <CloseOutlinedIcon fontSize="large" sx={{ color: 'secondary.main' }} />
-          </IconButton>
-        </Box>
-        <Box onClick={handleRightSwipe} sx={{ ml: 6, mr: 6, boxShadow: 4, border: 2, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
-          <IconButton aria-label="swipe-right" size="large" >
-            <FavoriteOutlinedIcon fontSize="large" sx={{ color: 'primary.main' }} />
-          </IconButton>
-        </Box>
-      </Box>
+          {/* Buttons */}
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', mt: 4, mb: 4 }}>
+            <Box onClick={handleLeftSwipe} sx={{ ml: 6, mr: 6, boxShadow: 4, border: 2, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
+              <IconButton aria-label="swipe-left" size="large" >
+                <CloseOutlinedIcon fontSize="large" sx={{ color: 'secondary.main' }} />
+              </IconButton>
+            </Box>
+            <Box onClick={handleRightSwipe} sx={{ ml: 6, mr: 6, boxShadow: 4, border: 2, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
+              <IconButton aria-label="swipe-right" size="large" >
+                <FavoriteOutlinedIcon fontSize="large" sx={{ color: 'primary.main' }} />
+              </IconButton>
+            </Box>
+          </Box>
+        </>
+      }
     </>
   )
 }

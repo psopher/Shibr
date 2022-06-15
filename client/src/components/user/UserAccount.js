@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import Spinner from '../utilities/Spinner.js'
 
-import { getPayload, getTokenFromLocalStorage } from '../../helpers/auth'
+import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 import { getImageList } from '../../helpers/imageHandling'
 import { karmaBar } from '../../helpers/viewProfile.js'
 import { getProfilesList, overallUserAnalyticsHorizontal, socialMediaMatches, photosFeedback, bioFeedback, mostFrequentPhotos, mostFrequentComments, commentFrequency } from '../../helpers/analytics.js'
@@ -121,7 +121,7 @@ const UserAccount = () => {
       try {
 
         // User must have an account to view profiles
-        if (!payload) {
+        if (!userIsAuthenticated()) {
           navigate('/login')
         }
 

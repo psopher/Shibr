@@ -26,6 +26,7 @@ import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import AddIcon from '@mui/icons-material/Add'
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
+import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined'
 
 import noGoodImages from '../images/no-good-images.png'
 import noBadImages from '../images/no-bad-images.png'
@@ -439,5 +440,109 @@ export const bioFeedback = (swipes) => {
       <Divider key={'2'} sx={{ mt: 2 }} />
 
     </Stack>
+  )
+}
+
+
+export const getMatchesList = (matchedUsersArray, handleViewMatch) => {
+
+  return (
+    <>
+      <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'start', mt: 0, mb: 2 }}>
+        <Typography variant='h5' sx={{ fontWeight: 'bold' }}>
+          Social Media Matches
+        </Typography>
+      </Box>
+      <Stack key={'20'} spacing={0}>
+        {matchedUsersArray.map((user, index) => {
+          return (
+            <Box key={'200'} sx={{ width: 300, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              {/* Profile Picture */}
+              <Avatar key={user.id} alt={'profile picture'} src={user.profile_image ? user.profile_image : profPicDefault } sx={{ boxShadow: 4, height: 76, width: 76 }} />
+
+              {/* Social Media */}
+              <Box key={index} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' }}>
+                <Typography  key={'20'}>
+                  Instagram: {user.ig ? user.ig : 'NA'}
+                </Typography>
+                <Typography  key={'21'}>
+                  SnapChat: {user.sc ? user.sc : 'NA'}
+                </Typography>
+                <Typography  key={'22'}>
+                  Twitter: {user.tw ? user.tw : 'NA'}
+                </Typography>
+              </Box>
+
+              {/* View Profile Button */}
+              <Box onClick={handleViewMatch} className={`${matchedUsersArray[index].current_profile} ${matchedUsersArray[index].id}`} sx={{ ml: 0, mr: 0, boxShadow: 4, border: 0, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
+                <IconButton aria-label={`${matchedUsersArray[index].current_profile}`} size="small" >
+                  <ChevronRightOutlinedIcon fontSize="small" sx={{ color: 'primary.main' }} />
+                </IconButton>
+              </Box>
+
+              {/* <Box key={profile.username} sx={{ height: 76, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-end' }}>
+                {profile.id === currentProfileId ? 
+                  <Typography key={'23'} sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                    Current
+                  </Typography>
+                  :
+                  <Typography key={'24'} sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                    Finished
+                  </Typography>
+                }
+
+                <Box key={index}>
+                  <IconButton
+                    key={'26'}
+                    aria-label="more"
+                    id="long-button"
+                    aria-controls={open ? 'long-menu' : undefined}
+                    aria-expanded={open ? 'true' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleMenuOpen}
+                  >
+                    <MoreHorizOutlinedIcon key={'200'} />
+                  </IconButton>
+                  <Menu
+                    key={'27'}
+                    id="long-menu"
+                    MenuListProps={{
+                      'aria-labelledby': 'long-button',
+                    }}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    PaperProps={{
+                      style: {
+                        // maxHeight: ITEM_HEIGHT * 4.5,
+                        width: '10%',
+                      },
+                    }}
+                  >
+                    {profile.id === currentProfileId ? 
+                      moreCurrentProfileOptions.map((option) => (
+                        <MenuItem key={option} className={`${profile.id}`} onClick={handleClose}>
+                          {option}
+                        </MenuItem>
+                      ))
+                      : 
+                      moreProfileOptions.map((option) => (
+                        <MenuItem key={option} onClick={handleClose}>
+                          {option}
+                        </MenuItem>
+                      ))
+                    }
+                  </Menu>
+                </Box> */}
+              {/* </Box> */}
+            </Box>
+          )
+        })}
+
+        {/* Line at bottom of  */}
+        <Divider key={'28'} sx={{ mt: 2 }} />
+
+      </Stack>
+    </>
   )
 }

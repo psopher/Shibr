@@ -224,7 +224,7 @@ const Home = () => {
                   {/* <Container > */}
                   <Paper sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'cream', boxShadow: 4, borderRadius: 4 }} >
                     {/* Image List */}
-                    {getProfile(profiles[0], karma, true, handleLeftSwipe, handleRightSwipe)}
+                    {getProfile(profiles[0], true, karma, handleLeftSwipe, handleRightSwipe)}
                   </Paper>
                 </Container>
               </>
