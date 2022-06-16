@@ -1,11 +1,15 @@
 
 import React, { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 
 import Spinner from '../utilities/Spinner'
 import RequestError from '../common/RequestError'
 
-import { getUserFromLocalStorage } from '../../helpers/storage.js'
+import { getPayload, getTokenFromLocalStorage } from '../../helpers/auth'
+import { getUserFromLocalStorage, getSettingsFromLocalStorage, setSettingsToLocalStorage } from '../../helpers/storage.js'
+
+import { handleChange } from '../../helpers/formMethods'
 
 import { newProfileImageList } from '../../helpers/imageHandling'
 
@@ -42,23 +46,112 @@ const Settings = () => {
     display: 'none',
   })
 
-  const user = getUserFromLocalStorage()
-  console.log('user ->', user)
+  // UseNavigate
+  const navigate = useNavigate()
+  const { userId } = useParams()
+  const payload = getPayload()
+  // console.log('payload.sub is ->', payload.sub)
 
-  const [ ageRange, setAgeRange ] = useState([0, 20])
-  const [ gender, setGender ] = useState('')
-  const [showMe, setShowMe] = useState(true)
-  const [giveSocial, setGiveSocial] = useState(false)
+  const user = getUserFromLocalStorage()
+  // console.log('user ->', user)
+  const settings = getSettingsFromLocalStorage()
+  // console.log('settings ->', settings)
+
+  const form = {
+    interested_in: '',
+    min_age: 0,
+    max_age: 20,
+    show_me: true,
+    give_social: false,
+    ig: '',
+    sc: '',
+    tw: '',
+  }
+
+  if (settings) {
+    if (settings.interested_in.length > 0) {
+      form.interested_in = settings.interested_in
+    }
+    if (settings.min_age.length > 0 && settings.min_age > -1) {
+      form.min_age = settings.min_age
+    }
+    if (settings.max_age.length > 0 && settings.max_age < 21) {
+      form.max_age = settings.max_age
+    }
+    if (settings.show_me.length > 0) {
+      form.show_me = settings.show_me
+    }
+    if (settings.give_social.length > 0) {
+      form.give_social = settings.give_social
+    }
+    if (settings.ig.length > 0) {
+      form.ig = settings.ig
+    }
+    if (settings.sc.length > 0) {
+      form.sc = settings.sc
+    }
+    if (settings.tw.length > 0) {
+      form.tw = settings.tw
+    }
+  } 
+
+  // Form Data
+  const [ formData, setFormData ] = useState(form)
 
   //loading and error state
   const [loading, setLoading] = useState(false)
   // setLoading(false)
   const [errors, setErrors] = useState(false)
+  const [postErrors, setPostErrors] = useState(false)
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     console.log('HANDLE SUBMIT RUNS')
+    // console.log('form data is ->', formData)
+    setLoading(true)
+    setErrors(false)
+    setPostErrors(false)
+
+    // POST Settings to User
+        
+    const newForm = {
+      ...formData,
+      'username': payload.username,
+      'email': payload.email,
+      'password': payload.pass,
+      'password_confirmation': payload.pass,
+    }
+
+    try {
+      const putResponse = await axios.put(`/api/auth/users/${payload.sub}/`, newForm, {
+        headers: {
+          Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+        },
+      })
+      
+      console.log('PUT response ->', putResponse)
+
+    } catch (error) {
+
+      setLoading(false)
+      console.log(error)
+      setPostErrors(true)
+    }
+
+
+    // update local storage
+    window.localStorage.removeItem('settings')
+    setSettingsToLocalStorage(formData)
+
+
+    // Navigate to: UserAccount
+    setLoading(false)
+    navigate(`/account/${payload.sub}`)
+
   }
+
 
 
 
@@ -100,11 +193,12 @@ const Settings = () => {
                         <Select
                           labelId="interested-in-label"
                           id="interested-in"
-                          name='interested-in'
-                          value={interestedIn}
+                          name='interested_in'
+                          value={formData.interested_in}
                           label='Interested In'
                           required
-                          onChange={e => setGender(e.target.value) }
+                          onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
+                          // onChange={e => setGender(e.target.value) }
                         >
                           {interestedIn.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                         </Select>
@@ -114,12 +208,12 @@ const Settings = () => {
 
                     {/* Age Range */}
                     <Typography id="height-slider" gutterBottom sx={{ pl: '3%', mt: 3 }}>
-                      Age: {ageRange[0]} - {ageRange[1]}
+                      Age: {formData.min_age} - {formData.max_age}
                     </Typography>
                     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', mt: 1, mb: 0 }}>
                       <Slider
-                        value={ageRange}
-                        onChange={(e) => handleAgeRangeChange(e, setAgeRange, ageRange)}
+                        value={[formData.min_age, formData.max_age]}
+                        onChange={(e) => handleAgeRangeChange(e, setPostErrors, setFormData, formData)}
                         valueLabelDisplay="auto"
                         name='age-range'
                         size="small"
@@ -137,7 +231,12 @@ const Settings = () => {
                       <Typography variant='p' sx={{ ml: 1, mr: 3 }}>Show me on Shibr</Typography>
                       <FormControlLabel 
                         control={
-                          <Checkbox value={showMe} onChange={e => setShowMe(!showMe)} sx={{ pl: 0 }} />
+                          <Checkbox 
+                            value={formData.show_me} 
+                            name='show_me'
+                            checked={formData.show_me}
+                            onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
+                            sx={{ pl: 0 }} />
                         } 
                         // label="Show me on Shibr"
                         // labelPlacement="start"
@@ -150,7 +249,12 @@ const Settings = () => {
                       <Typography variant='p' sx={{ ml: 1, mr: 3 }}>Give Social Media to Matches</Typography>
                       <FormControlLabel 
                         control={
-                          <Checkbox value={giveSocial} onChange={e => setShowMe(!giveSocial)} sx={{ pl: 0 }} />
+                          <Checkbox 
+                            value={formData.give_social} 
+                            name='give_social'
+                            checked={formData.give_social}
+                            onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
+                            sx={{ pl: 0 }} />
                         } 
                         // label="Show me on Shibr"
                         // labelPlacement="start"
@@ -169,6 +273,9 @@ const Settings = () => {
                           maxLength: 100,
                           startAdornment: <InputAdornment position="start">@</InputAdornment>,
                         }}
+                        name='ig'
+                        value={formData.ig}
+                        onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                       />
                     </Box>
 
@@ -182,6 +289,9 @@ const Settings = () => {
                           maxLength: 100,
                           startAdornment: <InputAdornment position="start">@</InputAdornment>,
                         }}
+                        name='sc'
+                        value={formData.sc}
+                        onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                       />
                     </Box>
 
@@ -195,6 +305,9 @@ const Settings = () => {
                           maxLength: 100,
                           startAdornment: <InputAdornment position="start">@</InputAdornment>,
                         }}
+                        name='tw'
+                        value={formData.tw}
+                        onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                       />
                     </Box>
 
@@ -207,6 +320,18 @@ const Settings = () => {
 
 
                   </Box>
+
+                  {/* Error message if the post request fails */}
+                  {postErrors && 
+                    <Grid key={'grid-key-564'} container textAlign='center'>
+                      <Grid key={'grid-key-657'} item xs={12}>
+                        <Typography sx={{ width: '100%', color: 'red' }}>Error. Failed to upload profile.</Typography>
+                      </Grid>
+                      <Grid key={'grid-key-65237'} item xs={12}>
+                        <Typography sx={{ width: '100%', color: 'red' }}>At least one image is required.</Typography>
+                      </Grid>
+                    </Grid>
+                  }
                 </Paper>
               </Container >
             </>

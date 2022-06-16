@@ -112,7 +112,7 @@ class UserDetailView(APIView):
   def put(self, request, pk):
     user_to_update = self.get_user(pk=pk)
 
-    deserialized_user = UserSerializer(instance=user_to_update, data=request.data)
+    deserialized_user = UserSerializer(instance=user_to_update, data=request.data, partial=True)
     
     try:
       deserialized_user.is_valid()

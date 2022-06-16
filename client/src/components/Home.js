@@ -27,7 +27,7 @@ import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
 
-import { getUserFromLocalStorage } from '../helpers/storage'
+import { getCurrentProfFromLocalStorage, getUserFromLocalStorage } from '../helpers/storage'
 import { getPayload, userIsAuthenticated } from '../helpers/auth.js'
 
 
@@ -35,8 +35,9 @@ const Home = () => {
 
   // Navigate
   const navigate = useNavigate()
+  
   const payload = getPayload()
-  console.log('payload sub ->', payload.sub)
+  // console.log('payload sub ->', payload.sub)
 
 
   //loading and error state
@@ -54,7 +55,15 @@ const Home = () => {
   // console.log('start karma ->', startKarma)
   const [karma, setKarma] = useState(user ? user.karma : 0)
 
+  const cp = getCurrentProfFromLocalStorage()
+
   useEffect(() => {
+
+    // User must have an account to view profiles
+    if (!userIsAuthenticated()) {
+      navigate('/login')
+    }
+
     const getData = async () => {
       try {
         const { data } = await axios.get('/api/profiles/')
@@ -143,7 +152,7 @@ const Home = () => {
     if (!userIsAuthenticated()) {
       navigate('/login')
     }
-    if (!user) {
+    if (!cp) {
       navigate(`/account/${payload.sub}/new-profile`)
     }
 

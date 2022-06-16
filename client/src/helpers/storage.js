@@ -20,6 +20,16 @@ export const getCurrentProfFromLocalStorage = () => {
   return JSON.parse(window.localStorage.getItem('currentProf'))
 }
 
+// Setting current profile to local storage
+export const setSettingsToLocalStorage = (settings) => {
+  window.localStorage.setItem('settings', JSON.stringify(settings))
+}
+
+// Retrieving current profile form local storage
+export const getSettingsFromLocalStorage = () => {
+  return JSON.parse(window.localStorage.getItem('settings'))
+}
+
 // Setting user to local storage
 export const setUserToLocalStorage = (user) => {
   window.localStorage.setItem('user', user)

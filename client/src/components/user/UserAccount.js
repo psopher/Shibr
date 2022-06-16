@@ -101,7 +101,8 @@ const UserAccount = () => {
   }
   const handleClose = (e) => {
     setAnchorEl(null)
-    // console.log('handle close event target classList ->', e.target.classList)
+    console.log('handle close event target ->', e.target)
+    console.log('handle close event target id ->', e.target.classList)
     const profileId = parseInt(e.target.classList[3])
     const optionPressed = e.target.innerText
     console.log('profile Id index ->', profileId)

@@ -191,6 +191,8 @@ export const getSocialMediaMatches = (matchesArray) => {
 
 export const getProfilesList = (profilesArray, currentProfileId = 0, open = false, handleMenuOpen, handleClose, anchorEl) => {
 
+
+
   return (
     <>
       <Stack key={'20'} spacing={0}>
@@ -256,13 +258,13 @@ export const getProfilesList = (profilesArray, currentProfileId = 0, open = fals
                     >
                       {profile.id === currentProfileId ? 
                         moreCurrentProfileOptions.map((option) => (
-                          <MenuItem key={option} className={`${profile.id}`} onClick={handleClose}>
+                          <MenuItem key={option} className={`${currentProfileId}`} onClick={handleClose}>
                             {option}
                           </MenuItem>
                         ))
                         : 
                         moreProfileOptions.map((option) => (
-                          <MenuItem key={option} className={`${profile.id}`} onClick={handleClose}>
+                          <MenuItem key={option} className={`${currentProfileId}`} onClick={handleClose}>
                             {option}
                           </MenuItem>
                         ))
