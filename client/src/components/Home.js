@@ -195,7 +195,9 @@ const Home = () => {
                       </Box>
 
                       {/* Profile Bio */}
-                      {profileBio(profiles[0], 1)}
+                      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center', mb: 1 }}>
+                        {profileBio(profiles[0], 1, 400)}
+                      </Box>
 
                       {/* Overall Bio Feedback */}
                       {bioFeedback(overallBioFeedback, feedbackTypes[0], handleBioFeedbackSelect)}

@@ -68,9 +68,9 @@ export const getProfile = (profile, fromHome = false, karma = 0, handleLeftSwipe
   )
 }
 
-export const profileBio = (profile, fromFeedback = false) => {
+export const profileBio = (profile, fromFeedback = false, width = 300) => {
   return (
-    <Box key={'0934t'} sx={{ width: 300, display: 'flex', flexDirection: 'column', mt: 2, mb: 0 }}>
+    <Box key={'0934t'} sx={{ width: width, display: 'flex', flexDirection: 'column', mt: 2, mb: 0 }}>
       <Typography variant='h6' fontWeight={'bold'}>
         {`${profile.name}, ${profile.age}`}
       </Typography>
