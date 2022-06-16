@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 
 import Spinner from './utilities/Spinner.js'
@@ -27,9 +28,16 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
 
 import { getUserFromLocalStorage } from '../helpers/storage'
+import { getPayload, userIsAuthenticated } from '../helpers/auth.js'
 
 
 const Home = () => {
+
+  // Navigate
+  const navigate = useNavigate()
+  const payload = getPayload()
+  console.log('payload sub ->', payload.sub)
+
 
   //loading and error state
   const [loading, setLoading] = useState(true)
@@ -122,6 +130,9 @@ const Home = () => {
   const handleLeftSwipe = (e) => {
     console.log('HANDLE LEFT SWIPE RUNS')
     window.scrollTo(0, 0)
+    if (!userIsAuthenticated()) {
+      navigate('/login')
+    }
 
     setSwiped(true)
   }
@@ -129,6 +140,12 @@ const Home = () => {
   const handleRightSwipe = (e) => {
     console.log('HANDLE RIGHT SWIPE RUNS')
     window.scrollTo(0, 0)
+    if (!userIsAuthenticated()) {
+      navigate('/login')
+    }
+    if (!user) {
+      navigate(`/account/${payload.sub}/new-profile`)
+    }
 
     setIsRightSwipe(true)
     setSwiped(true)

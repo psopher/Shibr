@@ -93,12 +93,23 @@ export const bioFeedback = (feedbackArray = [], feedbackType = feedbackTypes[0],
   )
 }  
 
+
+
+// Handles basic form input changes
+export const handleChange = (e, setPostErrors, setFormData, formData) => {
+  const { name, value } = e.target
+  setPostErrors(false)
+  setFormData({ ...formData, [name]: value })
+}
+
 // Handles sliding on the height/width sliders
-export const handleAgeChange = (e, setAge, age) => {
-  // const { name, value } = e.target
+export const handleAgeChange = (e, setPostErrors, setFormData, formData) => {
+  const { name, value } = e.target
   console.log('handleAgeChange runs')
-  console.log('e.target is ->', e.target.value)
-  setAge( e.target.value )
+  console.log('e.target value is ->', e.target.value)
+  console.log('e.target name is ->', e.target.name)
+  setPostErrors(false)
+  setFormData({ ...formData, [name]: value })
 }
 
 // Handles sliding on the height/width sliders

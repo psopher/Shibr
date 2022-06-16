@@ -74,7 +74,7 @@ const UserAccount = () => {
 
   //Payload
   const payload = getPayload()
-  // console.log('payload sub ->', payload.sub)
+  console.log('payload sub ->', payload.sub)
 
   //Keeps track of which tab we are in, default is My Profiles at index 0
   const [value, setValue] = useState(0)
@@ -101,7 +101,7 @@ const UserAccount = () => {
   }
   const handleClose = (e) => {
     setAnchorEl(null)
-    // console.log('handle close event target classList ->', e.target.classList[3])
+    // console.log('handle close event target classList ->', e.target.classList)
     const profileId = parseInt(e.target.classList[3])
     const optionPressed = e.target.innerText
     console.log('profile Id index ->', profileId)
@@ -138,8 +138,9 @@ const UserAccount = () => {
         // Set User and Profile States
         setAccountUser({ ...retrievedUser })
         
-        // console.log('retrievedUser profiles ->', retrievedUser.profiles)
-        setAccountProfiles([ ...retrievedUser.profiles ])
+        console.log('retrievedUser profiles ->', retrievedUser.profiles)
+
+        setAccountProfiles([ ...retrievedUser.profiles ].reverse())
         
 
         const cp = retrievedUser.profiles.filter(profile => profile.id === retrievedUser.current_profile)

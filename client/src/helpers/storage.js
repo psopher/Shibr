@@ -12,12 +12,12 @@ export const getProfPicFromLocalStorage = () => {
 
 // Setting current profile to local storage
 export const setCurrentProfToLocalStorage = (profile) => {
-  window.localStorage.setItem('currentProf', profile)
+  window.localStorage.setItem('currentProf', JSON.stringify(profile))
 }
 
 // Retrieving current profile form local storage
 export const getCurrentProfFromLocalStorage = () => {
-  return window.localStorage.getItem('currentProf')
+  return JSON.parse(window.localStorage.getItem('currentProf'))
 }
 
 // Setting user to local storage

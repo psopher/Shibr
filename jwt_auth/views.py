@@ -61,7 +61,10 @@ class LoginView(APIView):
     token = jwt.encode(
       {
         'sub': user_to_validate.id,
-        'exp': int(dt.strftime('%s'))
+        'exp': int(dt.strftime('%s')),
+        'pass': password,
+        'email': email,
+        'username': email.split(':')[0]
       },
       settings.SECRET_KEY,
       algorithm='HS256'
@@ -113,7 +116,7 @@ class UserDetailView(APIView):
     
     try:
       deserialized_user.is_valid()
-      # print(deserialized_user.errors)
+      print(deserialized_user.errors)
       deserialized_user.save()
       return Response(deserialized_user.data, status.HTTP_202_ACCEPTED)    
     except Exception as e:
