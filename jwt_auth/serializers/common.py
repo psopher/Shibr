@@ -65,3 +65,24 @@ class UserSerializer(serializers.ModelSerializer):
       'tw', 
       'current_profile'
     )
+
+class UserSettingsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+          'id',  
+          'email', 
+          'username', 
+          'profile_image', 
+          'karma', 
+          'interested_in', 
+          'min_age', 
+          'max_age', 
+          'show_me', 
+          'give_social', 
+          'ig', 
+          'sc', 
+          'tw', 
+          'current_profile'
+        )

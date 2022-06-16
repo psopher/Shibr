@@ -72,10 +72,10 @@ const Settings = () => {
     if (settings.interested_in.length > 0) {
       form.interested_in = settings.interested_in
     }
-    if (settings.min_age.length > 0 && settings.min_age > -1) {
+    if (settings.min_age > -1) {
       form.min_age = settings.min_age
     }
-    if (settings.max_age.length > 0 && settings.max_age < 21) {
+    if (settings.max_age < 21) {
       form.max_age = settings.max_age
     }
     if (settings.show_me.length > 0) {
@@ -118,10 +118,10 @@ const Settings = () => {
         
     const newForm = {
       ...formData,
-      'username': payload.username,
-      'email': payload.email,
-      'password': payload.pass,
-      'password_confirmation': payload.pass,
+      // 'username': payload.username,
+      // 'email': payload.email,
+      // 'password': payload.pass,
+      // 'password_confirmation': payload.pass,
     }
 
     try {

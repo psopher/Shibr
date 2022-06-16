@@ -1,4 +1,4 @@
-import { yellow, deepOrange, grey, teal, green } from '@mui/material/colors'
+import { yellow, deepOrange, grey, teal, green, red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, lightGreen, lime, amber, orange, brown, blueGrey  } from '@mui/material/colors'
 
 const getDesignTokens = (mode) => ({
   palette: {
@@ -6,8 +6,8 @@ const getDesignTokens = (mode) => ({
     ...(mode === 'light'
       ? {
         // palette values for light mode
-        primary: green,
-        secondary: deepOrange,
+        primary: orange,
+        secondary: purple,
         text: {
           primary: grey[900],
           secondary: grey[900],
@@ -20,14 +20,14 @@ const getDesignTokens = (mode) => ({
       : {
         // palette values for dark mode
         primary: yellow,
-        secondary: green,
+        secondary: pink,
         text: {
           primary: grey[100],
           secondary: grey[100],
         },
         background: {
-          default: teal[800],
-          paper: deepOrange[900],
+          default: teal[300],
+          paper: blueGrey[900],
         },
       }),
   },

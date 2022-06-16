@@ -11,6 +11,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 
 from .serializers.common import UserSerializer
+from .serializers.common import UserSettingsSerializer
 from .serializers.populated import PopulatedUserSerializer
 
 from django.contrib.auth import get_user_model
@@ -62,7 +63,6 @@ class LoginView(APIView):
       {
         'sub': user_to_validate.id,
         'exp': int(dt.strftime('%s')),
-        'pass': password,
         'email': email,
         'username': email.split(':')[0]
       },
@@ -112,7 +112,7 @@ class UserDetailView(APIView):
   def put(self, request, pk):
     user_to_update = self.get_user(pk=pk)
 
-    deserialized_user = UserSerializer(instance=user_to_update, data=request.data, partial=True)
+    deserialized_user = UserSettingsSerializer(instance=user_to_update, data=request.data, partial=True)
     
     try:
       deserialized_user.is_valid()

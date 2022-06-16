@@ -47,7 +47,7 @@ const NewProfile = () => {
   const navigate = useNavigate()
   const { userId } = useParams()
   const payload = getPayload()
-  console.log('payload.sub is ->', payload.sub)
+  // console.log('payload.sub is ->', payload.sub)
 
 
   const cp = getCurrentProfFromLocalStorage()
@@ -221,10 +221,10 @@ const NewProfile = () => {
         const modificationsObj = {
           'current_profile': createdProfileId,
           'profile_image': newForm.images[0],
-          'username': payload.username,
-          'email': payload.email,
-          'password': payload.pass,
-          'password_confirmation': payload.pass,
+          // 'username': payload.username,
+          // 'email': payload.email,
+          // 'password': payload.pass,
+          // 'password_confirmation': payload.pass,
         }
         // console.log('modifications object ->', modificationsObj)
 
