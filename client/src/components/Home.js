@@ -27,7 +27,7 @@ import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
 
-import { setCurrentProfToLocalStorage, setSettingsToLocalStorage } from '../helpers/storage'
+import { setCurrentProfToLocalStorage, setProfPicToLocalStorage, setSettingsToLocalStorage } from '../helpers/storage'
 import { getPayload, userIsAuthenticated, getTokenFromLocalStorage } from '../helpers/auth.js'
 
 
@@ -185,6 +185,11 @@ const Home = () => {
 
           window.localStorage.removeItem('currentProf')
           setCurrentProfToLocalStorage(currentProfile)
+
+          console.log('current profile images ->', currentProfile[0].images[0])
+
+          window.localStorage.removeItem('profPic')
+          setProfPicToLocalStorage(currentProfile[0].images[0])
 
           const sortedProfiles = sortProfiles(data, retrievedUser)
           console.log('sorted profiles ->', sortedProfiles)

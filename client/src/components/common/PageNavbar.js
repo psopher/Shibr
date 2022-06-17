@@ -43,6 +43,7 @@ const PageNavbar  = ({ mode, setMode }) => {
   // Payload
   const payload = getPayload()
   const profPic = getProfPicFromLocalStorage()
+  console.log('profpic ->', profPic)
 
   // Keeps track of menu
   const [anchorElUser, setAnchorElUser] = useState(null)
