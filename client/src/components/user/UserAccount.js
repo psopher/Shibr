@@ -101,16 +101,17 @@ const UserAccount = () => {
   }
   const handleClose = (e) => {
     setAnchorEl(null)
-    console.log('handle close event target ->', e.target)
-    console.log('handle close event target id ->', e.target.classList)
-    const profileId = parseInt(e.target.classList[3])
-    const optionPressed = e.target.innerText
+    console.log('handle close event target ->', e.currentTarget)
+    console.log('handle close event target classlist ->', e.currentTarget.classList)
+    const optionPressed = e.currentTarget.classList[0]
+    const profileId = parseInt(e.currentTarget.classList[1])
     console.log('profile Id index ->', profileId)
     console.log('option pressed ->', optionPressed)
     
-    if (optionPressed === 'View') {
+    
+    if (optionPressed === 'view') {
       navigate(`/account/${userId}/${profileId}`)
-    } else {
+    } else if (profileId) {
       navigate(`/analytics/profile/${profileId}`)
     }
 

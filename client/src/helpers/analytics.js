@@ -18,8 +18,8 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera'
 import LinearProgress from '@mui/material/LinearProgress'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
 
+import MoreVertIcon from '@mui/icons-material/MoreVert'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
@@ -27,6 +27,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import AddIcon from '@mui/icons-material/Add'
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined'
+import EqualizerIcon from '@mui/icons-material/Equalizer'
 
 import noGoodImages from '../images/no-good-images.png'
 import noBadImages from '../images/no-bad-images.png'
@@ -215,7 +216,7 @@ export const getProfilesList = (profilesArray, currentProfileId = 0, open = fals
                     Percentage: {profile.swipes.length > 0 ? getSwipesPercent(getRightSwipesNumber(profile.swipes), profile.swipes.length) : 0}%
                   </Typography>
                 </Box>
-
+                
                 <Box key={profile.username} sx={{ mt: 1, mb: 1 , height: 76, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-end' }}>
                   {profile.id === currentProfileId ? 
                     <Typography key={'23'} sx={{ color: 'primary.main', fontWeight: 'bold' }}>
@@ -227,7 +228,20 @@ export const getProfilesList = (profilesArray, currentProfileId = 0, open = fals
                     </Typography>
                   }
 
-                  <Box key={index}>
+                  {/* View Profile Button */}
+                  <Box onClick={handleClose} className={`view ${profile.id}`} sx={{ ml: 0, mr: 0, boxShadow: 0, border: 0, borderRadius: '50%', display: 'flex', alignItems: 'end', justifyContent: 'end' }} >
+                    <IconButton aria-label={`${profile.id}`} size="small" >
+                      <ChevronRightOutlinedIcon fontSize="small" sx={{ color: profile.id === currentProfileId ? 'primary.main' : 'secondary.main' }} />
+                    </IconButton>
+                  </Box>
+                  {/* View Profile Button */}
+                  <Box onClick={handleClose} className={`inulytics ${profile.id}`} sx={{ ml: 0, mr: 0, boxShadow: 0, border: 0, borderRadius: '50%', display: 'flex', alignItems: 'end', justifyContent: 'end' }} >
+                    <IconButton aria-label={`${profile.id}`} size="small" >
+                      <EqualizerIcon fontSize="small" sx={{ color: profile.id === currentProfileId ? 'primary.main' : 'secondary.main' }} />
+                    </IconButton>
+                  </Box>
+
+                  {/* <Box key={index}>
                     <IconButton
                       key={'26'}
                       aria-label="more"
@@ -257,22 +271,23 @@ export const getProfilesList = (profilesArray, currentProfileId = 0, open = fals
                       }}
                     >
                       {profile.id === currentProfileId ? 
-                        moreCurrentProfileOptions.map((option) => (
+                        moreCurrentProfileOptions.map((option, i) => (
                           <MenuItem key={option} className={`${currentProfileId}`} onClick={handleClose}>
                             {option}
                           </MenuItem>
                         ))
                         : 
-                        moreProfileOptions.map((option) => (
+                        moreProfileOptions.map((option, i) => (
                           <MenuItem key={option} className={`${currentProfileId}`} onClick={handleClose}>
-                            {option}
+                            {profile.id} {index} {currentProfileId}
                           </MenuItem>
                         ))
                       }
                     </Menu>
-                  </Box>
+                  </Box> */}
                 </Box>
               </Box>
+
               {/* Line at bottom of  */}
               <Divider key={'28'} sx={{ mt: 1, mb: 1 }} />
             </Box>
