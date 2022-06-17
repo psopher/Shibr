@@ -199,7 +199,7 @@ export const getProfilesList = (profilesArray, currentProfileId = 0, open = fals
         {profilesArray.map((profile, index) => {
           return (
             <Box key={index}>
-              <Box key={'200'} sx={{ width: 300, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Box key={index} sx={{ width: 300, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Profile Picture */}
                 <Avatar key={profile.id} alt={'profile picture'} src={profile.images ? profile.images[0] : profPicDefault } sx={{ boxShadow: 4, height: 76, width: 76 }} />
 
@@ -460,91 +460,37 @@ export const getMatchesList = (matchedUsersArray, handleViewMatch) => {
       <Stack key={'20'} spacing={0}>
         {matchedUsersArray.map((user, index) => {
           return (
-            <Box key={'200'} sx={{ width: 300, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              {/* Profile Picture */}
-              <Avatar key={user.id} alt={'profile picture'} src={user.profile_image ? user.profile_image : profPicDefault } sx={{ boxShadow: 4, height: 76, width: 76 }} />
+            <Box key={index}>
+              <Box key={index} sx={{ width: 300, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                {/* Profile Picture */}
+                <Avatar key={user.id} alt={'profile picture'} src={user.profile_image ? user.profile_image : profPicDefault } sx={{ mr: 1, boxShadow: 4, height: 76, width: 76 }} />
 
-              {/* Social Media */}
-              <Box key={index} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' }}>
-                <Typography  key={'20'}>
-                  Instagram: {user.ig ? user.ig : 'NA'}
-                </Typography>
-                <Typography  key={'21'}>
-                  SnapChat: {user.sc ? user.sc : 'NA'}
-                </Typography>
-                <Typography  key={'22'}>
-                  Twitter: {user.tw ? user.tw : 'NA'}
-                </Typography>
-              </Box>
-
-              {/* View Profile Button */}
-              <Box onClick={handleViewMatch} className={`${matchedUsersArray[index].current_profile} ${matchedUsersArray[index].id}`} sx={{ ml: 0, mr: 0, boxShadow: 4, border: 0, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
-                <IconButton aria-label={`${matchedUsersArray[index].current_profile}`} size="small" >
-                  <ChevronRightOutlinedIcon fontSize="small" sx={{ color: 'primary.main' }} />
-                </IconButton>
-              </Box>
-
-              {/* <Box key={profile.username} sx={{ height: 76, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-end' }}>
-                {profile.id === currentProfileId ? 
-                  <Typography key={'23'} sx={{ color: 'primary.main', fontWeight: 'bold' }}>
-                    Current
+                {/* Social Media */}
+                <Box key={index} sx={{ width: 200, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' }}>
+                  <Typography  key={'20'}>
+                    Instagram: {user.ig ? user.ig : 'NA'}
                   </Typography>
-                  :
-                  <Typography key={'24'} sx={{ color: 'primary.main', fontWeight: 'bold' }}>
-                    Finished
+                  <Typography  key={'21'}>
+                    SnapChat: {user.sc ? user.sc : 'NA'}
                   </Typography>
-                }
+                  <Typography  key={'22'}>
+                    Twitter: {user.tw ? user.tw : 'NA'}
+                  </Typography>
+                </Box>
 
-                <Box key={index}>
-                  <IconButton
-                    key={'26'}
-                    aria-label="more"
-                    id="long-button"
-                    aria-controls={open ? 'long-menu' : undefined}
-                    aria-expanded={open ? 'true' : undefined}
-                    aria-haspopup="true"
-                    onClick={handleMenuOpen}
-                  >
-                    <MoreHorizOutlinedIcon key={'200'} />
+                {/* View Profile Button */}
+                <Box onClick={handleViewMatch} className={`${matchedUsersArray[index].current_profile} ${matchedUsersArray[index].id}`} sx={{ ml: 0, mr: 0, boxShadow: 4, border: 0, borderRadius: '50%', display: 'flex', alignItems: 'end', justifyContent: 'end' }} >
+                  <IconButton aria-label={`${matchedUsersArray[index].current_profile}`} size="small" >
+                    <ChevronRightOutlinedIcon fontSize="small" sx={{ color: 'primary.main' }} />
                   </IconButton>
-                  <Menu
-                    key={'27'}
-                    id="long-menu"
-                    MenuListProps={{
-                      'aria-labelledby': 'long-button',
-                    }}
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    PaperProps={{
-                      style: {
-                        // maxHeight: ITEM_HEIGHT * 4.5,
-                        width: '10%',
-                      },
-                    }}
-                  >
-                    {profile.id === currentProfileId ? 
-                      moreCurrentProfileOptions.map((option) => (
-                        <MenuItem key={option} className={`${profile.id}`} onClick={handleClose}>
-                          {option}
-                        </MenuItem>
-                      ))
-                      : 
-                      moreProfileOptions.map((option) => (
-                        <MenuItem key={option} onClick={handleClose}>
-                          {option}
-                        </MenuItem>
-                      ))
-                    }
-                  </Menu>
-                </Box> */}
-              {/* </Box> */}
+                </Box>
+              </Box>
+
+              {/* Line at bottom of  */}
+              <Divider key={`${index}-1`} sx={{ mt: 2, mb: 2 }} />
             </Box>
           )
         })}
-
-        {/* Line at bottom of  */}
-        <Divider key={'28'} sx={{ mt: 2 }} />
 
       </Stack>
     </>

@@ -8,7 +8,6 @@ import { getProfile, profileBio } from '../../helpers/viewProfile'
 import { goodPhotoFeedback, badPhotoFeedback, feedbackTypes, overallBioFeedback, goodBioFeedback, badBioFeedback } from '../../helpers/formOptions'
 import { photoFeedback, bioFeedback } from '../../helpers/formMethods'
 import { getFeedbackImageList } from '../../helpers/imageHandling.js'
-import { getUserFromLocalStorage } from '../../helpers/storage'
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 import { getMatchesList } from '../../helpers/analytics'
 

@@ -311,10 +311,6 @@ const UserAccount = () => {
                 </Container>
                 : accountProfiles.length > 0 ?
                   <>
-                    {/* {getImageList(myPlants, 1, 2, 3, 4)} */}
-                    {/* <Typography variant='p'>
-                      Profiles appear here
-                    </Typography> */}
                     {getProfilesList(accountProfiles, accountCurrentProfile.id, open, handleMenuOpen, handleClose, anchorEl)}
                   </>
                   :

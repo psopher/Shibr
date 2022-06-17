@@ -30,12 +30,12 @@ export const getSettingsFromLocalStorage = () => {
   return JSON.parse(window.localStorage.getItem('settings'))
 }
 
-// Setting user to local storage
-export const setUserToLocalStorage = (user) => {
-  window.localStorage.setItem('user', user)
-}
+// // Setting user to local storage
+// export const setUserToLocalStorage = (user) => {
+//   window.localStorage.setItem('user', user)
+// }
 
-// Retrieving profile pic form local storage
-export const getUserFromLocalStorage = () => {
-  return window.localStorage.getItem('user')
-}
+// // Retrieving profile pic form local storage
+// export const getUserFromLocalStorage = () => {
+//   return window.localStorage.getItem('user')
+// }

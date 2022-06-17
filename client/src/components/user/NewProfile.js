@@ -6,7 +6,7 @@ import axios from 'axios'
 import Spinner from '../utilities/Spinner'
 import RequestError from '../common/RequestError'
 
-import { getUserFromLocalStorage, getCurrentProfFromLocalStorage, setCurrentProfToLocalStorage, setProfPicToLocalStorage } from '../../helpers/storage.js'
+import { getCurrentProfFromLocalStorage, setCurrentProfToLocalStorage, setProfPicToLocalStorage } from '../../helpers/storage.js'
 import { getTokenFromLocalStorage, getPayload } from '../../helpers/auth'
 
 import { newProfileImageList } from '../../helpers/imageHandling'

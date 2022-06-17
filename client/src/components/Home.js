@@ -27,7 +27,7 @@ import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
 
-import { setCurrentProfToLocalStorage, setUserToLocalStorage, setSettingsToLocalStorage } from '../helpers/storage'
+import { setCurrentProfToLocalStorage, setSettingsToLocalStorage } from '../helpers/storage'
 import { getPayload, userIsAuthenticated, getTokenFromLocalStorage } from '../helpers/auth.js'
 
 
@@ -63,10 +63,6 @@ const Home = () => {
     'bio_bad_comments': [],
     'swipe_id': -1,
   })
-  // const user = getUserFromLocalStorage()
-  // console.log('user is: ', user)
-  // const startKarma = user ? user.karma : 0
-  // console.log('start karma ->', startKarma)
   const [karma, setKarma] = useState(user ? user.karma : 0)
 
   const settingsAndUserToLocalStorage = (retrievedUser) => {
@@ -116,9 +112,6 @@ const Home = () => {
 
     window.localStorage.removeItem('settings')
     setSettingsToLocalStorage(settingsObj)
-
-    window.localStorage.removeItem('user')
-    setUserToLocalStorage(retrievedUser)
 
     return settingsObj
   }

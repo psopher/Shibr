@@ -73,7 +73,6 @@ const PageNavbar  = ({ mode, setMode }) => {
       window.localStorage.removeItem('settings')
       window.localStorage.removeItem('profPic')
       window.localStorage.removeItem('currentProf')
-      window.localStorage.removeItem('user')
 
       //Navigate to the login screen upon logout
       navigate('/login')

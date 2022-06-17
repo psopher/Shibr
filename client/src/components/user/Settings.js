@@ -7,7 +7,7 @@ import Spinner from '../utilities/Spinner'
 import RequestError from '../common/RequestError'
 
 import { getPayload, getTokenFromLocalStorage } from '../../helpers/auth'
-import { getUserFromLocalStorage, getSettingsFromLocalStorage, setSettingsToLocalStorage } from '../../helpers/storage.js'
+import { getSettingsFromLocalStorage, setSettingsToLocalStorage } from '../../helpers/storage.js'
 
 import { handleChange } from '../../helpers/formMethods'
 
@@ -52,7 +52,7 @@ const Settings = () => {
   const payload = getPayload()
   // console.log('payload.sub is ->', payload.sub)
 
-  const user = getUserFromLocalStorage()
+  // const user = getUserFromLocalStorage()
   // console.log('user ->', user)
   const settings = getSettingsFromLocalStorage()
   console.log('settings ->', settings)
