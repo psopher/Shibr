@@ -63,7 +63,7 @@ const Home = () => {
     'bio_bad_comments': [],
     'swipe_id': -1,
   })
-  const [karma, setKarma] = useState(user ? user.karma : 0)
+  const [karma, setKarma] = useState(0)
 
   const settingsAndUserToLocalStorage = (retrievedUser) => {
     
@@ -169,6 +169,8 @@ const Home = () => {
         console.log('data is ->', response.data)
         const retrievedUser = response.data
         setUser(retrievedUser)
+        setKarma(retrievedUser.karma)
+
 
         const settingsObj = settingsAndUserToLocalStorage(retrievedUser)
 
@@ -410,6 +412,36 @@ const Home = () => {
           
           console.log('POST feedback response ->', feedbackResponse)
 
+
+
+          // Update Karma for user account
+          console.log('karma ->', karma)
+          if (karma < 5) {
+            console.log('this runs')
+
+          
+            const modificationsObj = {
+              'karma': karma + 1,
+            }
+            try {
+              const putResponse = await axios.put(`/api/auth/users/${payload.sub}/`, modificationsObj, {
+                headers: {
+                  Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+                },
+              })
+              console.log('PUT response ->', putResponse)
+              setKarma(karma + 1)
+
+            } catch (error) {
+
+              setLoading(false)
+              console.log(error)
+              setPostErrors(true)
+            }
+          }
+
+
+
         } catch (error) {
 
           setLoading(false)
@@ -432,10 +464,6 @@ const Home = () => {
       setSwiped(false)
 
       setIterator(iterator + 1)
-
-      if (karma < 5) {
-        setKarma(karma + 1)
-      }
 
       setLoading(false)
 
