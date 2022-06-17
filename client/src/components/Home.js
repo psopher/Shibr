@@ -357,7 +357,7 @@ const Home = () => {
     window.scrollTo(0, 0)
     setPostErrors(false)
 
-    console.log('feedback form data ->', feedbackForm)
+    // console.log('feedback form data ->', feedbackForm)
 
     if (feedbackForm.best_image_index > -1 
       && feedbackForm.worst_image_index > -1 
@@ -367,7 +367,7 @@ const Home = () => {
       && feedbackForm.bio_bad_comments.length > 0 
       && feedbackForm.bio_overall !== '') {
 
-      console.log('all feedback filled out')
+      // console.log('all feedback filled out')
   
       const swipeObj = {
         'swiper_id': user.id,
@@ -375,12 +375,15 @@ const Home = () => {
         'right_swipe': isRightSwipe,
       }
 
+      // console.log('swipe object ->', swipeObj)
+
       // Post Swipe
       // After receiving the swipe Id, post feedback
 
 
       // Create a new form so that you can pass swipe id
       const newForm = { ...feedbackForm }
+      // console.log('new form ->', newForm)
 
       // POST Profile
       try {
@@ -428,9 +431,9 @@ const Home = () => {
 
 
       setSwiped(false)
-  
+
       setIterator(iterator + 1)
-    
+
       if (karma < 5) {
         setKarma(karma + 1)
       }
