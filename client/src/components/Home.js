@@ -27,8 +27,8 @@ import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
 
-import { getCurrentProfFromLocalStorage, getUserFromLocalStorage } from '../helpers/storage'
-import { getPayload, userIsAuthenticated } from '../helpers/auth.js'
+import { setCurrentProfToLocalStorage, setUserToLocalStorage, setSettingsToLocalStorage } from '../helpers/storage'
+import { getPayload, userIsAuthenticated, getTokenFromLocalStorage } from '../helpers/auth.js'
 
 
 const Home = () => {
@@ -43,19 +43,117 @@ const Home = () => {
   //loading and error state
   const [loading, setLoading] = useState(true)
   const [errors, setErrors] = useState(false)
+  const [postErrors, setPostErrors] = useState(false)
 
   //profile state 
   const [profiles, setProfiles] = useState([])
+  const [iterator, setIterator] = useState(0)
   const [swiped, setSwiped] = useState(false)
   const [isRightSwipe, setIsRightSwipe] = useState(false)
-
-  const user = getUserFromLocalStorage()
-  console.log('user is: ', user)
+  const [user, setUser] = useState({})
+  const [currentProfile, setCurrentProfile] = useState({})
+  const [settings, setSettings] = useState({})
+  const [feedbackForm, setFeedbackForm] = useState({
+    'best_image_index': -1,
+    'best_image_comments': [],
+    'worst_image_index': -1,
+    'worst_image_comments': [],
+    'bio_overall': '',
+    'bio_good_comments': [],
+    'bio_bad_comments': [],
+    'swipe_id': -1,
+  })
+  // const user = getUserFromLocalStorage()
+  // console.log('user is: ', user)
   // const startKarma = user ? user.karma : 0
   // console.log('start karma ->', startKarma)
   const [karma, setKarma] = useState(user ? user.karma : 0)
 
-  const cp = getCurrentProfFromLocalStorage()
+  const settingsAndUserToLocalStorage = (retrievedUser) => {
+    
+    const settingsObj = {
+      interested_in: '',
+      min_age: 0,
+      max_age: 20,
+      show_me: true,
+      give_social: false,
+      ig: '',
+      sc: '',
+      tw: '',
+    }
+
+    if (retrievedUser) {
+      if (retrievedUser.interested_in.length > 0) {
+        settingsObj.interested_in = retrievedUser.interested_in
+      }
+      if (retrievedUser.min_age > -1) {
+        settingsObj.min_age = retrievedUser.min_age
+      }
+      if (retrievedUser.max_age < 21) {
+        settingsObj.max_age = retrievedUser.max_age
+      }
+      if (retrievedUser.show_me.length > 0) {
+        settingsObj.show_me = retrievedUser.show_me
+      }
+      if (retrievedUser.give_social.length > 0) {
+        settingsObj.give_social = retrievedUser.give_social
+      }
+      if (retrievedUser.ig.length > 0) {
+        settingsObj.ig = retrievedUser.ig
+      }
+      if (retrievedUser.sc.length > 0) {
+        settingsObj.sc = retrievedUser.sc
+      }
+      if (retrievedUser.tw.length > 0) {
+        settingsObj.tw = retrievedUser.tw
+      }
+    } 
+
+    setSettings(settingsObj)
+
+    window.localStorage.removeItem('settings')
+    setSettingsToLocalStorage(settingsObj)
+
+    window.localStorage.removeItem('user')
+    setUserToLocalStorage(retrievedUser)
+
+    return settingsObj
+  }
+
+  const sortProfiles = (profiles, retrievedUser) => {
+    console.log('SORT PROFILES RUNS')
+
+    const swipedProfileIdsArray = []
+    for (let i = 0; i < retrievedUser.swipes.length; i++ ) {
+      // if (retrievedUser.swipes[i].swiped_profile_id.id === profile.id) {
+      swipedProfileIdsArray.push(retrievedUser.swipes[i].swiped_profile_id.id)
+      // }
+    }
+    console.log('swiped profile ids array ->', swipedProfileIdsArray)
+
+    const profileAfterFilters = profiles.filter((profile) => {
+
+      return (
+        profile.owner.id !== retrievedUser.id 
+        && profile.age >= retrievedUser.min_age 
+        && profile.age <= retrievedUser.max_age 
+        && (retrievedUser.interested_in === 'Alphas' ? profile.gender === 'Male' : retrievedUser.interested_in === 'Bitches' ? profile.gender === 'Female' : (profile.gender === 'Male' || profile.gender === 'Female')) 
+        && !swipedProfileIdsArray.includes(profile.id)
+      ) 
+    })
+
+
+
+    return profileAfterFilters
+  }
+
+  const findCurrentProfile = (profiles, retrievedUser) => {
+    console.log('FIND CURRENT PROFILE RUNS')
+
+    const current = profiles.filter(profile => profile.id === retrievedUser.current_profile)
+
+    return current
+  }
 
   useEffect(() => {
 
@@ -66,8 +164,38 @@ const Home = () => {
 
     const getData = async () => {
       try {
-        const { data } = await axios.get('/api/profiles/')
-        setProfiles(data)
+        // Get data for specified user, by username
+        const response = await axios.get(`/api/auth/users/${payload.sub}/`, {
+          headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          },
+        })
+        console.log('data is ->', response.data)
+        const retrievedUser = response.data
+        setUser(retrievedUser)
+
+        const settingsObj = settingsAndUserToLocalStorage(retrievedUser)
+
+        try {
+          const { data } = await axios.get('/api/profiles/')
+
+          console.log('retrieved profiles ->', data)
+
+          const currentProfile = findCurrentProfile(data, retrievedUser)
+          console.log(currentProfile)
+          setCurrentProfile(currentProfile)
+
+          window.localStorage.removeItem('currentProf')
+          setCurrentProfToLocalStorage(currentProfile)
+
+          const sortedProfiles = sortProfiles(data, retrievedUser)
+          console.log('sorted profiles ->', sortedProfiles)
+          setProfiles(sortedProfiles)
+        } catch (error) {
+          console.log(error)
+          setErrors(true)
+        }
+        setLoading(false)
       } catch (error) {
         console.log(error)
         setErrors(true)
@@ -77,8 +205,11 @@ const Home = () => {
     getData()
   }, [])
 
-  const handeImageSelect = (e) => {
+  const handleImageSelect = (e, bestPhotos) => {
     e.stopPropagation()
+
+    setPostErrors(false)
+
     // console.log('e.target ->', e.target)
     // console.log('e.target.classList ->', e.target.classList)
 
@@ -86,37 +217,38 @@ const Home = () => {
     console.log('selected index ->', selectedIndex)
 
     const photoClass = e.target.classList
-    // console.log('photo class ->', photoClass)
-    // console.log('photo class index 0 ->', photoClass[0])
 
     const photos = document.body.querySelectorAll(`.${photoClass[0]}`)
     console.log('photos ->', photos)
     photos.forEach(photo => photo.classList.remove('styled'))
 
+    console.log('bestPhotos ->', bestPhotos)
+
+    if (bestPhotos) {
+      console.log('best photos runs')
+      setFeedbackForm({ ...feedbackForm, 'best_image_index': selectedIndex })
+    } else {
+      console.log('worst photos runs')
+      setFeedbackForm({ ...feedbackForm, 'worst_image_index': selectedIndex })
+    }
+
     e.target.classList.toggle('styled')
+
+
   }
 
-  const handlePhotoFeedbackSelect = (e) => {
+  const handlePhotoFeedbackSelect = (e, isGoodFeedback) => {
     console.log('handleFeedbackSelect Fires')
+
+    setPostErrors(false)
+
     console.log('e.targe.textContent ->', e.target.textContent)
     const feedbackClass = e.target.classList
-    // console.log('feedback class ->', feedbackClass)
-    // console.log('feedback class index 0 ->', feedbackClass[0])
+    console.log('feedback class ->', feedbackClass)
+    console.log('feedback class index 0 ->', feedbackClass[0])
+    console.log('isGoodFeedback ->', isGoodFeedback)
 
-    // const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}`)
-    // console.log('feedback ->', feedback)
-    // feedback.forEach(comment => comment.classList.remove('styled'))
-
-    e.target.classList.toggle('styled')
-
-  }
-
-  const handleBioFeedbackSelect = (e) => {
-    console.log('handleBioFeedbackSelect Runs')
-    console.log('e.targe.textContent ->', e.target.textContent)
-    const feedbackClass = e.target.classList
-
-    if (e.target.textContent === 'I Like Nothing' || e.target.textContent === 'I Like Everything') {
+    if (e.target.textContent === 'No Good Images' || e.target.textContent === 'No Bad Images') {
       const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}`)
       console.log('feedback ->', feedback)
       feedback.forEach(comment => comment.classList.remove('styled'))
@@ -124,6 +256,66 @@ const Home = () => {
       const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}-end`)
       console.log('feedback ->', feedback)
       feedback.forEach(comment => comment.classList.remove('styled'))
+    }
+
+    if (isGoodFeedback) {
+      console.log('is good photo feedback!')
+      if (e.target.textContent === 'No Good Images' || feedbackForm.best_image_comments.includes('No Good Images')) {
+        setFeedbackForm({ ...feedbackForm, 'best_image_comments': [e.target.textContent] })
+      } else {
+        setFeedbackForm({ ...feedbackForm, 'best_image_comments': [ ...feedbackForm.best_image_comments, e.target.textContent ] })  
+      }
+    } else {
+      console.log('is bad photo feedback!')
+      if (e.target.textContent === 'No Bad Images' || feedbackForm.worst_image_comments.includes('No Bad Images')) {
+        setFeedbackForm({ ...feedbackForm, 'worst_image_comments': [e.target.textContent] })
+      } else {
+        setFeedbackForm({ ...feedbackForm, 'worst_image_comments': [ ...feedbackForm.worst_image_comments, e.target.textContent ] })
+      }
+    }
+
+
+
+    e.target.classList.toggle('styled')
+
+  }
+
+  const handleBioFeedbackSelect = (e, feedbackType) => {
+    console.log('handleBioFeedbackSelect Runs')
+
+    setPostErrors(false)
+
+    console.log('e.targe.textContent ->', e.target.textContent)
+    console.log('feedbackType is ->', feedbackType)
+    const feedbackClass = e.target.classList
+
+    if (e.target.textContent === 'I Like Nothing' || e.target.textContent === 'I Like Everything' || e.target.textContent === 'Good' || e.target.textContent === 'So-So' || e.target.textContent === 'Bad' ) {
+      const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}`)
+      console.log('feedback ->', feedback)
+      feedback.forEach(comment => comment.classList.remove('styled'))
+    } else {
+      const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}-end`)
+      console.log('feedback ->', feedback)
+      feedback.forEach(comment => comment.classList.remove('styled'))
+    }
+
+    if (feedbackType === 'Overall') {
+      console.log('is overall bio!')
+      setFeedbackForm({ ...feedbackForm, 'bio_overall': e.target.textContent })
+    } else if (feedbackType === 'Good') {
+      console.log('is good bio!')
+      if (e.target.textContent === 'I Like Nothing' || feedbackForm.bio_good_comments.includes('I Like Nothing')) {
+        setFeedbackForm({ ...feedbackForm, 'bio_good_comments': [e.target.textContent] })
+      } else {
+        setFeedbackForm({ ...feedbackForm, 'bio_good_comments': [ ...feedbackForm.bio_good_comments, e.target.textContent ] })
+      }
+    } else if (feedbackType === 'Bad') {
+      console.log('is bad bio!')
+      if (e.target.textContent === 'I Like Everything' || feedbackForm.bio_bad_comments.includes('I Like Everything')) {
+        setFeedbackForm({ ...feedbackForm, 'bio_bad_comments': [e.target.textContent] })
+      } else {
+        setFeedbackForm({ ...feedbackForm, 'bio_bad_comments': [ ...feedbackForm.bio_bad_comments, e.target.textContent ] })
+      }
     }
 
     // console.log('feedback class ->', feedbackClass)
@@ -152,7 +344,7 @@ const Home = () => {
     if (!userIsAuthenticated()) {
       navigate('/login')
     }
-    if (!cp) {
+    if (!currentProfile) {
       navigate(`/account/${payload.sub}/new-profile`)
     }
 
@@ -163,13 +355,94 @@ const Home = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     window.scrollTo(0, 0)
+    setPostErrors(false)
+
+    console.log('feedback form data ->', feedbackForm)
+
+    if (feedbackForm.best_image_index > -1 
+      && feedbackForm.worst_image_index > -1 
+      && feedbackForm.best_image_comments.length > 0 
+      && feedbackForm.worst_image_comments.length > 0 
+      && feedbackForm.bio_good_comments.length > 0 
+      && feedbackForm.bio_bad_comments.length > 0 
+      && feedbackForm.bio_overall !== '') {
+
+      console.log('all feedback filled out')
+  
+      const swipeObj = {
+        'swiper_id': user.id,
+        'swiped_profile_id': profiles[iterator].id,
+        'right_swipe': isRightSwipe,
+      }
+
+      // Post Swipe
+      // After receiving the swipe Id, post feedback
+
+
+      // Create a new form so that you can pass swipe id
+      const newForm = { ...feedbackForm }
+
+      // POST Profile
+      try {
+        setLoading(true)
+
+        const response = await axios.post('/api/swipes/', swipeObj, {
+          headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          },
+        })
+        console.log(response)
+        const createdSwipeId = response.data.id
+        console.log('created swipe id', createdSwipeId)
+
+        // Add swipe id to form
+        newForm.swipe_id = createdSwipeId
+        console.log('new form with created swipe id ->', createdSwipeId)
+
+        try {
+          const feedbackResponse = await axios.post('/api/feedback/', newForm, {
+            headers: {
+              Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+            },
+          })
+          
+          console.log('POST feedback response ->', feedbackResponse)
+
+        } catch (error) {
+
+          setLoading(false)
+          console.log(error)
+          setPostErrors(true)
+        }
+        
+
+
+      } catch (error) {
+        setLoading(false)
+        console.log(error)
+
+        // error message posting new profile
+        setPostErrors(true)
+      }
+
+
+
+      setSwiped(false)
+  
+      setIterator(iterator + 1)
     
-    if (karma < 5) {
-      setKarma(karma + 1)
+      if (karma < 5) {
+        setKarma(karma + 1)
+      }
+
+      setLoading(false)
+
+    } else {
+
+      console.log('all feedback NOT filled out')
+
+      setPostErrors(true)
     }
-
-    setSwiped(false)
-
   }
 
   return (
@@ -203,13 +476,13 @@ const Home = () => {
                       </Box>
 
                       {/* Best Images */}
-                      {getFeedbackImageList(profiles[0], 1, handeImageSelect)}
+                      {getFeedbackImageList(profiles[iterator], 1, handleImageSelect)}
 
                       {/* Good Image Feedback */}
                       {photoFeedback(goodPhotoFeedback, 1, handlePhotoFeedbackSelect)}
 
                       {/* Worst Images */}
-                      {getFeedbackImageList(profiles[0], 0, handeImageSelect)}
+                      {getFeedbackImageList(profiles[iterator], 0, handleImageSelect)}
 
                       {/* Bad Image Feedback */}
                       {photoFeedback(badPhotoFeedback, 0, handlePhotoFeedbackSelect)}
@@ -222,7 +495,7 @@ const Home = () => {
 
                       {/* Profile Bio */}
                       <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center', mb: 1 }}>
-                        {profileBio(profiles[0], 1, 400)}
+                        {profileBio(profiles[iterator], 1, 400)}
                       </Box>
 
                       {/* Overall Bio Feedback */}
@@ -242,6 +515,19 @@ const Home = () => {
                       </Grid>
 
                     </Box>
+
+
+                    {/* Error message if the post request fails */}
+                    {postErrors && 
+                      <Grid key={'grid-key-564'} container textAlign='center'>
+                        <Grid key={'grid-key-657'} item xs={12}>
+                          <Typography sx={{ width: '100%', color: 'red' }}>Error. Failed to upload profile.</Typography>
+                        </Grid>
+                        <Grid key={'grid-key-65237'} item xs={12}>
+                          <Typography sx={{ width: '100%', color: 'red' }}>All fields required.</Typography>
+                        </Grid>
+                      </Grid>
+                    }
                   </Paper>
                 </Container >
               </>
@@ -252,7 +538,7 @@ const Home = () => {
                   {/* <Container > */}
                   <Paper sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'cream', boxShadow: 4, borderRadius: 4 }} >
                     {/* Image List */}
-                    {getProfile(profiles[0], true, karma, handleLeftSwipe, handleRightSwipe)}
+                    {getProfile(profiles[iterator], true, karma, handleLeftSwipe, handleRightSwipe)}
                   </Paper>
                 </Container>
               </>

@@ -101,7 +101,7 @@ const NewProfile = () => {
   const [postErrors, setPostErrors] = useState(false)
 
 
-  const handeImageSelect = async (e) => {
+  const handleImageSelect = async (e) => {
     console.log('HANDLE IMAGE SELECT RUNS')
     setPostErrors(false)
   
@@ -306,7 +306,7 @@ const NewProfile = () => {
                     </>
                     
                     {/* Images */}
-                    {newProfileImageList(formData.images, handeImageSelect, handleDeleteImage)}
+                    {newProfileImageList(formData.images, handleImageSelect, handleDeleteImage)}
 
                     {/* Name */}
                     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', mt: 1, mb: 1 }}>

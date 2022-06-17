@@ -70,6 +70,10 @@ const PageNavbar  = ({ mode, setMode }) => {
 
       //Remove token from local storage upon logout
       window.localStorage.removeItem('shibr')
+      window.localStorage.removeItem('settings')
+      window.localStorage.removeItem('profPic')
+      window.localStorage.removeItem('currentProf')
+      window.localStorage.removeItem('user')
 
       //Navigate to the login screen upon logout
       navigate('/login')

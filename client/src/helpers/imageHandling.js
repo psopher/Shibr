@@ -27,7 +27,7 @@ import Spinner from '../components/utilities/Spinner.js'
 import { styled } from '@mui/material/styles'
 
 
-export const getFeedbackImageList = (profile, bestPhotos = true, handeImageSelect) => {
+export const getFeedbackImageList = (profile, bestPhotos = true, handleImageSelect) => {
 
   return (
     <>
@@ -45,7 +45,7 @@ export const getFeedbackImageList = (profile, bestPhotos = true, handeImageSelec
                   
                   <Box
                     key={index}
-                    onClick={handeImageSelect} 
+                    onClick={(e) => handleImageSelect(e, bestPhotos)}
                     sx={{ 
                       boxShadow: 4, 
                       mt: 1,
@@ -76,7 +76,7 @@ export const getFeedbackImageList = (profile, bestPhotos = true, handeImageSelec
             <ImageListItem key={100} >
               <Box 
                 key={profile.images.length}
-                onClick={handeImageSelect} 
+                onClick={(e) => handleImageSelect(e, bestPhotos)}
                 sx={{ 
                   boxShadow: 4, 
                   mt: 1,
@@ -110,7 +110,7 @@ export const getFeedbackImageList = (profile, bestPhotos = true, handeImageSelec
 
 
 
-export const newProfileImageList = (imageArray, handeImageSelect, handleDeleteImage) => {
+export const newProfileImageList = (imageArray, handleImageSelect, handleDeleteImage) => {
 
   // Styling Input so it won't display
   const Input = styled('input')({
@@ -128,7 +128,7 @@ export const newProfileImageList = (imageArray, handeImageSelect, handleDeleteIm
                   <ImageListItem key={index} >
                     <Box
                       key={`${index}`}
-                      // onClick={handeImageSelect} 
+                      // onClick={handleImageSelect} 
                       sx={{ 
                         boxShadow: 4, 
                         // mt: 1,
@@ -163,7 +163,7 @@ export const newProfileImageList = (imageArray, handeImageSelect, handleDeleteIm
                       </Box>
                       :
                       <label key={`${index}-3`} htmlFor="icon-button-file">
-                        <Input key={`${index}-3`} accept="image/*" id="icon-button-file" className={`${index}-index`} type="file" onChange={handeImageSelect} />
+                        <Input key={`${index}-3`} accept="image/*" id="icon-button-file" className={`${index}-index`} type="file" onChange={handleImageSelect} />
                         <IconButton key={`${index}-4`} aria-label="upload picture" size="medium" component="span" sx={{ bottom: 22, left: 39, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(10,10,10,0.6)' }} >
                           <AddIcon key={`${index}-5`} sx={{ color: 'primary.main' }} />
                         </IconButton>

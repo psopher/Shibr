@@ -20,8 +20,9 @@ export const photoFeedback = (feedbackArray = [], isGoodFeedback = 1, handlePhot
               return (
                 <Grid item xs={feedback === 'No Good Images' || feedback === 'No Bad Images' ? 6 : 3} key={i}>
                   <Box
-                    onClick={handlePhotoFeedbackSelect}
-                    className= {isGoodFeedback ? 'good-feedback' : 'bad-feedback'}
+                    onClick={(e) => handlePhotoFeedbackSelect(e, isGoodFeedback)}
+                    // className= {isGoodFeedback ? 'good-feedback' : 'bad-feedback'}
+                    className= {feedback === 'No Good Images' || feedback === 'No Bad Images' ? isGoodFeedback ? 'good-feedback good-feedback-end' : 'bad-feedback bad-feedback-end' : isGoodFeedback ? 'good-feedback' : 'bad-feedback'}
                     sx={{
                       display: 'flex',
                       alignItems: 'center',
@@ -64,7 +65,7 @@ export const bioFeedback = (feedbackArray = [], feedbackType = feedbackTypes[0],
               return (
                 <Grid item xs={feedback === 'I Like Nothing' || feedback === 'I Like Everything' ? 6 : 3} key={i}>
                   <Box
-                    onClick={handleBioFeedbackSelect}
+                    onClick={(e) => handleBioFeedbackSelect(e, feedbackType)}
                     className= {feedback === feedbackArray[feedbackArray.length - 1] ? `bio-${feedbackType.toLocaleLowerCase()}-feedback bio-${feedbackType.toLocaleLowerCase()}-feedback-end` : `bio-${feedbackType.toLocaleLowerCase()}-feedback`}
                     sx={{
                       display: 'flex',
