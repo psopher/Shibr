@@ -79,5 +79,14 @@
     "swiper_id": 26,
     "swiped_profile_id": 2
   }
+},
+{
+  "model": "swipes.swipe",
+  "pk": 10,
+  "fields": {
+    "right_swipe": true,
+    "swiper_id": 2,
+    "swiped_profile_id": 30
+  }
 }
 ]

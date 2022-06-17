@@ -9,5 +9,16 @@
       2
     ]
   }
+},
+{
+  "model": "matches.match",
+  "pk": 2,
+  "fields": {
+    "exchange_social_media": true,
+    "matched_users": [
+      30,
+      2
+    ]
+  }
 }
 ]

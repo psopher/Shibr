@@ -124,5 +124,19 @@
     "bio_bad_comments": "[\"bland\"]",
     "swipe_id": 9
   }
+},
+{
+  "model": "feedback.feedback",
+  "pk": 10,
+  "fields": {
+    "best_image_index": 2,
+    "best_image_comments": "[\"fluffy\", \"smile\"]",
+    "worst_image_index": 3,
+    "worst_image_comments": "[\"squinty\", \"owner\"]",
+    "bio_overall": "So-So",
+    "bio_good_comments": "[\"school\", \"location\"]",
+    "bio_bad_comments": "[\"bland\"]",
+    "swipe_id": 10
+  }
 }
 ]
