@@ -37,6 +37,7 @@ import { styled } from '@mui/material/styles'
 
 
 const NewProfile = () => {
+  console.log('NEW PROFILE RUNS!')
 
   // Styling Input so it won't display
   const Input = styled('input')({
@@ -50,8 +51,8 @@ const NewProfile = () => {
   // console.log('payload.sub is ->', payload.sub)
 
 
-  const cp = getCurrentProfFromLocalStorage()
-  // console.log('cp ->', cp)
+  const cp = getCurrentProfFromLocalStorage()[0]
+  console.log('cp ->', cp)
 
   const form = {
     name: '',
@@ -64,6 +65,7 @@ const NewProfile = () => {
   }
 
   if (cp) {
+    console.log('cp images length->', cp.images.length)
     if (cp.images.length > 0) {
       const images = cp.images
       for (let i = 0; i < images.length; i++) {
@@ -104,7 +106,6 @@ const NewProfile = () => {
   const handleImageSelect = async (e) => {
     console.log('HANDLE IMAGE SELECT RUNS')
     setPostErrors(false)
-  
     const selectedIndex = parseInt(e.target.classList[0].charAt(0))
     console.log('selected index ->', selectedIndex)
 
@@ -160,15 +161,17 @@ const NewProfile = () => {
     console.log('HANDLE DELETE IMAGE RUNS')
     e.stopPropagation()
     setPostErrors(false)
-    // console.log('e.target ->', e.target)
-    // console.log('e.target.classList ->', e.target.classList)
+    console.log('e.target ->', e.target)
+    console.log('e.target.classList ->', e.target.classList)
 
     const selectedIndex = parseInt(e.target.classList[2].charAt(0))
-    // console.log('selected index ->', selectedIndex)
+    console.log('selected index ->', selectedIndex)
 
 
-    const newPhotos = formData.photos
-    newPhotos[selectedIndex] = ''
+    const newPhotos = formData.images
+    // newPhotos[selectedIndex] = ''
+    newPhotos.splice(selectedIndex, 1)
+    newPhotos.push('')
 
     setFormData({ ...formData, images: [ ...newPhotos ] })
   }

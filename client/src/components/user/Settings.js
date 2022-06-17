@@ -55,7 +55,7 @@ const Settings = () => {
   const user = getUserFromLocalStorage()
   // console.log('user ->', user)
   const settings = getSettingsFromLocalStorage()
-  // console.log('settings ->', settings)
+  console.log('settings ->', settings)
 
   const form = {
     interested_in: '',
@@ -78,10 +78,10 @@ const Settings = () => {
     if (settings.max_age < 21) {
       form.max_age = settings.max_age
     }
-    if (settings.show_me.length > 0) {
+    if (settings.show_me === false) {
       form.show_me = settings.show_me
     }
-    if (settings.give_social.length > 0) {
+    if (settings.give_social === true) {
       form.give_social = settings.give_social
     }
     if (settings.ig.length > 0) {
@@ -123,6 +123,7 @@ const Settings = () => {
       // 'password': payload.pass,
       // 'password_confirmation': payload.pass,
     }
+    console.log('new form -> ', newForm)
 
     try {
       const putResponse = await axios.put(`/api/auth/users/${payload.sub}/`, newForm, {
@@ -141,12 +142,12 @@ const Settings = () => {
     }
 
 
-    // update local storage
+    //   // update local storage
     window.localStorage.removeItem('settings')
     setSettingsToLocalStorage(formData)
 
 
-    // Navigate to: UserAccount
+    //   // Navigate to: UserAccount
     setLoading(false)
     navigate(`/account/${payload.sub}`)
 

@@ -83,6 +83,7 @@ const Home = () => {
     }
 
     if (retrievedUser) {
+      console.log('retrieved user ->', retrievedUser)
       if (retrievedUser.interested_in.length > 0) {
         settingsObj.interested_in = retrievedUser.interested_in
       }
@@ -92,10 +93,11 @@ const Home = () => {
       if (retrievedUser.max_age < 21) {
         settingsObj.max_age = retrievedUser.max_age
       }
-      if (retrievedUser.show_me.length > 0) {
+      if (retrievedUser.show_me === false) {
         settingsObj.show_me = retrievedUser.show_me
       }
-      if (retrievedUser.give_social.length > 0) {
+      if (retrievedUser.give_social === true) {
+
         settingsObj.give_social = retrievedUser.give_social
       }
       if (retrievedUser.ig.length > 0) {
@@ -108,6 +110,7 @@ const Home = () => {
         settingsObj.tw = retrievedUser.tw
       }
     } 
+    console.log('settings object ->', settingsObj)
 
     setSettings(settingsObj)
 
@@ -333,6 +336,9 @@ const Home = () => {
     window.scrollTo(0, 0)
     if (!userIsAuthenticated()) {
       navigate('/login')
+    }
+    if (!currentProfile) {
+      navigate(`/account/${payload.sub}/new-profile`)
     }
 
     setSwiped(true)
