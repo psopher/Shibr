@@ -5,7 +5,6 @@ import getDesignTokens from './helpers/theme.js'
 // Import Components
 import PageNavbar from './components/common/PageNavbar'
 import Home from './components/Home'
-import OverallAnalytics from './components/analytics/OverallAnalytics'
 import SocialMediaMatches from './components/analytics/SocialMediaMatches'
 import SingleProfileAnalytics from './components/analytics/SingleProfileAnalytics'
 import NotFound from './components/common/NotFound'
@@ -42,7 +41,6 @@ const App = () => {
             <Route path="/add-settings" element={<Settings />} />
 
             {/* Analytics routes */}
-            <Route path="/analytics/:userId" element={<OverallAnalytics />} />
             <Route path="/analytics/:userId/matches" element={<SocialMediaMatches />} />
             <Route path="/analytics/profile/:profileId" element={<SingleProfileAnalytics />} />
             <Route path="/analytics/profile/:userId/matches" element={<SocialMediaMatches />} />
