@@ -3,35 +3,22 @@ import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import Spinner from '../utilities/Spinner.js'
 
-import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
+import { getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 import { profileStatsImageList } from '../../helpers/imageHandling'
-import { karmaBar } from '../../helpers/viewProfile.js'
-import { getProfilesList, overallUserAnalyticsHorizontal, socialMediaMatches, photosFeedback, bioFeedback, mostFrequentPhotos, mostFrequentComments, commentFrequency } from '../../helpers/analytics.js'
+import { overallUserAnalyticsHorizontal, photosFeedback, bioFeedback, mostFrequentPhotos, mostFrequentComments, commentFrequency } from '../../helpers/analytics.js'
 import { profileBio } from '../../helpers/viewProfile.js'
 
 //mui
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
-import Avatar from '@mui/material/Avatar'
 import Paper from '@mui/material/Paper'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
-import Stack from '@mui/material/Stack'
-import PropTypes from 'prop-types'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
-
-import AddIcon from '@mui/icons-material/Add'
-import SettingsIcon from '@mui/icons-material/Settings'
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
-
-import profPicDefault from '../../images/prof-pic-default.png'
 
 
 
+// Retrieves stats for a single profile
+// Accessed by clicking the bar graph icon button in the profile list in UserAccount.js
 const SingleProfileAnalytics = () => {
 
   // Navigate
@@ -40,19 +27,15 @@ const SingleProfileAnalytics = () => {
   //Params
   const { profileId } = useParams()
 
-  //Payload
-  const payload = getPayload()
-  // console.log('payload sub ->', payload.sub)
-
   //loading and error state
   const [loading, setLoading] = useState(true)
   const [errors, setErrors] = useState(false)
 
   //User variables
-  const [selectedProfile, setSelectedProfile] = useState({ })
-  const [profileStats, setProfileStats] = useState([ ])
-  const [bestImagesWithComments, setBestImagesWithComments] = useState([ ])
-  const [worstImagesWithComments, setWorstImagesWithComments] = useState([ ])
+  const [selectedProfile, setSelectedProfile] = useState({ }) //The entire object for the selected profile (age, name, bio, etc.)
+  const [profileStats, setProfileStats] = useState([ ]) //The swipe data for the selected profile
+  const [bestImagesWithComments, setBestImagesWithComments] = useState([ ]) //Best images with comments for the selected profile
+  const [worstImagesWithComments, setWorstImagesWithComments] = useState([ ]) // Worst images with comments for the selected profile
 
   // Get Profile Data
   useEffect(() => {
@@ -64,32 +47,6 @@ const SingleProfileAnalytics = () => {
           navigate('/login')
         }
 
-
-        // // Get data for specified user, by username
-        // const { data } = await axios.get(`/api/auth/users/${payload.sub}/`, {
-        //   headers: {
-        //     Authorization: `Bearer ${getTokenFromLocalStorage()}`,
-        //   },
-        // })
-        // // console.log('data is ->', data)
-        // const retrievedUser = data
-        // console.log('retrieved user ->', retrievedUser)
-
-        // const sp = retrievedUser.profiles.filter(profile => profile.id === parseInt(profileId))
-        // console.log('profile Id ->', parseInt(profileId))
-        // console.log('retrieved user profile Id ->', retrievedUser.profiles[0].id)
-        // console.log('sp ->', sp[0])
-
-        // // Set Profile State
-        // setSelectedProfile({ ...sp[0] })
-
-
-        // console.log('sp[0] swipes ->', sp[0].swipes)
-        // setProfileStats({ ...sp[0].swipes })
-        
-        
-        
-
         // Get data for specified profile, by profile Id
         const { data } = await axios.get(`/api/profiles/${profileId}/`, {
           headers: {
@@ -97,72 +54,77 @@ const SingleProfileAnalytics = () => {
           },
         })
         // console.log('data is ->', data)
-        const retrievedProfile = data
+        const retrievedProfile = data //The retrieved profile
         console.log('retrieved profile ->', retrievedProfile)
-        setSelectedProfile({ ...retrievedProfile })
+        setSelectedProfile({ ...retrievedProfile }) //Set the selectedProfile state to the retrieved profile
 
         console.log('retrievedProfile swipes ->', retrievedProfile.swipes)
-        setProfileStats([ ...retrievedProfile.swipes ])
+        setProfileStats([ ...retrievedProfile.swipes ]) //Set the profileStats state to the profile's swipe data
         
-        const selectedProfileArray = [retrievedProfile]
-        const bestPhotos = mostFrequentPhotos(retrievedProfile.swipes, 1, selectedProfileArray)
-        console.log('best photos', bestPhotos)
+        const selectedProfileArray = [retrievedProfile] //Convert retrieved profile into an array with one object at index zero so it can be passed into the mostFrequentPhotos method; Must be an array because the method is also used for overall inulytics, where there are multiple profiles
+        const bestPhotos = mostFrequentPhotos(retrievedProfile.swipes, 1, selectedProfileArray) //Retrieves an object with keys that are photo URLs and values that are the number of times the photo was selected as the best photo, ordered from most to least
+        bestPhotos.length = 3 //Keep only the three most popular photos
+        // console.log('best photos', bestPhotos)
 
         const bestImagesWithCommentsArray = []
-        for (let p = 0; p < bestPhotos.length; p++) {
+        for (let p = 0; p < bestPhotos.length; p++) { //loop through the bestPhotos array
           const imagesWithCommentsObj = []
-          imagesWithCommentsObj.image = bestPhotos[p]
-          const goodComments = mostFrequentComments(retrievedProfile.swipes, 1, bestPhotos[p], selectedProfileArray)
-          console.log('good comments ->', goodComments)
+          imagesWithCommentsObj.image = bestPhotos[p] // set the image value equal to the best photo index
+          const goodComments = mostFrequentComments(retrievedProfile.swipes, 1, bestPhotos[p], selectedProfileArray) //retrieve an array of the most frequent good comments on a specified photo as a key, and the number of times it appears as a value, sorted from most to least 
+          // console.log('good comments ->', goodComments)
 
           if (imagesWithCommentsObj.comments) {
             imagesWithCommentsObj.comments = [ ...imagesWithCommentsObj.comments, ...goodComments[p]]
           } else {
             imagesWithCommentsObj.comments = [ ...goodComments ]
-          }
+          } //Set the comments equal to the accumulated good comments on the photo
+          //PERHAPS THE FIRST PART OF THIS IF STATEMENT ISN'T NECESSARY FOR SINGLE PROFILE ANALYTICS
 
           const goodCommentsFrequency = []
-          for (let i = 0; i < goodComments.length; i++) {
+          for (let i = 0; i < goodComments.length; i++) { //Loop through good comments
             const frequencyOfComment = commentFrequency(retrievedProfile.swipes, 1, bestPhotos[p], selectedProfileArray, goodComments[i])
             goodCommentsFrequency.push(frequencyOfComment)
-
-          }
-          console.log('good comment frequency', goodCommentsFrequency)
-          imagesWithCommentsObj.frequency = goodCommentsFrequency
-          bestImagesWithCommentsArray.push(imagesWithCommentsObj)
+          } //Returns the number of times each of the best comments appears in an array of numbers whose order corresponds to the array of comments
+          // The above method can likely be simplified by a lot. A lot of redundant code that isn't used
+          // console.log('good comment frequency', goodCommentsFrequency)
+          imagesWithCommentsObj.frequency = goodCommentsFrequency // set the frequency equal to the comment frequency array
+          bestImagesWithCommentsArray.push(imagesWithCommentsObj) // push the object with the image, comments, and freqency keys onto the array that has these values for all images, ordered from most to least often voted as best photo
         }
         console.log('best images with comments ->', bestImagesWithCommentsArray)
-        setBestImagesWithComments([ ...bestImagesWithCommentsArray ])
+        setBestImagesWithComments([ ...bestImagesWithCommentsArray ]) //Set bestImagesWithComments state to an array of objects with image as one key, the comments, as another, and the frequency as a third, all ordered from most to least
 
 
-        const worstPhotos = mostFrequentPhotos(retrievedProfile.swipes, 0, selectedProfileArray)
-        console.log('worst photos', worstPhotos)
+        //The same as above but for worst photo; it might be possible to combine the best and worst methods into one
+        const worstPhotos = mostFrequentPhotos(retrievedProfile.swipes, 0, selectedProfileArray)  //Retrieves an object with keys that are photo URLs and values that are the number of times the photo was selected as the worst photo, ordered from most to least
+        worstPhotos.length = 3 //Keep only the three most unpopular popular photos
+        // console.log('worst photos', worstPhotos)
 
         const worstImagesWithCommentsArray = []
-        for (let p = 0; p < worstPhotos.length; p++) {
+        for (let p = 0; p < worstPhotos.length; p++) { //loop through the worstPhotos array
           const imagesWithCommentsObj = []
-          imagesWithCommentsObj.image = worstPhotos[p]
-          const badComments = mostFrequentComments(retrievedProfile.swipes, 0, worstPhotos[p], selectedProfileArray)
-          console.log('bad comments ->', badComments)
+          imagesWithCommentsObj.image = worstPhotos[p] // set the image value equal to the best photo index
+          const badComments = mostFrequentComments(retrievedProfile.swipes, 0, worstPhotos[p], selectedProfileArray) //retrieve an array of the most frequent good comments on a specified photo as a key, and the number of times it appears as a value, sorted from most to least
+          // console.log('bad comments ->', badComments)
 
           if (imagesWithCommentsObj.comments) {
             imagesWithCommentsObj.comments = [ ...imagesWithCommentsObj.comments, ...badComments[p]]
           } else {
             imagesWithCommentsObj.comments = [ ...badComments ]
-          }
+          } //Set the comments equal to the accumulated bad comments on the photo
+          //PERHAPS THE FIRST PART OF THIS IF STATEMENT ISN'T NECESSARY FOR SINGLE PROFILE ANALYTICS
 
           const badCommentsFrequency = []
-          for (let i = 0; i < badComments.length; i++) {
+          for (let i = 0; i < badComments.length; i++) { //Loop through good comments
             const frequencyOfComment = commentFrequency(retrievedProfile.swipes, 0, worstPhotos[p], selectedProfileArray, badComments[i])
             badCommentsFrequency.push(frequencyOfComment)
-
-          }
-          console.log('bad comment frequency', badCommentsFrequency)
-          imagesWithCommentsObj.frequency = badCommentsFrequency
-          worstImagesWithCommentsArray.push(imagesWithCommentsObj)
+          } //Returns the number of times each of the best comments appears in an array of numbers whose order corresponds to the array of comments
+          // The above method can likely be simplified by a lot. A lot of redundant code that isn't used
+          // console.log('bad comment frequency', badCommentsFrequency)
+          imagesWithCommentsObj.frequency = badCommentsFrequency // set the frequency equal to the comment frequency array
+          worstImagesWithCommentsArray.push(imagesWithCommentsObj) // push the object with the image, comments, and freqency keys onto the array that has these values for all images, ordered from most to least often voted as worst photo
         }
-        console.log('worst images with comments ->', worstImagesWithCommentsArray)
-        setWorstImagesWithComments([ ...worstImagesWithCommentsArray ])
+        // console.log('worst images with comments ->', worstImagesWithCommentsArray)
+        setWorstImagesWithComments([ ...worstImagesWithCommentsArray ]) //Set worstImagesWithComments state to an array of objects with image as one key, the comments, as another, and the frequency as a third, all ordered from most to least
 
 
       } catch (error) {
@@ -174,22 +136,14 @@ const SingleProfileAnalytics = () => {
     getData()
   }, [navigate])
 
-  const getStateVariable = (stateVariable) => {
-    console.log('state variable ->', stateVariable)
-    console.log('state variable length ->', stateVariable.length)
-  }
-
   return (
     <>
       <Container key={'apsdiofa'} maxWidth='lg' sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
         <Paper key={'asdfwe'} elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream', pl: 4, pr: 4, borderRadius: 4 }} >
           <Box key={'vnpasd'} sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3 }}>
-            
-            
-            {/* {getStateVariable(selectedProfile)} */}
 
             {/* Images List */}
-            {Object.keys(selectedProfile).length !== 0 && profileStatsImageList(selectedProfile)}
+            {Object.keys(selectedProfile).length !== 0 && profileStatsImageList(selectedProfile)} 
 
             {/* Bio */}
             <Box key={'vpifsaf'} sx={{ mb: 4 }}>

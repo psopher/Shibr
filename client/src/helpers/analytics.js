@@ -70,78 +70,78 @@ export const mostFrequentPhotos = (swipes, isBest = true, profiles) => {
   
   const photosArray = []
 
-  for (let i = 0; i < swipes.length; i++) {
-    const profileWithPhoto = profiles.filter(profile => profile.id === swipes[i].swiped_profile_id)
+  for (let i = 0; i < swipes.length; i++) { //Loop through all swipes
+    const profileWithPhoto = profiles.filter(profile => profile.id === swipes[i].swiped_profile_id) //Filter out all profiles except for the one that the swipe corresponds to 
     // console.log('profile with photo ->', profileWithPhoto[0])
     // console.log('best image index ->', swipes[i].feedback[0].best_image_index)
     // console.log('worst image index ->', swipes[i].feedback[0].worst_image_index)
-    const imageOnProfile = profileWithPhoto[0].images[isBest ? swipes[i].feedback[0].best_image_index : swipes[i].feedback[0].worst_image_index]
+    const imageOnProfile = profileWithPhoto[0].images[isBest ? swipes[i].feedback[0].best_image_index : swipes[i].feedback[0].worst_image_index] //Get the URL for the best/worst image on the profile
     // console.log('image on profile ->', imageOnProfile)
-    photosArray.push(imageOnProfile)
+    photosArray.push(imageOnProfile) //Push this image URL 
+  } // End up with an array of best/worst photos for every swipe on all of the specified profiles
 
-  }
-
-  console.log('photos array', photosArray)
+  // console.log('photos array', photosArray)
 
   const photosObject = {}
-  for (let i = 0; i < photosArray.length; i++) {
+  for (let i = 0; i < photosArray.length; i++) { //loop through the photos array
     if (photosObject[photosArray[i]]){
-      photosObject[photosArray[i]] = photosObject[photosArray[i]] + 1
+      photosObject[photosArray[i]] = photosObject[photosArray[i]] + 1 //The key is the photo url, and the value is the number of times this photo appears as the best/worst photo
     } else {
-      photosObject[photosArray[i]] = 1
+      photosObject[photosArray[i]] = 1 //if it's the first time the photo has appeared, set the value to one
     }
   }
 
   // console.log('photos object ->', photosObject)
-  const keysSorted = Object.keys(photosObject).sort((a,b) => photosObject[b] - photosObject[a])
+  const keysSorted = Object.keys(photosObject).sort((a,b) => photosObject[b] - photosObject[a]) //Sort the keys by their values from most to least; End up with the most/least popular photos appearing first in the object
   // console.log('keys sorted ->', keysSorted)
 
-  return keysSorted
+  return keysSorted //Return the object with the most/least popular photos appearing first; keys are the photo urls, and values are the amount of times the photos appear
 }
 
 export const mostFrequentComments = (swipes, isBest = true, photo, profiles) => {
-  if (photo && photo !== 'undefined') {
+  if (photo && photo !== 'undefined') { //if the photo has a url...
 
     const photosObject = {}
-    for (let i = 0; i < swipes.length; i++){
-      const profileWithPhoto = profiles.filter(profile => profile.id === swipes[i].swiped_profile_id)
-      const imageOnProfile = profileWithPhoto[0].images[isBest ? swipes[i].feedback[0].best_image_index : swipes[i].feedback[0].worst_image_index]
+    for (let i = 0; i < swipes.length; i++){ //loop through all swipes
+      const profileWithPhoto = profiles.filter(profile => profile.id === swipes[i].swiped_profile_id) //Filter out all profiles except for the one that the swipe corresponds to 
+      const imageOnProfile = profileWithPhoto[0].images[isBest ? swipes[i].feedback[0].best_image_index : swipes[i].feedback[0].worst_image_index] //Get the url for best/worst image on the profile
 
-      const imageComments = isBest ? swipes[i].feedback[0].best_image_comments : swipes[i].feedback[0].worst_image_comments
+      const imageComments = isBest ? swipes[i].feedback[0].best_image_comments : swipes[i].feedback[0].worst_image_comments // Get the comments for the best/worst image on the profile
 
       if (photosObject[imageOnProfile]) {
-        photosObject[imageOnProfile] = [ ...photosObject[imageOnProfile], ...imageComments ]
+        photosObject[imageOnProfile] = [ ...photosObject[imageOnProfile], ...imageComments ] //If the image url is already a key on the object, push the new set of comments onto the end of the value, which is an array of comments array 
       } else {
-        photosObject[imageOnProfile] = [ ...imageComments ]
+        photosObject[imageOnProfile] = [ ...imageComments ] //If this is the first time an image URL is found as a key, set it's value to the array of best/worst comments
       }
     }
     // console.log('photos object ->', photosObject)
     // console.log('specific photo comments ->', photosObject[photo])
 
     const commentsObject = {}
-    for (let i = 0; i < photosObject[photo].length; i++) {
+    for (let i = 0; i < photosObject[photo].length; i++) { //loop through the comments array for the specified photo
       if (commentsObject[photosObject[photo][i]]){
         commentsObject[photosObject[photo][i]] = commentsObject[photosObject[photo][i]] + 1
       } else {
         commentsObject[photosObject[photo][i]] = 1
       }
-    }
+    } //End up with a comments object, where the key is a good/bad comment, and the value is the number of times it appeared
     // console.log('comments object ->', commentsObject)
 
-    const keysSorted = Object.keys(commentsObject).sort((a,b) => commentsObject[b] - commentsObject[a])
+    const keysSorted = Object.keys(commentsObject).sort((a,b) => commentsObject[b] - commentsObject[a]) //sorts the comments object so that the most frequent comments appear first
 
     // console.log('comment keys sorted ->', keysSorted)
 
-    return keysSorted
+    return keysSorted //return an object of best/worst comments as keys and number times they appear as values, sorted from most frequent to least frequent
 
 
   } else {
 
-    return ['No Comments', 'No Comments', 'No Comments']
+    return ['No Comments', 'No Comments', 'No Comments'] //If photo is undefined, there were no comments on it
 
   }
 }
 
+//Perhaps a totally unnecessary method
 export const commentFrequency = (swipes, isBest = true, photo, profiles, comment) => {
   if (photo && photo !== 'undefined' && comment !== 'No Comments') {
 
@@ -365,6 +365,7 @@ export const photosFeedback = (imagesWithCommentsArray, isBest = true ) => {
       
       <Box key = {`aoasid${isBest}`} spacing={0} sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'center' }}>
 
+        {/* Header (Best Photos or Worst Photos) */}
         <Typography key={'9'} variant='p' sx={{ mt: 0 }}>{isBest ? 'Best Photos:' : 'Worst Photos:'}</Typography>
         
         <Box key={'8'} sx={{ width: 300, mt: 2, mb: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -372,6 +373,7 @@ export const photosFeedback = (imagesWithCommentsArray, isBest = true ) => {
           {imagesWithCommentsArray.map((imageWithComments, index) => {
             return (
               <Box key={`asdf${isBest}${index}`} sx={{ width: 75, height: 75, display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'center' }}>
+                {/* A best or worst image */}
                 <img
                   src={imageWithComments.image !== 'undefined' ? imageWithComments.image : isBest ? noGoodImages : noBadImages}
                   alt={index}
@@ -381,6 +383,7 @@ export const photosFeedback = (imagesWithCommentsArray, isBest = true ) => {
                   key={`image-${index}`}
                 />
 
+                {/* Comments beneath the best or worst image */}
                 <Box key={`aoid${isBest}`} sx={{ textOverflow: 'clip', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                   <Typography sx={{ textAlign: 'center', fontSize: '1.2vw', width: 75, overflow: 'hidden', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 1 }}>
                     {imageWithComments.image && imageWithComments.comments[0] && imageWithComments.comments[1] !== 'No Comments' ?

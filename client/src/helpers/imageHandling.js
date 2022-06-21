@@ -186,12 +186,13 @@ export const newProfileImageList = (imageArray, handleImageSelect, handleDeleteI
 
 export const profileStatsImageList = (profile) => {
 
-  console.log('profilestatsimagelist images ->', Object.keys(profile))
+  // console.log('profilestatsimagelist images ->', Object.keys(profile))
 
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'start', mt: 0, mb: 2 }}>
-        <Typography variant='h5' sx={{ fontWeight: 'bold' }}>
+        {/* Page Header */}
+        <Typography variant='h5' sx={{ fontWeight: 'bold' }}> 
           Profile Performance
         </Typography>
       </Box>
@@ -211,7 +212,6 @@ export const profileStatsImageList = (profile) => {
                       justifyContent: 'center',
                       backgroundColor: '#ebebeb',
                       borderRadius: 5,
-                      // p: 1,
                       fontFamily: 'Lato',
                     }}>
                     <img
