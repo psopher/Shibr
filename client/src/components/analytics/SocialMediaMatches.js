@@ -4,29 +4,12 @@ import axios from 'axios'
 
 import Spinner from '../utilities/Spinner'
 import RequestError from '../common/RequestError'
-import { getProfile, profileBio } from '../../helpers/viewProfile'
-import { goodPhotoFeedback, badPhotoFeedback, feedbackTypes, overallBioFeedback, goodBioFeedback, badBioFeedback } from '../../helpers/formOptions'
-import { photoFeedback, bioFeedback } from '../../helpers/formMethods'
-import { getFeedbackImageList } from '../../helpers/imageHandling.js'
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 import { getMatchesList } from '../../helpers/analytics'
 
 //mui
 import Container from '@mui/material/Container'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
-import IconButton from '@mui/material/IconButton'
-import LinearProgress from '@mui/material/LinearProgress'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-
-// icons
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
 
 
@@ -42,7 +25,7 @@ const SocialMediaMatches = () => {
   const payload = getPayload()
 
   //profile state 
-  const [matchedUsers, setMatchedUsers] = useState([])
+  const [matchedUsers, setMatchedUsers] = useState([]) //an array of objects of the users the current user matched with
 
   //loading and error state
   const [loading, setLoading] = useState(true)
@@ -50,10 +33,11 @@ const SocialMediaMatches = () => {
 
 
   const handleViewMatch = (e) => {
-    console.log('handle view match event target classList ->', e.currentTarget.classList)
+    // console.log('handle view match event target classList ->', e.currentTarget.classList)
     const selectedProfileId = parseInt(e.currentTarget.classList[0])
     const selectedUserId = parseInt(e.currentTarget.classList[1])
     
+    //View the current profile of the selected match
     navigate(`/account/${selectedUserId}/${selectedProfileId}`)
 
   }
@@ -74,21 +58,24 @@ const SocialMediaMatches = () => {
           },
         })
         console.log('data is ->', data)
+
+        //The full user data
         const retrievedUser = data
         // console.log('retrievedUser ->', retrievedUser)
 
-        console.log('retrieved user matches ->', retrievedUser.matches)
+        // console.log('retrieved user matches ->', retrievedUser.matches)
 
-        const matchedUsersArray = []
+        // Filter out the current user from the matches, and then add the other user to the matchedUsersArray
+        const matchedUsersArray = [] //Will be an array of objects
         retrievedUser.matches.forEach(match => {
           console.log('match ->', match)
           const userToAdd = match.matched_users.filter(user => user.id !== parseInt(userId))
           matchedUsersArray.push(userToAdd[0])
         })
 
-        console.log('matchedUsersArray ->', matchedUsersArray)
+        // console.log('matchedUsersArray ->', matchedUsersArray)
 
-
+        //Set matchedUsers state; an array of objects of the users the current user matched with
         setMatchedUsers([ ...matchedUsersArray ])
 
 
@@ -118,7 +105,7 @@ const SocialMediaMatches = () => {
               <Container maxWidth='xs' sx={{ pb: 4, pt: 4 }}>
                 {/* <Container > */}
                 <Paper sx={{ pt: 2, pb: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: 'cream', boxShadow: 4, borderRadius: 4 }} >
-                  {/* Image List */}
+                  {/* List of matched users */}
                   {getMatchesList(matchedUsers, handleViewMatch)}
                 </Paper>
               </Container>

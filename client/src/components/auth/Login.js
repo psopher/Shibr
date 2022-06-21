@@ -41,25 +41,35 @@ const Login = () => {
 
     if (formData.email && formData.password) {
       try {
+        // POST the email and password to the login endpoint
         const { data } = await axios.post('api/auth/login/', formData)
         
-        console.log('token -> ', data.token)
+        // console.log('token -> ', data.token)
 
+        // Set the token to local storage
         setTokenToLocalStorage(data.token)
         
+        // Navigate to Home.js
         navigate('/')
       } catch (err) {
         console.log(err)
+
+        // set errors to true if the email or password is wrong
         setErrors(true)
       }
     } else {
+
+      // Set errors to true if the email or password is missing
       setErrors(true)
     }
   }
 
   // ? Handle change
   const handleChange = (e) => {
+    // Re-set the form data state to incorporate all changes
     setFormData({ ...formData, [e.target.name]: e.target.value })
+
+    // Set errors to false if the form is changed
     setErrors(false)
   }
 
@@ -74,13 +84,19 @@ const Login = () => {
           alignItems: 'center',
         }}
       >
+        {/* Lock Icon */}
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
+
+        {/* Header */}
         <Typography component="h1" variant="h5">
           Log In
         </Typography>
+        
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          
+          {/* Email */}
           <TextField
             margin="normal"
             required
@@ -93,6 +109,8 @@ const Login = () => {
             value={formData.email} 
             onChange={handleChange}
           />
+
+          {/* Password */}
           <TextField
             margin="normal"
             required
@@ -105,6 +123,8 @@ const Login = () => {
             value={formData.password} 
             onChange={handleChange}
           />
+
+          {/* Errors if there are errors */}
           {errors && 
             <Grid item xs={12}>
               <Container sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -112,6 +132,8 @@ const Login = () => {
               </Container>
             </Grid>  
           }
+
+          {/* Submit button */}
           <Button
             type="submit"
             fullWidth
@@ -120,6 +142,8 @@ const Login = () => {
           >
             Sign In
           </Button>
+
+          {/* Link to Register page for people without accounts */}
           <Grid container>
             <Grid item>
               <Link href="/register" variant="body2">

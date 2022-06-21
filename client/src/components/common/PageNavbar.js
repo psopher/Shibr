@@ -1,6 +1,9 @@
+// React
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+
+// MUI
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -12,24 +15,25 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
-import AddIcon from '@mui/icons-material/Add'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 
 // Import logo image
-import logo from '../../images/logo.png'
-import logoShibr from '../../images/logo-shibr.png'
-import logoShibrW from '../../images/logo-shibr-w.png'
-import logoShibrInulytics from '../../images/logo-shibr-inulytics.png'
 import logoShibrInulyticsW from '../../images/logo-shibr-inulytics-w.png'
+
+// Default profile pic
 import profPicDefault from '../../images/prof-pic-default.png'
+
+// Helper methods
 import { getPayload, userIsAuthenticated } from '../../helpers/auth'
 import { getProfPicFromLocalStorage } from '../../helpers/storage'
 
-
+// Global Variables
 const pagesNoLogin = ['Login', 'Register']
 const settings = ['My Account', 'Logout']
 
+
+// The navbar appears at the top of the website on all pages
 const PageNavbar  = ({ mode, setMode }) => {
   
   //light/dark
@@ -42,8 +46,10 @@ const PageNavbar  = ({ mode, setMode }) => {
 
   // Payload
   const payload = getPayload()
+
+  // Get profile picture from local storage
   const profPic = getProfPicFromLocalStorage()
-  console.log('profpic ->', profPic)
+  // console.log('profpic ->', profPic)
 
   // Keeps track of menu
   const [anchorElUser, setAnchorElUser] = useState(null)
@@ -69,7 +75,7 @@ const PageNavbar  = ({ mode, setMode }) => {
     } else if (pageName === 'logout') {
       handleCloseUserMenu()
 
-      //Remove token from local storage upon logout
+      //Remove token, settings, profpic, and currentprof from local storage upon logout
       window.localStorage.removeItem('shibr')
       window.localStorage.removeItem('settings')
       window.localStorage.removeItem('profPic')
@@ -97,7 +103,7 @@ const PageNavbar  = ({ mode, setMode }) => {
           {/* Logo */}
           <Container sx={{ display: 'flex', alignItems: 'flex-end' }}>
 
-            {/* Icon image */}
+            {/* Logo image */}
             <Box as={Link} to="/" sx={{ width: 180 }}>
               <Box component='img' src={logoShibrInulyticsW} alt="Logo" />
             </Box>
@@ -156,7 +162,7 @@ const PageNavbar  = ({ mode, setMode }) => {
                   <Button
                     key={index}
                     onClick={handleNavClick}
-                    sx={{ my: 2, color: 'white', display: 'block', fontFamily: 'Oxygen' }}
+                    sx={{ my: 2, color: 'white', display: 'block', fontFamily: 'Lato' }}
                   >
                     {page}
                   </Button>

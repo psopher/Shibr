@@ -471,6 +471,7 @@ export const getMatchesList = (matchedUsersArray, handleViewMatch) => {
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'start', mt: 0, mb: 2 }}>
+        {/* Header */}
         <Typography variant='h5' sx={{ fontWeight: 'bold' }}>
           Social Media Matches
         </Typography>

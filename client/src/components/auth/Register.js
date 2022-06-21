@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
@@ -11,7 +11,7 @@ import Box from '@mui/material/Box'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { createTheme } from '@mui/material/styles'
 
 
 const theme = createTheme()
@@ -34,17 +34,21 @@ const Register = () => {
 
   // Update formData
   const handleChange = (e) => {
-    console.log('handle change fires')
+    // console.log('handle change fires')
+
+    // Re-set the form data state to incorporate all changes
     setFormData({ ...formData, [e.target.name]: e.target.value })
+
+    // reset errors to none on the changed field
     setErrors({ ...errors, [e.target.name]: '' })
   }
 
   // Post request to server containing formData inputs
   const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log('submit pressed')
+    // console.log('submit pressed')
 
-    
+    // If none of the form fields are empty, POST the form data to the register endpoint and then navigate to /login
     if (formData.username && formData.email && formData.password && formData.password_confirmation) {
       try {
         console.log('form data is: ', formData)
