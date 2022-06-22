@@ -1,33 +1,30 @@
+// React
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 
 //mui
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import ImageListItem from '@mui/material/ImageListItem'
-import ImageListItemBar from '@mui/material/ImageListItemBar'
 import Typography from '@mui/material/Typography'
 import Masonry from '@mui/lab/Masonry'
 import IconButton from '@mui/material/IconButton'
-import PhotoCamera from '@mui/icons-material/PhotoCamera'
-import LinearProgress from '@mui/material/LinearProgress'
+import { styled } from '@mui/material/styles'
 
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
-import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
+// Icons
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 import AddIcon from '@mui/icons-material/Add'
 
+// Images
 import noGoodImages from '../images/no-good-images.png'
 import noBadImages from '../images/no-bad-images.png'
 import profPicDefault from '../images/prof-pic-default.png'
 
+// Loading and error views
 import Spinner from '../components/utilities/Spinner.js'
-
-import { styled } from '@mui/material/styles'
 
 
 // Image list for Feedback
+// Called in feedback part of home.js
 export const getFeedbackImageList = (profile, bestPhotos = true, handleImageSelect) => {
 
   return (
@@ -111,8 +108,8 @@ export const getFeedbackImageList = (profile, bestPhotos = true, handleImageSele
 }
 
 
+// The Image List with the add and delete icon buttons
 // Called in NewProfile.js
-// The Image List with the add and delete buttons
 export const newProfileImageList = (imageArray, handleImageSelect, handleDeleteImage) => {
 
   // Styling Input so it won't display
@@ -183,7 +180,8 @@ export const newProfileImageList = (imageArray, handleImageSelect, handleDeleteI
 
 
 
-
+// All the images on a single profile
+// Called in Single Profile Analytics at the top
 export const profileStatsImageList = (profile) => {
 
   // console.log('profilestatsimagelist images ->', Object.keys(profile))
@@ -201,6 +199,8 @@ export const profileStatsImageList = (profile) => {
           <Masonry key={'2'} columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
             {Object.keys(profile).length !== 0 && profile.images.length > 0 && profile.images.map((image, index) => {
               return (
+
+                // Image List
                 <ImageListItem key={index} >
                   <Box
                     key={index}

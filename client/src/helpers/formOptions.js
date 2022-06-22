@@ -56,7 +56,7 @@ export const badBioFeedback = [
   'Location',
   'Rude',
   'Bland',
-  'Not Enough',
+  'Not Shiba',
   'Weird',
   'I Like Everything'
 ]

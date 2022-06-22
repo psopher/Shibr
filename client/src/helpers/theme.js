@@ -1,4 +1,4 @@
-import { yellow, deepOrange, grey, teal, green, red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, lightGreen, lime, amber, orange, brown, blueGrey  } from '@mui/material/colors'
+import { yellow, grey, teal, pink, purple, orange, blueGrey  } from '@mui/material/colors'
 
 const getDesignTokens = (mode) => ({
   palette: {

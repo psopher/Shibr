@@ -1,48 +1,29 @@
-import React, { useState, useEffect } from 'react'
+// React
 import { Link } from 'react-router-dom'
 
-import { moreProfileOptions, moreCurrentProfileOptions } from './formOptions'
-
 //mui
-import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Avatar from '@mui/material/Avatar'
 import Divider from '@mui/material/Divider'
-import ImageListItem from '@mui/material/ImageListItem'
-import ImageListItemBar from '@mui/material/ImageListItemBar'
 import Typography from '@mui/material/Typography'
-import Masonry from '@mui/lab/Masonry'
 import IconButton from '@mui/material/IconButton'
-import PhotoCamera from '@mui/icons-material/PhotoCamera'
-import LinearProgress from '@mui/material/LinearProgress'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
-import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
-import AddIcon from '@mui/icons-material/Add'
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined'
 import EqualizerIcon from '@mui/icons-material/Equalizer'
 
+// Images
 import noGoodImages from '../images/no-good-images.png'
 import noBadImages from '../images/no-bad-images.png'
 import profPicDefault from '../images/prof-pic-default.png'
 
-import { styled } from '@mui/material/styles'
-import { fontWeight } from '@mui/system'
 
-
-
+// Pass in swipes and retrieve the number of right swipes
 const getRightSwipesNumber = (swipesArray) => {
   const rightSwipesArray = swipesArray.filter(swipe => swipe.right_swipe)
   return rightSwipesArray.length
 } 
 
+// Pass in swipes and retrieve an object with overall bio feedback options as keys and number of times they appear as values
 const getBioFeedbackNumber = (swipesArray) => {
   const goodBioArray = swipesArray.filter(swipe => swipe.feedback[0].bio_overall === 'Good')
   const sosoBioArray = swipesArray.filter(swipe => swipe.feedback[0].bio_overall === 'So-So')
@@ -56,12 +37,14 @@ const getBioFeedbackNumber = (swipesArray) => {
   return bioObj
 }
 
+// pass in sample size of a type of swipe and total number of swipes and retrieve a percentage
 const getSwipesPercent = (sampleSize = 0, totalSwipes = 0) => {
   return (sampleSize / totalSwipes) * 100
 } 
 
 
-
+// Pass in swipes, profiles and whether you want best/worst
+// Retrieve an object with keys that are photo URLs and values that are the number of times the photo was selected as the best photo, ordered from most to least 
 export const mostFrequentPhotos = (swipes, isBest = true, profiles) => {
   
   // console.log('swipes ->', swipes)
@@ -99,6 +82,8 @@ export const mostFrequentPhotos = (swipes, isBest = true, profiles) => {
   return keysSorted //Return the object with the three most/least popular photos; keys are the photo urls, and values are the amount of times the photos appear
 }
 
+// input swipes, a specific photo, profiles, and whether you are looking for best/worst
+// return an object of best/worst comments as keys and number times they appear as values, sorted from most frequent to least frequent
 export const mostFrequentComments = (swipes, isBest = true, photo, profiles) => {
   if (photo && photo !== 'undefined') { //if the photo has a url...
 
@@ -171,12 +156,7 @@ export const commentFrequency = (swipes, isBest = true, photo, profiles, comment
       }
     }
     // console.log('comments object ->', commentsObject)
-
-
-
     return commentsObject[comment]
-
-
   } else {
 
     return 0
@@ -184,17 +164,15 @@ export const commentFrequency = (swipes, isBest = true, photo, profiles, comment
 
 }
 
-
+// Input all matches and only return the ones where users have opted to exchange social media
 export const getSocialMediaMatches = (matchesArray) => {
-  const socialMatchesArray = matchesArray.filter(match => match.exchange_social_media)
   return matchesArray.filter(match => match.exchange_social_media)
 } 
 
 
+// Returns a list of the user's profiles
+// Called on UserAccount.js
 export const getProfilesList = (profilesArray, currentProfileId = 0, handleViewOrGetData) => {
-
-
-
   return (
     <>
       <Stack key={'20'} spacing={0}>
@@ -259,6 +237,9 @@ export const getProfilesList = (profilesArray, currentProfileId = 0, handleViewO
   )
 }
 
+
+// Overall analytics for all profiles that a user has
+// Called in UserAccount.js
 export const overallUserAnalyticsHorizontal = (allSwipes) => {
 
   return (
@@ -304,6 +285,8 @@ export const overallUserAnalyticsHorizontal = (allSwipes) => {
   )
 }
 
+// Section of Inulytics where social media matches are linked
+// Called in UserAccount.js
 export const socialMediaMatches = (matchesArray, userId, profileId, isOverall = true) => {
   
   return (
@@ -329,7 +312,7 @@ export const socialMediaMatches = (matchesArray, userId, profileId, isOverall = 
   )
 }
 
-
+// The Best/Worst photos and the most common comments on the respective photos
 export const photosFeedback = (imagesWithCommentsArray, isBest = true ) => {
   return (
     <Stack>
@@ -392,6 +375,7 @@ export const photosFeedback = (imagesWithCommentsArray, isBest = true ) => {
   )
 }
 
+// Analytics for the bio, given an array of swipes
 export const bioFeedback = (swipes) => {
   
   return (
@@ -436,7 +420,7 @@ export const bioFeedback = (swipes) => {
             {swipes.length > 0 ? getSwipesPercent(getBioFeedbackNumber(swipes).bad, swipes.length) : 0}%
           </Typography>
         </Box>
-        
+
       </Box>
 
       {/* Line at bottom of  */}
@@ -446,7 +430,8 @@ export const bioFeedback = (swipes) => {
   )
 }
 
-
+// List of social media matches
+// Called in SocialMediaMatches.js
 export const getMatchesList = (matchedUsersArray, handleViewMatch) => {
 
   return (

@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+// React
+import React from 'react'
 
 //mui
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import ImageListItem from '@mui/material/ImageListItem'
-import ImageListItemBar from '@mui/material/ImageListItemBar'
 import Typography from '@mui/material/Typography'
 import Masonry from '@mui/lab/Masonry'
 import IconButton from '@mui/material/IconButton'
 import LinearProgress from '@mui/material/LinearProgress'
 
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
+// Icons
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
-
+// Retrieves a profile with the bio underneath the first image
+// Called on home.js
 export const getProfile = (profile, fromHome = false, karma = 0, handleLeftSwipe, handleRightSwipe) => {
   return (
     <>
@@ -37,7 +36,7 @@ export const getProfile = (profile, fromHome = false, karma = 0, handleLeftSwipe
 
                   {/* Place the bio after the first photo */}
                   {index === 0 &&
-                    profileBio(profile, 0)
+                    profileBio(profile)
                   }
                 </ImageListItem>
               )
@@ -72,7 +71,8 @@ export const getProfile = (profile, fromHome = false, karma = 0, handleLeftSwipe
   )
 }
 
-export const profileBio = (profile, fromFeedback = false, width = 300) => {
+// The profile bio
+export const profileBio = (profile, width = 300) => {
   return (
     <Box key={'0934t'} sx={{ width: width, display: 'flex', flexDirection: 'column', mt: 2, mb: 0 }}>
       

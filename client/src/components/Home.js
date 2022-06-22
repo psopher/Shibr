@@ -523,7 +523,7 @@ const Home = () => {
 
                       {/* Profile Bio */}
                       <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center', mb: 1 }}>
-                        {profileBio(profiles[iterator], 1, 400)}
+                        {profileBio(profiles[iterator], 400)}
                       </Box>
 
                       {/* Overall Bio Feedback */}

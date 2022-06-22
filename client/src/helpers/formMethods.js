@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 
 // Options for why a photo is good
+// Called in the home.js feedback portion
 export const photoFeedback = (feedbackArray = [], isGoodFeedback = 1, handlePhotoFeedbackSelect) => {
   return (
     <>
@@ -49,6 +50,8 @@ export const photoFeedback = (feedbackArray = [], isGoodFeedback = 1, handlePhot
   )
 }
 
+// Options for why the bio is good/bad/soso
+// Called in the home.js feedback section
 export const bioFeedback = (feedbackArray = [], feedbackType = feedbackTypes[0], handleBioFeedbackSelect) => {
   console.log('bioFeedback runs!!!')
   return (
@@ -121,7 +124,7 @@ export const handleChange = (e, setPostErrors, setFormData, formData) => {
   }
 }
 
-// Handles sliding on the height/width sliders
+// Handles sliding on the min/max age sliders
 export const handleAgeRangeChange = (e, setPostErrors, setFormData, formData) => {
   const { name, value } = e.target
   console.log('handleAgeRangeChange runs')
@@ -131,6 +134,5 @@ export const handleAgeRangeChange = (e, setPostErrors, setFormData, formData) =>
   // console.log('e.target name is ->', e.target.name)
   setPostErrors(false)
   setFormData({ ...formData, min_age: minAge, max_age: maxAge })
-  // setAgeRange([ ...e.target.value ])
 }
 
