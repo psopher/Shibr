@@ -95,7 +95,7 @@ export const mostFrequentPhotos = (swipes, isBest = true, profiles) => {
   const keysSorted = Object.keys(photosObject).sort((a,b) => photosObject[b] - photosObject[a]) //Sort the keys by their values from most to least; End up with the most/least popular photos appearing first in the object
   // console.log('keys sorted ->', keysSorted)
 
-  return keysSorted //Return the object with the most/least popular photos appearing first; keys are the photo urls, and values are the amount of times the photos appear
+  return keysSorted.length = 3 //Return the object with the three most/least popular photos; keys are the photo urls, and values are the amount of times the photos appear
 }
 
 export const mostFrequentComments = (swipes, isBest = true, photo, profiles) => {

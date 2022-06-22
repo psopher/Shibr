@@ -63,7 +63,7 @@ const SingleProfileAnalytics = () => {
         
         const selectedProfileArray = [retrievedProfile] //Convert retrieved profile into an array with one object at index zero so it can be passed into the mostFrequentPhotos method; Must be an array because the method is also used for overall inulytics, where there are multiple profiles
         const bestPhotos = mostFrequentPhotos(retrievedProfile.swipes, 1, selectedProfileArray) //Retrieves an object with keys that are photo URLs and values that are the number of times the photo was selected as the best photo, ordered from most to least
-        bestPhotos.length = 3 //Keep only the three most popular photos
+        // bestPhotos.length = 3 //Keep only the three most popular photos
         // console.log('best photos', bestPhotos)
 
         const bestImagesWithCommentsArray = []
@@ -96,7 +96,7 @@ const SingleProfileAnalytics = () => {
 
         //The same as above but for worst photo; it might be possible to combine the best and worst methods into one
         const worstPhotos = mostFrequentPhotos(retrievedProfile.swipes, 0, selectedProfileArray)  //Retrieves an object with keys that are photo URLs and values that are the number of times the photo was selected as the worst photo, ordered from most to least
-        worstPhotos.length = 3 //Keep only the three most unpopular popular photos
+        // worstPhotos.length = 3 //Keep only the three most unpopular popular photos
         // console.log('worst photos', worstPhotos)
 
         const worstImagesWithCommentsArray = []

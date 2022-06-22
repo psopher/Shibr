@@ -162,7 +162,7 @@ const UserAccount = () => {
 
 
         const bestPhotos = mostFrequentPhotos(accumulatedProfileStats, 1, retrievedUser.profiles)
-        bestPhotos.length = 3 //Keep only the three most popular photos
+        // bestPhotos.length = 3 //Keep only the three most popular photos
 
         const bestImagesWithCommentsArray = []
         for (let p = 0; p < bestPhotos.length; p++) {
@@ -192,7 +192,7 @@ const UserAccount = () => {
 
 
         const worstPhotos = mostFrequentPhotos(accumulatedProfileStats, 0, retrievedUser.profiles)
-        worstPhotos.length = 3 //Keep only the three most unpopular photos
+        // worstPhotos.length = 3 //Keep only the three most unpopular photos
         
         const worstImagesWithCommentsArray = []
         for (let p = 0; p < worstPhotos.length; p++) {

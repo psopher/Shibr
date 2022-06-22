@@ -25,6 +25,7 @@ export const getProfile = (profile, fromHome = false, karma = 0, handleLeftSwipe
           <Masonry key={'2'} columns={{ xs: 1, sm: 1, md: 1 }} spacing={1}>
             {profile.images.map((image, index) => {
               return (
+                // Image list item
                 <ImageListItem key={index} >
                   <Box sx={{ boxShadow: 4, mt: 2, borderRadius: 4 }}>
                     <img
@@ -33,6 +34,8 @@ export const getProfile = (profile, fromHome = false, karma = 0, handleLeftSwipe
                       loading='lazy'
                     />
                   </Box>
+
+                  {/* Place the bio after the first photo */}
                   {index === 0 &&
                     profileBio(profile, 0)
                   }
@@ -43,6 +46,7 @@ export const getProfile = (profile, fromHome = false, karma = 0, handleLeftSwipe
         </Box>
       </Container>
       
+      {/* Add a progress bar and swipe right/left buttons if it's from the home screen */}
       {fromHome === true &&
         <>
           {/* Progress Bar */}
@@ -71,15 +75,23 @@ export const getProfile = (profile, fromHome = false, karma = 0, handleLeftSwipe
 export const profileBio = (profile, fromFeedback = false, width = 300) => {
   return (
     <Box key={'0934t'} sx={{ width: width, display: 'flex', flexDirection: 'column', mt: 2, mb: 0 }}>
+      
+      {/* Name and Age */}
       <Typography variant='h6' fontWeight={'bold'}>
         {`${profile.name}, ${profile.age}`}
       </Typography>
+
+      {/* Gender */}
       <Typography>
         {`${profile.gender}`}
       </Typography>
+
+      {/* Training */}
       <Typography>
         {`${profile.school}`}
       </Typography>
+
+      {/* Bio */}
       <Typography>
         {`${profile.bio}`}
       </Typography>
@@ -87,8 +99,8 @@ export const profileBio = (profile, fromFeedback = false, width = 300) => {
   )
 }
 
+// Progress bar that tracks karma
 export const karmaBar = (karma = 0, width = 300) => {
-
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
       <LinearProgress variant="determinate" value={karma * 20} sx={{ width: width, height: 10, border: 1, boxShadow: 4 }} />

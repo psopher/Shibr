@@ -1,20 +1,19 @@
-
-import React, { useState, useEffect } from 'react'
+// React
+import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+
+// Axios
 import axios from 'axios'
 
+// Loading and Error views
 import Spinner from '../utilities/Spinner'
 import RequestError from '../common/RequestError'
 
+// Helper methods
 import { getPayload, getTokenFromLocalStorage } from '../../helpers/auth'
 import { getSettingsFromLocalStorage, setSettingsToLocalStorage } from '../../helpers/storage.js'
-
 import { handleChange } from '../../helpers/formMethods'
-
-import { newProfileImageList } from '../../helpers/imageHandling'
-
 import { interestedIn } from '../../helpers/formOptions'
-
 import { handleAgeRangeChange } from '../../helpers/formMethods'
 
 //mui
@@ -22,12 +21,9 @@ import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
-import IconButton from '@mui/material/IconButton'
-import LinearProgress from '@mui/material/LinearProgress'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Select from '@mui/material/Select'
@@ -48,91 +44,52 @@ const Settings = () => {
 
   // UseNavigate
   const navigate = useNavigate()
-  const { userId } = useParams()
   const payload = getPayload()
   // console.log('payload.sub is ->', payload.sub)
 
-  // const user = getUserFromLocalStorage()
-  // console.log('user ->', user)
+  // Get Settings from local storage
   const settings = getSettingsFromLocalStorage()
   console.log('settings ->', settings)
 
+  // Default settings form data
   const form = {
-    interested_in: '',
-    min_age: 0,
-    max_age: 20,
-    show_me: true,
-    give_social: false,
-    ig: '',
-    sc: '',
-    tw: '',
+    interested_in: settings && settings.interested_in.length > 0 ? settings.interested_in : '',
+    min_age: settings && settings.min_age > -1 ? settings.min_age : 0,
+    max_age: settings && settings.max_age < 21 ? settings.max_age : 20,
+    show_me: settings && settings.show_me === false ? settings.show_me : true,
+    give_social: settings && settings.give_social === false ? settings.give_social : true,
+    ig: settings && settings.ig.length > 0 ? settings.ig : '',
+    sc: settings && settings.sc.length > 0 ? settings.sc : '',
+    tw: settings && settings.tw.length > 0 ? settings.tw : '',
   }
-
-  if (settings) {
-    if (settings.interested_in.length > 0) {
-      form.interested_in = settings.interested_in
-    }
-    if (settings.min_age > -1) {
-      form.min_age = settings.min_age
-    }
-    if (settings.max_age < 21) {
-      form.max_age = settings.max_age
-    }
-    if (settings.show_me === false) {
-      form.show_me = settings.show_me
-    }
-    if (settings.give_social === true) {
-      form.give_social = settings.give_social
-    }
-    if (settings.ig.length > 0) {
-      form.ig = settings.ig
-    }
-    if (settings.sc.length > 0) {
-      form.sc = settings.sc
-    }
-    if (settings.tw.length > 0) {
-      form.tw = settings.tw
-    }
-  } 
 
   // Form Data
   const [ formData, setFormData ] = useState(form)
 
   //loading and error state
   const [loading, setLoading] = useState(false)
-  // setLoading(false)
-  const [errors, setErrors] = useState(false)
-  const [postErrors, setPostErrors] = useState(false)
+  const [errors, setErrors] = useState(false) //General errors
+  const [postErrors, setPostErrors] = useState(false) //Posting errors
 
 
-
+  // Submit the form
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('HANDLE SUBMIT RUNS')
+    // console.log('HANDLE SUBMIT RUNS')
     // console.log('form data is ->', formData)
     setLoading(true)
     setErrors(false)
     setPostErrors(false)
 
     // POST Settings to User
-        
-    const newForm = {
-      ...formData,
-      // 'username': payload.username,
-      // 'email': payload.email,
-      // 'password': payload.pass,
-      // 'password_confirmation': payload.pass,
-    }
-    console.log('new form -> ', newForm)
-
     try {
-      const putResponse = await axios.put(`/api/auth/users/${payload.sub}/`, newForm, {
+      const putResponse = await axios.put(`/api/auth/users/${payload.sub}/`, formData, {
         headers: {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
       })
       
-      console.log('PUT response ->', putResponse)
+      // console.log('PUT response ->', putResponse)
 
     } catch (error) {
 
@@ -142,12 +99,12 @@ const Settings = () => {
     }
 
 
-    //   // update local storage
+    // update local storage
     window.localStorage.removeItem('settings')
     setSettingsToLocalStorage(formData)
 
 
-    //   // Navigate to: UserAccount
+    // Navigate to: UserAccount
     setLoading(false)
     navigate(`/account/${payload.sub}`)
 

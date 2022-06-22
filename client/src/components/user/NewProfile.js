@@ -1,18 +1,20 @@
 
-import React, { useState, useEffect } from 'react'
+// React
+import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+
+// Axios
 import axios from 'axios'
 
+// Loading and Error Views
 import Spinner from '../utilities/Spinner'
 import RequestError from '../common/RequestError'
 
+// Helper Methods
 import { getCurrentProfFromLocalStorage, setCurrentProfToLocalStorage, setProfPicToLocalStorage } from '../../helpers/storage.js'
 import { getTokenFromLocalStorage, getPayload } from '../../helpers/auth'
-
 import { newProfileImageList } from '../../helpers/imageHandling'
-
 import { genders } from '../../helpers/formOptions'
-
 import { handleChange } from '../../helpers/formMethods'
 
 //mui
@@ -20,14 +22,10 @@ import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
-import IconButton from '@mui/material/IconButton'
-import LinearProgress from '@mui/material/LinearProgress'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
 import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -46,46 +44,30 @@ const NewProfile = () => {
 
   // UseNavigate
   const navigate = useNavigate()
-  const { userId } = useParams()
   const payload = getPayload()
   // console.log('payload.sub is ->', payload.sub)
 
-
+  // Get currentProfile from local storage
   const cp = getCurrentProfFromLocalStorage()[0]
-  console.log('cp ->', cp)
+  // console.log('cp ->', cp)
 
+  // Set default values for the form
   const form = {
-    name: '',
-    age: 10,
-    gender: '',
-    school: '',
-    bio: '',
+    name: cp && cp.name.length > 0 ? cp.name : '',
+    age: cp && cp.age.length > 0 ? cp.age : 6,
+    gender: cp && cp.gender.length > 0 ? cp.gender : '',
+    school: cp && cp.school.length > 0 ? cp.school : '',
+    bio: cp && cp.bio.length > 0 ? cp.bio : '',
     images: ['', '', '', '', ''],
     owner: payload.sub,
   }
 
-  if (cp) {
-    console.log('cp images length->', cp.images.length)
-    if (cp.images.length > 0) {
-      const images = cp.images
-      for (let i = 0; i < images.length; i++) {
-        form.images[i] = images[i]
-      }
-    }
-    if (cp.name.length > 0) {
-      form.name = cp.name
-    }
-    if (cp.age.length > 0) {
-      form.age = cp.age
-    }
-    if (cp.gender.length > 0) {
-      form.gender = cp.gender
-    }
-    if (cp.school.length > 0) {
-      form.school = cp.school
-    }
-    if (cp.bio.length > 0) {
-      form.bio = cp.bio
+  // If there is a current profile that has images, set the form images equal to the current profile images
+  if (cp && cp.images.length > 0) {
+    // console.log('cp images length->', cp.images.length)
+    const images = cp.images
+    for (let i = 0; i < images.length; i++) {
+      form.images[i] = images[i]
     }
   } 
 
@@ -98,23 +80,26 @@ const NewProfile = () => {
 
   //loading and error state
   const [loading, setLoading] = useState(false)
-  // setLoading(false)
-  const [errors, setErrors] = useState(false)
-  const [postErrors, setPostErrors] = useState(false)
+  const [errors, setErrors] = useState(false) //General errors
+  const [postErrors, setPostErrors] = useState(false) //Upload errors
 
-
+  // Adding a new image when the user selects the + button
+  // All images automaticall centered and squared
   const handleImageSelect = async (e) => {
-    console.log('HANDLE IMAGE SELECT RUNS')
+    // console.log('HANDLE IMAGE SELECT RUNS')
     setPostErrors(false)
+    // Index is passed through the class of the event target
     const selectedIndex = parseInt(e.target.classList[0].charAt(0))
-    console.log('selected index ->', selectedIndex)
+    // console.log('selected index ->', selectedIndex)
 
+    // Give the selected image a blob URL
     const urlString = URL.createObjectURL(e.target.files[0])
-
     const img = new Image()
     img.src = urlString
 
+
     img.onload = async function() {
+      // Automatically square and center the image
       const widthMoreThanHeight = img.width > img.height ? true : false
       const widthOverHeight = img.width / img.height
       let scale
@@ -148,43 +133,49 @@ const NewProfile = () => {
         startX,
         startY
       )
-
+      
+      // Convert the square image to a data url
       const squareImageURL = canvas.toDataURL('image/jpg', 1)
-
+      
+      // Set the selected form image index to the squared and centered image data URL
       const newPhotos = formData.images
       newPhotos[selectedIndex] = squareImageURL
       setFormData({ ...formData, images: [ ...newPhotos ] })
     }
   }
 
+  // Delete the image at the selected index when people press 'x'
   const handleDeleteImage = (e) => {
-    console.log('HANDLE DELETE IMAGE RUNS')
+    // console.log('HANDLE DELETE IMAGE RUNS')
     e.stopPropagation()
     setPostErrors(false)
-    console.log('e.target ->', e.target)
-    console.log('e.target.classList ->', e.target.classList)
+    // console.log('e.target ->', e.target)
+    // console.log('e.target.classList ->', e.target.classList)
 
+    // Get the integer value for the selected index
     const selectedIndex = parseInt(e.target.classList[2].charAt(0))
-    console.log('selected index ->', selectedIndex)
+    // console.log('selected index ->', selectedIndex)
 
-
+    // Splice the selected image from the image list and push an empty string to the end of it
     const newPhotos = formData.images
-    // newPhotos[selectedIndex] = ''
     newPhotos.splice(selectedIndex, 1)
     newPhotos.push('')
 
+    // Set the form with the new image list
     setFormData({ ...formData, images: [ ...newPhotos ] })
   }
 
+  // Submitting the new profile
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('HANDLE SUBMIT RUNS')
+    // console.log('HANDLE SUBMIT RUNS')
     // console.log('form data is ->', formData)
     setLoading(true)
     setErrors(false)
     setPostErrors(false)
 
     if (formData.images[0] === '') {
+      // Profiles must include at least one image
       setPostErrors(true)
     } else {
 
@@ -220,17 +211,13 @@ const NewProfile = () => {
 
 
         // Modify User (current profile, profile picture)
-        
         const modificationsObj = {
           'current_profile': createdProfileId,
           'profile_image': newForm.images[0],
-          // 'username': payload.username,
-          // 'email': payload.email,
-          // 'password': payload.pass,
-          // 'password_confirmation': payload.pass,
         }
         // console.log('modifications object ->', modificationsObj)
 
+        // Make the modifications to the User Model
         try {
           const putResponse = await axios.put(`/api/auth/users/${payload.sub}/`, modificationsObj, {
             headers: {
@@ -265,14 +252,10 @@ const NewProfile = () => {
       window.localStorage.removeItem('profPic')
       setProfPicToLocalStorage(newForm.images[0])
 
-
       // Navigate to: UserAccount
       setLoading(false)
       navigate(`/account/${payload.sub}`)
-
-
     }
-
   }
 
 
@@ -381,13 +364,6 @@ const NewProfile = () => {
                       />
                     </Box>
 
-
-                    {/* Bio Title */}
-                    {/* <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', mt: 0 }}>
-                      <Typography variant='h6' sx={{ pb: 0, pl: '7.5%' }}>Bio</Typography>
-                    </Box> */}
-
-
                     {/* Bio Textfield */}
                     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
                       <TextField
@@ -404,7 +380,6 @@ const NewProfile = () => {
                         maxRows={6}
                         onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                         sx={{ width: '85%' }}
-                        // fullWidth 
                       />
                     </Box>
 
@@ -424,7 +399,7 @@ const NewProfile = () => {
                         <Typography sx={{ width: '100%', color: 'red' }}>Error. Failed to upload profile.</Typography>
                       </Grid>
                       <Grid key={'grid-key-65237'} item xs={12}>
-                        <Typography sx={{ width: '100%', color: 'red' }}>At least one image is required.</Typography>
+                        <Typography sx={{ width: '100%', color: 'red' }}>A lead image is required.</Typography>
                       </Grid>
                     </Grid>
                   }

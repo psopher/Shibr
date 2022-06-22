@@ -109,7 +109,8 @@ export const getFeedbackImageList = (profile, bestPhotos = true, handleImageSele
 }
 
 
-
+// Called in NewProfile.js
+// The Image List with the add and delete buttons
 export const newProfileImageList = (imageArray, handleImageSelect, handleDeleteImage) => {
 
   // Styling Input so it won't display
@@ -126,23 +127,18 @@ export const newProfileImageList = (imageArray, handleImageSelect, handleDeleteI
               return (
                 <Box key={index} sx={{ mb: 0, pb: 0 }}>
                   <ImageListItem key={index} >
+                    
+                    {/* The image */}
                     <Box
                       key={`${index}`}
-                      // onClick={handleImageSelect} 
                       sx={{ 
                         boxShadow: 4, 
-                        // mt: 1,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         backgroundColor: '#ebebeb',
                         borderRadius: 5,
-                        // p: 1,
                         fontFamily: 'Lato',
-                        // '&:hover': {
-                        //   cursor: 'pointer',
-                        //   backgroundColor: '#e0e0e0',
-                        // },
                       }}>
                       <img
                         src={image ? image : profPicDefault}
@@ -153,6 +149,8 @@ export const newProfileImageList = (imageArray, handleImageSelect, handleDeleteI
                         key={`${index}`}
                       />
                     </Box>
+
+                    {/* X button if there is an image; + button if there is no image */}
                     {image ? 
                       <Box key={`${index}-2`} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
                         <Box key={`${index}-2`} onClick={handleDeleteImage} sx={{ borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
