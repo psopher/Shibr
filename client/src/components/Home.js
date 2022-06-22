@@ -1,34 +1,29 @@
+// React
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+
+// Axios
 import axios from 'axios'
 
+// Loading and Error Views
 import Spinner from './utilities/Spinner.js'
 import RequestError from './common/RequestError'
+
+// Helper Methods
 import { getProfile, profileBio } from '../helpers/viewProfile'
 import { goodPhotoFeedback, badPhotoFeedback, feedbackTypes, overallBioFeedback, goodBioFeedback, badBioFeedback } from '../helpers/formOptions'
 import { photoFeedback, bioFeedback } from '../helpers/formMethods'
 import { getFeedbackImageList } from '../helpers/imageHandling.js'
+import { setCurrentProfToLocalStorage, setProfPicToLocalStorage, setSettingsToLocalStorage } from '../helpers/storage'
+import { getPayload, userIsAuthenticated, getTokenFromLocalStorage } from '../helpers/auth.js'
 
 //mui
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
-import IconButton from '@mui/material/IconButton'
-import LinearProgress from '@mui/material/LinearProgress'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-
-// icons
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined'
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
-
-
-import { setCurrentProfToLocalStorage, setProfPicToLocalStorage, setSettingsToLocalStorage } from '../helpers/storage'
-import { getPayload, userIsAuthenticated, getTokenFromLocalStorage } from '../helpers/auth.js'
 
 
 const Home = () => {
@@ -36,6 +31,7 @@ const Home = () => {
   // Navigate
   const navigate = useNavigate()
   
+  // Payload
   const payload = getPayload()
   // console.log('payload sub ->', payload.sub)
 
@@ -46,14 +42,14 @@ const Home = () => {
   const [postErrors, setPostErrors] = useState(false)
 
   //profile state 
-  const [profiles, setProfiles] = useState([])
-  const [iterator, setIterator] = useState(0)
-  const [swiped, setSwiped] = useState(false)
-  const [isRightSwipe, setIsRightSwipe] = useState(false)
-  const [user, setUser] = useState({})
-  const [currentProfile, setCurrentProfile] = useState({})
-  const [settings, setSettings] = useState({})
-  const [feedbackForm, setFeedbackForm] = useState({
+  const [profiles, setProfiles] = useState([]) //All profiles in db
+  const [iterator, setIterator] = useState(0) //Profile to view index
+  const [swiped, setSwiped] = useState(false) //Determines whether it is the swipe view or feedback view
+  const [isRightSwipe, setIsRightSwipe] = useState(false) //keeps track of whether the swipe was a right swipe when in feedback view
+  const [user, setUser] = useState({}) //the full user object for the user
+  const [currentProfile, setCurrentProfile] = useState({}) //the current profile for the user
+  const [settings, setSettings] = useState({}) //settings for the user
+  const [feedbackForm, setFeedbackForm] = useState({ //Default feedback form
     'best_image_index': -1,
     'best_image_comments': [],
     'worst_image_index': -1,
@@ -63,59 +59,39 @@ const Home = () => {
     'bio_bad_comments': [],
     'swipe_id': -1,
   })
-  const [karma, setKarma] = useState(0)
+  const [karma, setKarma] = useState(0) //karma for the user
 
+  // Returns a settings form; sets the form to the settings state and to local storage
   const settingsAndUserToLocalStorage = (retrievedUser) => {
+    // console.log('settingsAndUserToLocalStorage runs')
+
+    // console.log('retrievedUser ->', retrievedUser)
     
+    //settings form
     const settingsObj = {
-      interested_in: '',
-      min_age: 0,
-      max_age: 20,
-      show_me: true,
-      give_social: false,
-      ig: '',
-      sc: '',
-      tw: '',
+      interested_in: retrievedUser && retrievedUser.interested_in.length > 0 ? retrievedUser.interested_in : '',
+      min_age: retrievedUser && retrievedUser.min_age > -1 ? retrievedUser.min_age : 0,
+      max_age: retrievedUser && retrievedUser.max_age < 21 ? retrievedUser.max_age : 20,
+      show_me: retrievedUser && retrievedUser.show_me === false ? retrievedUser.show_me : true,
+      give_social: retrievedUser && retrievedUser.give_social === false ? retrievedUser.give_social : true,
+      ig: retrievedUser && retrievedUser.ig.length > 0 ? retrievedUser.ig : '',
+      sc: retrievedUser && retrievedUser.sc.length > 0 ? retrievedUser.sc : '',
+      tw: retrievedUser && retrievedUser.tw.length > 0 ? retrievedUser.tw : '',
     }
+    // console.log('settings object ->', settingsObj)
 
-    if (retrievedUser) {
-      console.log('retrieved user ->', retrievedUser)
-      if (retrievedUser.interested_in.length > 0) {
-        settingsObj.interested_in = retrievedUser.interested_in
-      }
-      if (retrievedUser.min_age > -1) {
-        settingsObj.min_age = retrievedUser.min_age
-      }
-      if (retrievedUser.max_age < 21) {
-        settingsObj.max_age = retrievedUser.max_age
-      }
-      if (retrievedUser.show_me === false) {
-        settingsObj.show_me = retrievedUser.show_me
-      }
-      if (retrievedUser.give_social === true) {
-
-        settingsObj.give_social = retrievedUser.give_social
-      }
-      if (retrievedUser.ig.length > 0) {
-        settingsObj.ig = retrievedUser.ig
-      }
-      if (retrievedUser.sc.length > 0) {
-        settingsObj.sc = retrievedUser.sc
-      }
-      if (retrievedUser.tw.length > 0) {
-        settingsObj.tw = retrievedUser.tw
-      }
-    } 
-    console.log('settings object ->', settingsObj)
-
+    // Set settings
     setSettings(settingsObj)
 
+    // set settings to local storage
     window.localStorage.removeItem('settings')
     setSettingsToLocalStorage(settingsObj)
 
+    // Return the settings form
     return settingsObj
   }
 
+  // Sorts profiles based on user settings so that the user will only see profiles that meets the user's parameters
   const sortProfiles = (profiles, retrievedUser) => {
     console.log('SORT PROFILES RUNS')
 
@@ -130,19 +106,18 @@ const Home = () => {
     const profileAfterFilters = profiles.filter((profile) => {
 
       return (
-        profile.owner.id !== retrievedUser.id 
-        && profile.age >= retrievedUser.min_age 
-        && profile.age <= retrievedUser.max_age 
-        && (retrievedUser.interested_in === 'Alphas' ? profile.gender === 'Male' : retrievedUser.interested_in === 'Bitches' ? profile.gender === 'Female' : (profile.gender === 'Male' || profile.gender === 'Female')) 
-        && !swipedProfileIdsArray.includes(profile.id)
+        profile.owner.id !== retrievedUser.id //user won't see own profiles
+        && profile.age >= retrievedUser.min_age //age greater than or equal to minimum age
+        && profile.age <= retrievedUser.max_age //age less than or equal to max age
+        && (retrievedUser.interested_in === 'Alphas' ? profile.gender === 'Male' : retrievedUser.interested_in === 'Bitches' ? profile.gender === 'Female' : (profile.gender === 'Male' || profile.gender === 'Female')) //sees the gender(s) that interest the user
+        && !swipedProfileIdsArray.includes(profile.id) //won't see profiles the user has already swiped on
       ) 
     })
 
-
-
-    return profileAfterFilters
+    return profileAfterFilters //array of profiles that fit the specified parameters
   }
 
+  // Returns the user's current profile
   const findCurrentProfile = (profiles, retrievedUser) => {
     console.log('FIND CURRENT PROFILE RUNS')
 
@@ -166,34 +141,39 @@ const Home = () => {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
-        console.log('data is ->', response.data)
+        // console.log('data is ->', response.data)
         const retrievedUser = response.data
+
+        // Set user and set karm from the response data
         setUser(retrievedUser)
         setKarma(retrievedUser.karma)
 
-
+        // get user settings and set them to local storage
         const settingsObj = settingsAndUserToLocalStorage(retrievedUser)
 
+        // Retrieve all profiles
         try {
           const { data } = await axios.get('/api/profiles/')
 
-          console.log('retrieved profiles ->', data)
+          // console.log('retrieved profiles ->', data)
 
+          // Current Profile
           const currentProfile = findCurrentProfile(data, retrievedUser)
-          console.log(currentProfile)
+          // console.log(currentProfile)
           setCurrentProfile(currentProfile)
-
           window.localStorage.removeItem('currentProf')
           setCurrentProfToLocalStorage(currentProfile)
 
-          console.log('current profile images ->', currentProfile[0].images[0])
-
+          // Profile Picture
+          // console.log('current profile images ->', currentProfile[0].images[0])
           window.localStorage.removeItem('profPic')
           setProfPicToLocalStorage(currentProfile[0].images[0])
 
+          // Sort through profiles and set the sorted profiles to state
           const sortedProfiles = sortProfiles(data, retrievedUser)
-          console.log('sorted profiles ->', sortedProfiles)
+          // console.log('sorted profiles ->', sortedProfiles)
           setProfiles(sortedProfiles)
+
         } catch (error) {
           console.log(error)
           setErrors(true)
@@ -208,6 +188,8 @@ const Home = () => {
     getData()
   }, [])
 
+
+  // When a user chooses a best/worst image
   const handleImageSelect = (e, bestPhotos) => {
     e.stopPropagation()
 
@@ -216,51 +198,55 @@ const Home = () => {
     // console.log('e.target ->', e.target)
     // console.log('e.target.classList ->', e.target.classList)
 
+    // Retrieve selected index from 'alt' tag
     const selectedIndex = parseInt(e.target.alt)
-    console.log('selected index ->', selectedIndex)
+    // console.log('selected index ->', selectedIndex)
 
+    // Remove the 'styled' class from all of the best or worst photos
     const photoClass = e.target.classList
-
     const photos = document.body.querySelectorAll(`.${photoClass[0]}`)
     console.log('photos ->', photos)
     photos.forEach(photo => photo.classList.remove('styled'))
 
-    console.log('bestPhotos ->', bestPhotos)
+    // console.log('bestPhotos ->', bestPhotos)
 
+    // Set selected index for best/worst photo
     if (bestPhotos) {
-      console.log('best photos runs')
+      // console.log('best photos runs')
       setFeedbackForm({ ...feedbackForm, 'best_image_index': selectedIndex })
     } else {
-      console.log('worst photos runs')
+      // console.log('worst photos runs')
       setFeedbackForm({ ...feedbackForm, 'worst_image_index': selectedIndex })
     }
 
+    // Add 'styled' class to selected photo
     e.target.classList.toggle('styled')
-
-
   }
 
+  // Feedback for best/worst photo
   const handlePhotoFeedbackSelect = (e, isGoodFeedback) => {
-    console.log('handleFeedbackSelect Fires')
+    // console.log('handleFeedbackSelect Fires')
 
     setPostErrors(false)
 
-    console.log('e.targe.textContent ->', e.target.textContent)
+    // console.log('e.targe.textContent ->', e.target.textContent)
     const feedbackClass = e.target.classList
-    console.log('feedback class ->', feedbackClass)
-    console.log('feedback class index 0 ->', feedbackClass[0])
-    console.log('isGoodFeedback ->', isGoodFeedback)
+    // console.log('feedback class ->', feedbackClass)
+    // console.log('feedback class index 0 ->', feedbackClass[0])
+    // console.log('isGoodFeedback ->', isGoodFeedback)
 
+    // Remove all other feedback if 'no good images' or 'no bad images' is the selection; otherwise let options accumulate
     if (e.target.textContent === 'No Good Images' || e.target.textContent === 'No Bad Images') {
       const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}`)
-      console.log('feedback ->', feedback)
+      // console.log('feedback ->', feedback)
       feedback.forEach(comment => comment.classList.remove('styled'))
     } else {
       const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}-end`)
-      console.log('feedback ->', feedback)
+      // console.log('feedback ->', feedback)
       feedback.forEach(comment => comment.classList.remove('styled'))
     }
 
+    // Set the correct state elements
     if (isGoodFeedback) {
       console.log('is good photo feedback!')
       if (e.target.textContent === 'No Good Images' || feedbackForm.best_image_comments.includes('No Good Images')) {
@@ -277,31 +263,33 @@ const Home = () => {
       }
     }
 
-
-
+    // Add styling to the event target
     e.target.classList.toggle('styled')
 
   }
 
+  // Feedback for Bio
   const handleBioFeedbackSelect = (e, feedbackType) => {
-    console.log('handleBioFeedbackSelect Runs')
+    // console.log('handleBioFeedbackSelect Runs')
 
     setPostErrors(false)
 
-    console.log('e.targe.textContent ->', e.target.textContent)
-    console.log('feedbackType is ->', feedbackType)
+    // console.log('e.targe.textContent ->', e.target.textContent)
+    // console.log('feedbackType is ->', feedbackType)
     const feedbackClass = e.target.classList
 
+    // Remove styling from all other options if 'I like nothing', 'I like everything', 'good', 'so-so', or 'bad' is selected; otherwise let the styling accumulate
     if (e.target.textContent === 'I Like Nothing' || e.target.textContent === 'I Like Everything' || e.target.textContent === 'Good' || e.target.textContent === 'So-So' || e.target.textContent === 'Bad' ) {
       const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}`)
-      console.log('feedback ->', feedback)
+      // console.log('feedback ->', feedback)
       feedback.forEach(comment => comment.classList.remove('styled'))
     } else {
       const feedback = document.body.querySelectorAll(`.${feedbackClass[0]}-end`)
-      console.log('feedback ->', feedback)
+      // console.log('feedback ->', feedback)
       feedback.forEach(comment => comment.classList.remove('styled'))
     }
 
+    // Set the correct state elements
     if (feedbackType === 'Overall') {
       console.log('is overall bio!')
       setFeedbackForm({ ...feedbackForm, 'bio_overall': e.target.textContent })
@@ -328,9 +316,11 @@ const Home = () => {
     // console.log('feedback ->', feedback)
     // feedback.forEach(comment => comment.classList.remove('styled'))
 
+    // toggle the 'styled' class for the event target
     e.target.classList.toggle('styled')
   }
 
+  // Handle left swiping
   const handleLeftSwipe = (e) => {
     console.log('HANDLE LEFT SWIPE RUNS')
     window.scrollTo(0, 0)
@@ -344,6 +334,7 @@ const Home = () => {
     setSwiped(true)
   }
 
+  // handle right swiping
   const handleRightSwipe = (e) => {
     console.log('HANDLE RIGHT SWIPE RUNS')
     window.scrollTo(0, 0)
@@ -365,6 +356,7 @@ const Home = () => {
 
     // console.log('feedback form data ->', feedbackForm)
 
+    // If all feedback fields are filled out, then send a POST request for a Swipe and a Feedback object
     if (feedbackForm.best_image_index > -1 
       && feedbackForm.worst_image_index > -1 
       && feedbackForm.best_image_comments.length > 0 
@@ -383,15 +375,14 @@ const Home = () => {
 
       // console.log('swipe object ->', swipeObj)
 
+
       // Post Swipe
       // After receiving the swipe Id, post feedback
-
-
       // Create a new form so that you can pass swipe id
       const newForm = { ...feedbackForm }
       // console.log('new form ->', newForm)
 
-      // POST Profile
+      // POST Swipe
       try {
         setLoading(true)
 
@@ -401,12 +392,14 @@ const Home = () => {
           },
         })
         console.log(response)
+        
+        // the Swipe ID for the new swipe 
         const createdSwipeId = response.data.id
-        console.log('created swipe id', createdSwipeId)
+        // console.log('created swipe id', createdSwipeId)
 
         // Add swipe id to form
         newForm.swipe_id = createdSwipeId
-        console.log('new form with created swipe id ->', createdSwipeId)
+        // console.log('new form with created swipe id ->', createdSwipeId)
 
         try {
           const feedbackResponse = await axios.post('/api/feedback/', newForm, {
@@ -415,16 +408,15 @@ const Home = () => {
             },
           })
           
-          console.log('POST feedback response ->', feedbackResponse)
+          // console.log('POST feedback response ->', feedbackResponse)
 
-
-
+          // The POST request was successful
+          
           // Update Karma for user account
           console.log('karma ->', karma)
           if (karma < 5) {
             console.log('this runs')
 
-          
             const modificationsObj = {
               'karma': karma + 1,
             }
@@ -434,7 +426,8 @@ const Home = () => {
                   Authorization: `Bearer ${getTokenFromLocalStorage()}`,
                 },
               })
-              console.log('PUT response ->', putResponse)
+              // console.log('PUT response ->', putResponse)
+              // Update karma state
               setKarma(karma + 1)
 
             } catch (error) {
@@ -465,7 +458,7 @@ const Home = () => {
       }
 
 
-
+      // ? Should these be here or inside the third axios request?
       setSwiped(false)
 
       setIterator(iterator + 1)

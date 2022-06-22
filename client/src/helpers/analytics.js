@@ -94,8 +94,9 @@ export const mostFrequentPhotos = (swipes, isBest = true, profiles) => {
   // console.log('photos object ->', photosObject)
   const keysSorted = Object.keys(photosObject).sort((a,b) => photosObject[b] - photosObject[a]) //Sort the keys by their values from most to least; End up with the most/least popular photos appearing first in the object
   // console.log('keys sorted ->', keysSorted)
+  keysSorted.length = 3
 
-  return keysSorted.length = 3 //Return the object with the three most/least popular photos; keys are the photo urls, and values are the amount of times the photos appear
+  return keysSorted //Return the object with the three most/least popular photos; keys are the photo urls, and values are the amount of times the photos appear
 }
 
 export const mostFrequentComments = (swipes, isBest = true, photo, profiles) => {
@@ -190,7 +191,7 @@ export const getSocialMediaMatches = (matchesArray) => {
 } 
 
 
-export const getProfilesList = (profilesArray, currentProfileId = 0, open = false, handleMenuOpen, handleClose, anchorEl) => {
+export const getProfilesList = (profilesArray, currentProfileId = 0, handleViewOrGetData) => {
 
 
 
@@ -217,7 +218,10 @@ export const getProfilesList = (profilesArray, currentProfileId = 0, open = fals
                   </Typography>
                 </Box>
                 
+                {/* Current/Finished labels; view button; analytics button */}
                 <Box key={profile.username} sx={{ mt: 1, mb: 1 , height: 76, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-end' }}>
+                  
+                  {/* Current/Finished label */}
                   {profile.id === currentProfileId ? 
                     <Typography key={'23'} sx={{ color: 'primary.main', fontWeight: 'bold' }}>
                       Current
@@ -229,62 +233,18 @@ export const getProfilesList = (profilesArray, currentProfileId = 0, open = fals
                   }
 
                   {/* View Profile Button */}
-                  <Box onClick={handleClose} className={`view ${profile.id}`} sx={{ ml: 0, mr: 0, boxShadow: 0, border: 0, borderRadius: '50%', display: 'flex', alignItems: 'end', justifyContent: 'end' }} >
+                  <Box onClick={handleViewOrGetData} className={`view ${profile.id}`} sx={{ ml: 0, mr: 0, boxShadow: 0, border: 0, borderRadius: '50%', display: 'flex', alignItems: 'end', justifyContent: 'end' }} >
                     <IconButton aria-label={`${profile.id}`} size="small" >
                       <ChevronRightOutlinedIcon fontSize="small" sx={{ color: profile.id === currentProfileId ? 'primary.main' : 'secondary.main' }} />
                     </IconButton>
                   </Box>
                   {/* View Profile Button */}
-                  <Box onClick={handleClose} className={`inulytics ${profile.id}`} sx={{ ml: 0, mr: 0, boxShadow: 0, border: 0, borderRadius: '50%', display: 'flex', alignItems: 'end', justifyContent: 'end' }} >
+                  <Box onClick={handleViewOrGetData} className={`inulytics ${profile.id}`} sx={{ ml: 0, mr: 0, boxShadow: 0, border: 0, borderRadius: '50%', display: 'flex', alignItems: 'end', justifyContent: 'end' }} >
                     <IconButton aria-label={`${profile.id}`} size="small" >
                       <EqualizerIcon fontSize="small" sx={{ color: profile.id === currentProfileId ? 'primary.main' : 'secondary.main' }} />
                     </IconButton>
                   </Box>
 
-                  {/* <Box key={index}>
-                    <IconButton
-                      key={'26'}
-                      aria-label="more"
-                      id="long-button"
-                      aria-controls={open ? 'long-menu' : undefined}
-                      aria-expanded={open ? 'true' : undefined}
-                      aria-haspopup="true"
-                      onClick={handleMenuOpen}
-                    >
-                      <MoreHorizOutlinedIcon key={'200'} />
-                    </IconButton>
-                    <Menu
-                      key={'27'}
-                      id="long-menu"
-                      MenuListProps={{
-                        'aria-labelledby': 'long-button',
-                      }}
-                      className={`${profile.id}`}
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleClose}
-                      PaperProps={{
-                        style: {
-                          // maxHeight: ITEM_HEIGHT * 4.5,
-                          width: '10%',
-                        },
-                      }}
-                    >
-                      {profile.id === currentProfileId ? 
-                        moreCurrentProfileOptions.map((option, i) => (
-                          <MenuItem key={option} className={`${currentProfileId}`} onClick={handleClose}>
-                            {option}
-                          </MenuItem>
-                        ))
-                        : 
-                        moreProfileOptions.map((option, i) => (
-                          <MenuItem key={option} className={`${currentProfileId}`} onClick={handleClose}>
-                            {profile.id} {index} {currentProfileId}
-                          </MenuItem>
-                        ))
-                      }
-                    </Menu>
-                  </Box> */}
                 </Box>
               </Box>
 
@@ -304,6 +264,8 @@ export const overallUserAnalyticsHorizontal = (allSwipes) => {
   return (
     <Stack key={'1asd'} spacing={0}>
       <Box key={'1ew'} sx={{ width: 300, display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+        
+        {/* Sample Size */}
         <Box key={'1sdfg'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography key={'1hss'} sx={{ textDecoration: 'underline' }}>
             Sample
@@ -312,6 +274,8 @@ export const overallUserAnalyticsHorizontal = (allSwipes) => {
             {allSwipes.length > 0 ? allSwipes.length : 0}
           </Typography>
         </Box>
+        
+        {/* Right Swipes */}
         <Box key={'2arg'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography key={'1'} sx={{ textDecoration: 'underline' }}>
             Right Swipes
@@ -320,6 +284,8 @@ export const overallUserAnalyticsHorizontal = (allSwipes) => {
             {allSwipes.length > 0 ? getRightSwipesNumber(allSwipes) : 0}
           </Typography>
         </Box>
+        
+        {/* Percentage */}
         <Box key={'3eryj'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography key={'1tyjr'} sx={{ textDecoration: 'underline' }}>
             Percentage
@@ -343,11 +309,16 @@ export const socialMediaMatches = (matchesArray, userId, profileId, isOverall = 
   return (
     <Stack key={'10'} spacing={0}>
       <Box key={'10'} sx={{ mt: 2, mb: 2, display: 'flex', flexDirection: 'row', justifyContent: 'start', alignItems: 'center' }}>
+        
+        {/* Social Media Matches label */}
         <Typography key={'10'} variant='p' sx={{ mt: 1 }} >Social Media Matches: 
           <Typography key={'11'} variant='p' sx={{ ml: 2, fontWeight: 'bold', fontSize: '16px', color: 'primary.main' }} as='span'>
+            
+            {/* Number is link to social media matches page */}
             <Link key={'12'} to={ isOverall ? `/analytics/profile/${userId}/matches` : `/analytics/profile/${userId}/${profileId}/matches`}>
               { getSocialMediaMatches(matchesArray).length }
             </Link>
+
           </Typography>
         </Typography>
       </Box>
@@ -425,13 +396,18 @@ export const bioFeedback = (swipes) => {
   
   return (
     <Stack key={'1'} spacing={0}>
-      
+
+      {/* Bio Label */}
       <Box key = {'10'} spacing={0} sx={{ mt: 3, display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'center' }}>
         <Typography key={'9'} variant='p' sx={{ mt: 0 }}>
           Bio:
         </Typography>
       </Box>
+
+      {/* Bio Feedback */}
       <Box key={'1'} sx={{ width: 300, mt: 1, mb: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+        
+        {/* 'Good' rating */}
         <Box key={'1'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography key={'1'} sx={{ textDecoration: 'underline' }}>
             Good
@@ -440,6 +416,8 @@ export const bioFeedback = (swipes) => {
             {swipes.length > 0 ? getSwipesPercent(getBioFeedbackNumber(swipes).good, swipes.length) : 0}%
           </Typography>
         </Box>
+        
+        {/* 'So-So' rating */}
         <Box key={'2'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography key={'1'} sx={{ textDecoration: 'underline' }}>
             So-So
@@ -448,6 +426,8 @@ export const bioFeedback = (swipes) => {
             {swipes.length > 0 ? getSwipesPercent(getBioFeedbackNumber(swipes).soso, swipes.length) : 0}%
           </Typography>
         </Box>
+        
+        {/* 'Bad' rating */}
         <Box key={'3'} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography key={'1'} sx={{ textDecoration: 'underline' }}>
             Bad
@@ -456,6 +436,7 @@ export const bioFeedback = (swipes) => {
             {swipes.length > 0 ? getSwipesPercent(getBioFeedbackNumber(swipes).bad, swipes.length) : 0}%
           </Typography>
         </Box>
+        
       </Box>
 
       {/* Line at bottom of  */}

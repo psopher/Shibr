@@ -1,10 +1,15 @@
+// React
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+
+// Axios
 import axios from 'axios'
+
+// Loading View
 import Spinner from '../utilities/Spinner.js'
 
+// Helper Methods
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
-import { getImageList } from '../../helpers/imageHandling'
 import { karmaBar } from '../../helpers/viewProfile.js'
 import { getProfilesList, overallUserAnalyticsHorizontal, socialMediaMatches, photosFeedback, bioFeedback, mostFrequentPhotos, mostFrequentComments, commentFrequency } from '../../helpers/analytics.js'
 
@@ -13,22 +18,20 @@ import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Paper from '@mui/material/Paper'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import Stack from '@mui/material/Stack'
 import PropTypes from 'prop-types'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 
+// Icons
 import AddIcon from '@mui/icons-material/Add'
 import SettingsIcon from '@mui/icons-material/Settings'
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
 
+// Images
 import profPicDefault from '../../images/prof-pic-default.png'
 
-
+// Tab Panel helper functions
 function TabPanel(props) {
   const { children, value, index, ...other } = props
   const numberValue = parseFloat(value)
@@ -74,7 +77,7 @@ const UserAccount = () => {
 
   //Payload
   const payload = getPayload()
-  console.log('payload sub ->', payload.sub)
+  // console.log('payload sub ->', payload.sub)
 
   //Keeps track of which tab we are in, default is My Profiles at index 0
   const [value, setValue] = useState(0)
@@ -84,31 +87,28 @@ const UserAccount = () => {
   const [errors, setErrors] = useState(false)
 
   //User variables
-  const [accountUser, setAccountUser] = useState({ })
-  const [accountCurrentProfile, setAccountCurrentProfile] = useState({ })
-  const [accountProfiles, setAccountProfiles] = useState([ ])
-  const [accountOverallStats, setAccountOverallStats] = useState([ ])
-  const [accountMatches, setAccountMatches] = useState([ ])
-  const [bestImagesWithComments, setBestImagesWithComments] = useState([ ])
-  const [worstImagesWithComments, setWorstImagesWithComments] = useState([ ])
+  const [accountUser, setAccountUser] = useState({ }) //The full user object for the account user
+  const [accountCurrentProfile, setAccountCurrentProfile] = useState({ }) //the current profile for the account user
+  const [accountProfiles, setAccountProfiles] = useState([ ]) //all profiles for the account user
+  const [accountOverallStats, setAccountOverallStats] = useState([ ]) //all swipe data for the account user
+  const [accountMatches, setAccountMatches] = useState([ ]) //all matches for the account user
+  const [bestImagesWithComments, setBestImagesWithComments] = useState([ ]) //best images with comments for the account user
+  const [worstImagesWithComments, setWorstImagesWithComments] = useState([ ]) //worst images with comments for the account user
 
 
-  // More Options Button
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const open = Boolean(anchorEl)
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleClose = (e) => {
-    setAnchorEl(null)
-    console.log('handle close event target ->', e.currentTarget)
-    console.log('handle close event target classlist ->', e.currentTarget.classList)
+  
+  // Navigate to the individual profile or to the inulytics for the profile when the button is clicked
+  const handleViewOrGetData = (e) => {
+    // console.log('handle close event target ->', e.currentTarget)
+    // console.log('handle close event target classlist ->', e.currentTarget.classList)
+    
+    // retrieve the option pressed and profile id from class 
     const optionPressed = e.currentTarget.classList[0]
     const profileId = parseInt(e.currentTarget.classList[1])
     console.log('profile Id index ->', profileId)
     console.log('option pressed ->', optionPressed)
     
-    
+    // Navigate to the correct view
     if (optionPressed === 'view') {
       navigate(`/account/${userId}/${profileId}`)
     } else if (profileId) {
@@ -127,13 +127,15 @@ const UserAccount = () => {
           navigate('/login')
         }
 
-        // Get data for specified user, by username
+        // Get data for specified user, by user id
         const { data } = await axios.get(`/api/auth/users/${payload.sub}/`, {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
         // console.log('data is ->', data)
+        
+        // Full data for the retrieved user
         const retrievedUser = data
         // console.log('retrievedUser ->', retrievedUser)
 
@@ -142,9 +144,9 @@ const UserAccount = () => {
         
         console.log('retrievedUser profiles ->', retrievedUser.profiles)
 
+        // order the profiles from newest to oldest so the current profile will always show first
         setAccountProfiles([ ...retrievedUser.profiles ].reverse())
         
-
         const cp = retrievedUser.profiles.filter(profile => profile.id === retrievedUser.current_profile)
         // console.log('cp ->', cp[0])
         setAccountCurrentProfile({ ...cp[0] })
@@ -160,9 +162,8 @@ const UserAccount = () => {
         setAccountMatches([ ...retrievedUser.matches ])
 
 
-
+        // STANDARDIZE THIS CODE WITH SINGLEPROFILEANALYTICS.JS WHEN YOU MAKE IT MORE EFFICIENT
         const bestPhotos = mostFrequentPhotos(accumulatedProfileStats, 1, retrievedUser.profiles)
-        // bestPhotos.length = 3 //Keep only the three most popular photos
 
         const bestImagesWithCommentsArray = []
         for (let p = 0; p < bestPhotos.length; p++) {
@@ -192,7 +193,6 @@ const UserAccount = () => {
 
 
         const worstPhotos = mostFrequentPhotos(accumulatedProfileStats, 0, retrievedUser.profiles)
-        // worstPhotos.length = 3 //Keep only the three most unpopular photos
         
         const worstImagesWithCommentsArray = []
         for (let p = 0; p < worstPhotos.length; p++) {
@@ -230,10 +230,12 @@ const UserAccount = () => {
     getData()
   }, [navigate])
 
+  // Changes tabs
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
 
+  // When the Settings button is pressed
   const handleEditSettings = (e) => {
     e.preventDefault()
     if (accountUser.id === payload.sub) {
@@ -241,6 +243,7 @@ const UserAccount = () => {
     }
   }
 
+  // When the New Profile button is pressed
   const handleAddProfile = (e) => {
     e.preventDefault()
     if (accountUser.id === payload.sub) {
@@ -314,7 +317,8 @@ const UserAccount = () => {
                 </Container>
                 : accountProfiles.length > 0 ?
                   <>
-                    {getProfilesList(accountProfiles, accountCurrentProfile.id, open, handleMenuOpen, handleClose, anchorEl)}
+                    {/* List of all profiles for left-side Tab */}
+                    {getProfilesList(accountProfiles, accountCurrentProfile.id, handleViewOrGetData)}
                   </>
                   :
                   <>
@@ -339,6 +343,8 @@ const UserAccount = () => {
                 </Container>
                 : accountOverallStats.length > 0 ?
                   <>
+                    {/* Inulytics for right-side tab */}
+
                     {/* Overall Stats */}
                     {overallUserAnalyticsHorizontal(accountOverallStats)}
 

@@ -27,6 +27,7 @@ import Spinner from '../components/utilities/Spinner.js'
 import { styled } from '@mui/material/styles'
 
 
+// Image list for Feedback
 export const getFeedbackImageList = (profile, bestPhotos = true, handleImageSelect) => {
 
   return (
@@ -41,8 +42,8 @@ export const getFeedbackImageList = (profile, bestPhotos = true, handleImageSele
           <Masonry key={'2'} columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
             {profile.images.map((image, index) => {
               return (
+                // Profile Image
                 <ImageListItem key={index} >
-                  
                   <Box
                     key={index}
                     onClick={(e) => handleImageSelect(e, bestPhotos)}
@@ -73,6 +74,7 @@ export const getFeedbackImageList = (profile, bestPhotos = true, handleImageSele
               )
             })}
 
+            {/* Final image — 'No Bad Photos' or 'No Good Photos' */}
             <ImageListItem key={100} >
               <Box 
                 key={profile.images.length}
