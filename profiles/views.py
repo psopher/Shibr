@@ -15,6 +15,7 @@ from .serializers.populated import PopulatedProfileSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class ProfileListView(APIView):
+  # Authentication required except for GET methods
   permission_classes = (IsAuthenticatedOrReadOnly, ) # one-tuple requires trailing comma
 
 
@@ -28,7 +29,7 @@ class ProfileListView(APIView):
     # get all objects using all() method
     profiles = Profile.objects.all()
     serialized_profiles = PopulatedProfileSerializer(profiles, many=True)
-    print('searlized data ->', serialized_profiles.data)
+    # print('serialized data ->', serialized_profiles.data)
     # print('PROFILES ->', profiles())
     return Response(serialized_profiles.data, status=status.HTTP_200_OK)
 
@@ -53,6 +54,8 @@ class ProfileListView(APIView):
       print(e)
       return Response( {'detail': str(e) }, status.HTTP_422_UNPROCESSABLE_ENTITY)
 
+# Endpoint: /profiles/:pk
+# GET, POST, PUT, DELETE a single profile
 class ProfileDetailView(APIView):
   permission_classes = (IsAuthenticatedOrReadOnly, ) # one-tuple requires trailing comma
 
@@ -87,7 +90,7 @@ class ProfileDetailView(APIView):
         raise PermissionDenied()
       print('WE CAN UPDATE OUR RECORD')
 
-      deserialized_profile = ProfileSerializer(instance=profile_to_update, data=request.data)
+      deserialized_profile = ProfileSerializer(instance=profile_to_update, data=request.data, partial=True)
       
       try:
         deserialized_profile.is_valid()

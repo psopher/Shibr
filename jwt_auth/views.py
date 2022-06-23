@@ -17,7 +17,8 @@ from .serializers.populated import PopulatedUserSerializer
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-
+# POST
+# Endpoint: /register
 class RegisterView(APIView):
 
   def post(self, request):
@@ -36,7 +37,8 @@ class RegisterView(APIView):
       print(e)
       return Response({ 'detail': str(e)}, status.HTTP_422_UNPROCESSABLE_ENTITY)
     
-
+# POST
+# Endpoint: /login
 class LoginView(APIView):
   def post(self, request):
     email = request.data.get('email')
@@ -73,12 +75,10 @@ class LoginView(APIView):
     return Response({ 'message': f"Welcome back, {user_to_validate.username}", 'token': token }, status.HTTP_202_ACCEPTED)
 
 
-
-
 # GET : /users/
 class UserListView(APIView):
+  # Must be authenticated to all users
   permission_classes = (IsAuthenticated, )
-
 
   def get(self, _request):
     users = User.objects.all()
@@ -90,6 +90,7 @@ class UserListView(APIView):
 # Endpoint: /users/:id
 # Methods: GET, PUT, DELETE
 class UserDetailView(APIView):
+  # Must be authenticated to retrieve, modify, or delete a user
   permission_classes = (IsAuthenticated, )
 
   # CUSTOM FUNCTION
@@ -112,6 +113,7 @@ class UserDetailView(APIView):
   def put(self, request, pk):
     user_to_update = self.get_user(pk=pk)
 
+    # Partial = true and using the serializer that doesn't include validation is important for being able to modify a user without inputting the password and password_confirmation
     deserialized_user = UserSettingsSerializer(instance=user_to_update, data=request.data, partial=True)
     
     try:
@@ -129,10 +131,10 @@ class UserDetailView(APIView):
     print ('PK -> ', pk)
     user_to_delete = self.get_user(pk)
     # print('USER OWNER ID -> ', user_to_delete.owner)
-    print('REQUEST USER ID ->', request.user)
+    # print('REQUEST USER ID ->', request.user)
     # if user_to_delete.owner != request.user:
     #   print('WE CANNOT DELETE OUR RECORD')
     #   raise PermissionDenied()
-    print('WE CAN DELETE OUR RECORD')
+    # print('WE CAN DELETE OUR RECORD')
     user_to_delete.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)

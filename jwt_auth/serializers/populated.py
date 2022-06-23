@@ -12,7 +12,7 @@ User = get_user_model()
 
 # defining populated serializer
 class PopulatedUserSerializer(UserSerializer):
-  # one task in this class is to define our field to populate
+  # Each populated user object contains all the profiles the user created, all the swipes the user made, and all the matches the user has
   profiles = PopulatedProfileSerializerNoOwner(many=True)
   swipes = PopulatedSwipeNoSIDSerializer(many=True)
   matches = PopulatedMatchSerializer(many=True)

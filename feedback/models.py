@@ -26,6 +26,7 @@ class Feedback(models.Model):
   )
 
   # Relationship Fields
+  # The feedback model contains the swipe id; the populated swipe model contains the feedback
   swipe_id = models.ForeignKey(
     'swipes.Swipe',
     related_name='feedback',

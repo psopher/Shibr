@@ -5,5 +5,5 @@ from jwt_auth.serializers.common import UserSerializer
 
 # defining populated serializer
 class PopulatedMatchSerializer(MatchSerializer):
-  # one task in this class is to define our field to populate
+  # the populated Match model includes the User objects of both matched users
   matched_users = UserSerializer(many=True)

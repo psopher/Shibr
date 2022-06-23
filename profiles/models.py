@@ -7,7 +7,7 @@ class Profile(models.Model):
 
   # Profile contents
   bio = models.TextField(max_length=500, default=None, blank=True)
-  name = models.CharField(max_length=50, default="No Name Given")
+  name = models.CharField(max_length=50, default="Anonymous")
   age = models.PositiveIntegerField(default=None, blank=True)
   school = models.CharField(max_length=50, default=None, blank=True)
   gender = models.CharField(max_length=30, default=None, blank=True)

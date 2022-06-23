@@ -91,6 +91,8 @@ class SwipeListView(APIView):
       matched_list = list(filter(check_already_matched, serialized_swiper_matches.value))
       print("matched list length -> ", len(matched_list))
 
+      # If the match list is zero, then the two users have not matched
+      # The next step is to check the swipes of the owner of the swiped profile to see if that user has made any right swipes on any of the swiper's profiles
       if len(matched_list) == 0:
         
         swiped_user = self.get_user(profile_owner_id)
@@ -100,6 +102,8 @@ class SwipeListView(APIView):
         # Checks to see if the current swipe garners a match
         def check_match_exists(swipe):
           print('is right swipe ->', swipe['right_swipe'])
+
+          # If it's a right swipe, check to see if the swiped profile owner matches the swiper's user id
           if swipe['right_swipe']:
             swipe_profile = self.get_profile(swipe['swiped_profile_id']['id'])
             swipe_profile_owner_id = swipe_profile.owner.id
@@ -122,6 +126,7 @@ class SwipeListView(APIView):
         if len(match_swipes) > 0:
           exchange_social = False
 
+          # Check to see if it's a social media match
           if serialized_swiped_user['give_social'].value & serialized_swiper['give_social'].value:
             exchange_social = True
 
@@ -130,6 +135,7 @@ class SwipeListView(APIView):
             'matched_users': [profile_owner_id, swipe_data['swiper_id']]
           }
 
+          # Add new match
           match_to_add = MatchSerializer(data=match_data)
           match_to_add.is_valid()
           print(match_to_add.errors)
@@ -153,6 +159,7 @@ class SwipeListView(APIView):
 # Endpoint: /swipes/:id
 # Methods: GET, PUT, DELETE
 class SwipeDetailView(APIView):
+  # retrieving, modifiying, and deleting single swipes requires authentication
   permission_classes = (IsAuthenticated, )
 
   # CUSTOM FUNCTION
@@ -175,14 +182,14 @@ class SwipeDetailView(APIView):
   def put(self, request, pk):
     swipe_to_update = self.get_swipe(pk=pk)
 
-    deserialized_swipe = SwipeSerializer(instance=swipe_to_update, data=request.data)
+    deserialized_swipe = SwipeSerializer(instance=swipe_to_update, data=request.data, partial=True)
     
-    print('SWIPE OWNER ID -> ', deserialized_swipe.swiper_id)
-    print('REQUEST USER ID ->', request.user)
-    if deserialized_swipe.swiper_id != request.user:
-      print('WE CANNOT UPDATE OUR RECORD')
-      raise PermissionDenied()
-    print('WE CAN UPDATE OUR RECORD')
+    # print('SWIPE OWNER ID -> ', deserialized_swipe.swiper_id)
+    # print('REQUEST USER ID ->', request.user)
+    # if deserialized_swipe.swiper_id != request.user:
+    #   print('WE CANNOT UPDATE OUR RECORD')
+    #   raise PermissionDenied()
+    # print('WE CAN UPDATE OUR RECORD')
 
     try:
       deserialized_swipe.is_valid()

@@ -12,15 +12,16 @@ from .models import Match
 class MatchListView(APIView):
   permission_classes = (IsAuthenticated, )
 
-
+  # GET
   def get(self, _request):
     matches = Match.objects.all()
     serialized_matches = PopulatedMatchSerializer(matches, many=True)
     return Response(serialized_matches.data)
 
+  # POST
   def post(self, request):
-    print('request ->', request.data)
-    print('request user id ->', request.user.id)
+    # print('request ->', request.data)
+    # print('request user id ->', request.user.id)
     request.data['owner'] = request.user.id
     match_to_add = MatchSerializer(data=request.data)
     try:
@@ -37,6 +38,7 @@ class MatchListView(APIView):
 # Endpoint: /matches/:id
 # Methods: GET, PUT, DELETE
 class MatchDetailView(APIView):
+  # Must be authenticated to retrieve, modify, or delete single Match objects
   permission_classes = (IsAuthenticated, )
 
   # CUSTOM FUNCTION
@@ -59,7 +61,7 @@ class MatchDetailView(APIView):
   def put(self, request, pk):
     match_to_update = self.get_match(pk=pk)
 
-    deserialized_match = MatchSerializer(instance=match_to_update, data=request.data)
+    deserialized_match = MatchSerializer(instance=match_to_update, data=request.data, partial=True)
 
     try:
       deserialized_match.is_valid()

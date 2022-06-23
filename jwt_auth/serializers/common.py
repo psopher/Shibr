@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError #this error will be thrown if
 User = get_user_model()
 
 # inherit model serializer
+# This if for registration of new users
 class UserSerializer(serializers.ModelSerializer):
   # we're gonna define password and password_confirmation fields as write_only
   password = serializers.CharField(write_only=True) # ensures these are never returned when converting to JSON
@@ -66,6 +67,8 @@ class UserSerializer(serializers.ModelSerializer):
       'current_profile'
     )
 
+
+# this is used for updating user settings without having to input your password every time
 class UserSettingsSerializer(serializers.ModelSerializer):
 
     class Meta:

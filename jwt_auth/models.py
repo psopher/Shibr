@@ -10,7 +10,7 @@ class User(AbstractUser):
   email = models.CharField(max_length=50, unique=True)
 
   # User Settings
-  profile_image = models.CharField(max_length=300, default="https://res.cloudinary.com/drgegagha/image/upload/v1654545117/shibr/image-b-large_in19xb.png")
+  profile_image = models.CharField(max_length=300, default="https://res.cloudinary.com/drgegagha/image/upload/v1655982545/shibr/prof-pic-default_ondvz2.png")
   karma = models.PositiveIntegerField(default=0)
   interested_in = models.CharField(max_length=30, blank=True)
   min_age = models.PositiveIntegerField(default=0)
