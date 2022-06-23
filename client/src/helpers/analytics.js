@@ -77,7 +77,9 @@ export const mostFrequentPhotos = (swipes, isBest = true, profiles) => {
   // console.log('photos object ->', photosObject)
   const keysSorted = Object.keys(photosObject).sort((a,b) => photosObject[b] - photosObject[a]) //Sort the keys by their values from most to least; End up with the most/least popular photos appearing first in the object
   // console.log('keys sorted ->', keysSorted)
-  keysSorted.length = 3
+  if (keysSorted.length > 3) {
+    keysSorted.length = 3
+  }
 
   return keysSorted //Return the object with the three most/least popular photos; keys are the photo urls, and values are the amount of times the photos appear
 }
@@ -115,53 +117,57 @@ export const mostFrequentComments = (swipes, isBest = true, photo, profiles) => 
 
     const keysSorted = Object.keys(commentsObject).sort((a,b) => commentsObject[b] - commentsObject[a]) //sorts the comments object so that the most frequent comments appear first
 
+    if (keysSorted.length > 3) {
+      keysSorted.length = 3
+    }
     // console.log('comment keys sorted ->', keysSorted)
 
-    return keysSorted //return an object of best/worst comments as keys and number times they appear as values, sorted from most frequent to least frequent
+    const valuesSorted = Object.values(commentsObject).sort((a,b) => commentsObject[b] - commentsObject[a]) //sorts the comments object so that the most frequent comments appear first
+    if (valuesSorted.length > 3) {
+      valuesSorted.length = 3
+    }
+    // console.log('values sorted ->', valuesSorted)
+
+    const commentsAndFrequencyObject = {
+      'comments': keysSorted,
+      'frequency': valuesSorted,
+    }
+    // console.log('commentsAndFrequencyObject ->', commentsAndFrequencyObject)
+
+    return commentsAndFrequencyObject //return an object with best/worst comments as an array on the comments key, and the frequency of these comments as an array on the frequency key
 
 
   } else {
-
-    return ['No Comments', 'No Comments', 'No Comments'] //If photo is undefined, there were no comments on it
+    const commentsAndFrequencyObject = {
+      'comments': ['No Comments', 'No Comments', 'No Comments'],
+      'frequency': [0, 0, 0],
+    }
+    return commentsAndFrequencyObject //If photo is undefined, there were no comments on it
 
   }
 }
 
-//Perhaps a totally unnecessary method
-export const commentFrequency = (swipes, isBest = true, photo, profiles, comment) => {
-  if (photo && photo !== 'undefined' && comment !== 'No Comments') {
+export const bestAndWorstPhotosWithComments = (swipes, isBest = true, profileArray) => {
+  const photos = mostFrequentPhotos(swipes, isBest, profileArray) //Retrieves an object with keys that are photo URLs and values that are the number of times the photo was selected as the best photo, ordered from most to least
+  // console.log('best photos', bestPhotos)
 
-    const photosObject = {}
-    for (let i = 0; i < swipes.length; i++){
-      const profileWithPhoto = profiles.filter(profile => profile.id === swipes[i].swiped_profile_id)
-      const imageOnProfile = profileWithPhoto[0].images[isBest ? swipes[i].feedback[0].best_image_index : swipes[i].feedback[0].worst_image_index]
-
-      const imageComments = isBest ? swipes[i].feedback[0].best_image_comments : swipes[i].feedback[0].worst_image_comments
-
-      if (photosObject[imageOnProfile]) {
-        photosObject[imageOnProfile] = [ ...photosObject[imageOnProfile], ...imageComments ]
-      } else {
-        photosObject[imageOnProfile] = [ ...imageComments ]
-      }
+  const bestImagesWithCommentsArray = []
+  for (let p = 0; p < photos.length; p++) { //loop through the bestPhotos array
+    
+    const goodComments = mostFrequentComments(swipes, isBest, photos[p], profileArray) //retrieve an array of the most frequent good comments on a specified photo as a key, and the number of times it appears as a value, sorted from most to least 
+    // console.log('good comments ->', goodComments.frequency)
+    
+    const imagesWithCommentsObj = {
+      'image': photos[p],
+      'comments': goodComments.comments,
+      'frequency': goodComments.frequency,
     }
-    // console.log('photos object ->', photosObject)
-    // console.log('specific photo comments ->', photosObject[photo])
+    // console.log('imagesWithCommentsObj ->', imagesWithCommentsObj)
 
-    const commentsObject = {}
-    for (let i = 0; i < photosObject[photo].length; i++) {
-      if (commentsObject[photosObject[photo][i]]){
-        commentsObject[photosObject[photo][i]] = commentsObject[photosObject[photo][i]] + 1
-      } else {
-        commentsObject[photosObject[photo][i]] = 1
-      }
-    }
-    // console.log('comments object ->', commentsObject)
-    return commentsObject[comment]
-  } else {
-
-    return 0
+    bestImagesWithCommentsArray.push(imagesWithCommentsObj) // push the object with the image, comments, and freqency keys onto the array that has these values for all images, ordered from most to least often voted as best photo
   }
-
+  // console.log('best images with comments ->', bestImagesWithCommentsArray)
+  return bestImagesWithCommentsArray
 }
 
 // Input all matches and only return the ones where users have opted to exchange social media

@@ -11,7 +11,7 @@ import Spinner from '../utilities/Spinner.js'
 // Helper Methods
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 import { karmaBar } from '../../helpers/viewProfile.js'
-import { getProfilesList, overallUserAnalyticsHorizontal, socialMediaMatches, photosFeedback, bioFeedback, mostFrequentPhotos, mostFrequentComments, commentFrequency } from '../../helpers/analytics.js'
+import { bestAndWorstPhotosWithComments, getProfilesList, overallUserAnalyticsHorizontal, socialMediaMatches, photosFeedback, bioFeedback } from '../../helpers/analytics.js'
 
 //mui
 import Container from '@mui/material/Container'
@@ -142,7 +142,7 @@ const UserAccount = () => {
         // Set User and Profile States
         setAccountUser({ ...retrievedUser })
         
-        console.log('retrievedUser profiles ->', retrievedUser.profiles)
+        // console.log('retrievedUser profiles ->', retrievedUser.profiles)
 
         // order the profiles from newest to oldest so the current profile will always show first
         setAccountProfiles([ ...retrievedUser.profiles ].reverse())
@@ -158,66 +158,15 @@ const UserAccount = () => {
         // console.log('accumulated profile stats ->', accumulatedProfileStats)
         setAccountOverallStats([ ...accumulatedProfileStats ])
 
-        console.log('retrieved user matches ->', retrievedUser.matches)
+        // console.log('retrieved user matches ->', retrievedUser.matches)
         setAccountMatches([ ...retrievedUser.matches ])
 
+        //Set bestImagesWithComments state to an array of objects with image as one key, the comments, as another, and the frequency as a third, all ordered from most to least
+        const bestImagesWithCommentsArray = bestAndWorstPhotosWithComments(accumulatedProfileStats, 1, retrievedUser.profiles)
+        setBestImagesWithComments([ ...bestImagesWithCommentsArray ]) 
 
-        // STANDARDIZE THIS CODE WITH SINGLEPROFILEANALYTICS.JS WHEN YOU MAKE IT MORE EFFICIENT
-        const bestPhotos = mostFrequentPhotos(accumulatedProfileStats, 1, retrievedUser.profiles)
-
-        const bestImagesWithCommentsArray = []
-        for (let p = 0; p < bestPhotos.length; p++) {
-          const imagesWithCommentsObj = []
-          imagesWithCommentsObj.image = bestPhotos[p]
-          const goodComments = mostFrequentComments(accumulatedProfileStats, 1, bestPhotos[p], retrievedUser.profiles)
-          console.log('good comments ->', goodComments)
-
-          if (imagesWithCommentsObj.comments) {
-            imagesWithCommentsObj.comments = [ ...imagesWithCommentsObj.comments, ...goodComments[p]]
-          } else {
-            imagesWithCommentsObj.comments = [ ...goodComments ]
-          }
-
-          const goodCommentsFrequency = []
-          for (let i = 0; i < goodComments.length; i++) {
-            const frequencyOfComment = commentFrequency(accumulatedProfileStats, 1, bestPhotos[p], retrievedUser.profiles, goodComments[i])
-            goodCommentsFrequency.push(frequencyOfComment)
-
-          }
-          console.log('good comment frequency', goodCommentsFrequency)
-          imagesWithCommentsObj.frequency = goodCommentsFrequency
-          bestImagesWithCommentsArray.push(imagesWithCommentsObj)
-        }
-        console.log('best images with comments ->', bestImagesWithCommentsArray)
-        setBestImagesWithComments([ ...bestImagesWithCommentsArray ])
-
-
-        const worstPhotos = mostFrequentPhotos(accumulatedProfileStats, 0, retrievedUser.profiles)
-        
-        const worstImagesWithCommentsArray = []
-        for (let p = 0; p < worstPhotos.length; p++) {
-          const imagesWithCommentsObj = []
-          imagesWithCommentsObj.image = worstPhotos[p]
-          const badComments = mostFrequentComments(accumulatedProfileStats, 0, worstPhotos[p], retrievedUser.profiles)
-          console.log('bad comments ->', badComments)
-
-          if (imagesWithCommentsObj.comments) {
-            imagesWithCommentsObj.comments = [ ...imagesWithCommentsObj.comments, ...badComments[p]]
-          } else {
-            imagesWithCommentsObj.comments = [ ...badComments ]
-          }
-
-          const badCommentsFrequency = []
-          for (let i = 0; i < badComments.length; i++) {
-            const frequencyOfComment = commentFrequency(accumulatedProfileStats, 0, worstPhotos[p], retrievedUser.profiles, badComments[i])
-            badCommentsFrequency.push(frequencyOfComment)
-
-          }
-          console.log('bad comment frequency', badCommentsFrequency)
-          imagesWithCommentsObj.frequency = badCommentsFrequency
-          worstImagesWithCommentsArray.push(imagesWithCommentsObj)
-        }
-        console.log('worst images with comments ->', worstImagesWithCommentsArray)
+        //Set worstImagesWithComments state to an array of objects with image as one key, the comments, as another, and the frequency as a third, all ordered from most to least
+        const worstImagesWithCommentsArray = bestAndWorstPhotosWithComments(accumulatedProfileStats, 0, retrievedUser.profiles)
         setWorstImagesWithComments([ ...worstImagesWithCommentsArray ])
 
 
