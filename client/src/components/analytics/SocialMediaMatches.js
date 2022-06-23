@@ -5,7 +5,7 @@ import axios from 'axios'
 import Spinner from '../utilities/Spinner'
 import RequestError from '../common/RequestError'
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
-import { getMatchesList } from '../../helpers/analytics'
+import { getMatchesList } from '../../helpers/socialMatches'
 
 //mui
 import Container from '@mui/material/Container'

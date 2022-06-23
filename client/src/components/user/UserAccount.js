@@ -11,7 +11,11 @@ import Spinner from '../utilities/Spinner.js'
 // Helper Methods
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 import { karmaBar } from '../../helpers/viewProfile.js'
-import { bestAndWorstPhotosWithComments, getProfilesList, overallUserAnalyticsHorizontal, socialMediaMatches, photosFeedback, bioFeedback } from '../../helpers/analytics.js'
+import { bestAndWorstPhotosWithComments, photosFeedback } from '../../helpers/photosBestWorst.js'
+import { getProfilesList } from '../../helpers/allProfilesList.js'
+import { bioFeedback } from '../../helpers/bioFeedback.js'
+import { overallUserAnalyticsHorizontal } from '../../helpers/overallStats.js'
+import { socialMediaMatches } from '../../helpers/socialMatches.js'
 
 //mui
 import Container from '@mui/material/Container'

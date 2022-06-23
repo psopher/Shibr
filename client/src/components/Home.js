@@ -12,8 +12,8 @@ import RequestError from './common/RequestError'
 // Helper Methods
 import { getProfile, profileBio } from '../helpers/viewProfile'
 import { goodPhotoFeedback, badPhotoFeedback, feedbackTypes, overallBioFeedback, goodBioFeedback, badBioFeedback } from '../helpers/formOptions'
-import { photoFeedback, bioFeedback } from '../helpers/formMethods'
-import { getFeedbackImageList } from '../helpers/imageHandling.js'
+import { bioSwipeFeedback } from '../helpers/bioFeedback.js'
+import { photoFeedback, getFeedbackImageList } from '../helpers/photosBestWorst.js'
 import { setCurrentProfToLocalStorage, setProfPicToLocalStorage, setSettingsToLocalStorage } from '../helpers/storage'
 import { getPayload, userIsAuthenticated, getTokenFromLocalStorage } from '../helpers/auth.js'
 
@@ -527,13 +527,13 @@ const Home = () => {
                       </Box>
 
                       {/* Overall Bio Feedback */}
-                      {bioFeedback(overallBioFeedback, feedbackTypes[0], handleBioFeedbackSelect)}
+                      {bioSwipeFeedback(overallBioFeedback, feedbackTypes[0], handleBioFeedbackSelect)}
 
                       {/* Good Bio Feedback */}
-                      {bioFeedback(goodBioFeedback, feedbackTypes[1], handleBioFeedbackSelect)}
+                      {bioSwipeFeedback(goodBioFeedback, feedbackTypes[1], handleBioFeedbackSelect)}
 
                       {/* Bad Bio Feedback */}
-                      {bioFeedback(badBioFeedback, feedbackTypes[2], handleBioFeedbackSelect)}
+                      {bioSwipeFeedback(badBioFeedback, feedbackTypes[2], handleBioFeedbackSelect)}
 
                       {/* Submit Button */}
                       <Grid container textAlign='center'>

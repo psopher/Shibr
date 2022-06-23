@@ -4,8 +4,10 @@ import axios from 'axios'
 import Spinner from '../utilities/Spinner.js'
 
 import { getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
-import { profileStatsImageList } from '../../helpers/imageHandling'
-import { bestAndWorstPhotosWithComments, overallUserAnalyticsHorizontal, photosFeedback, bioFeedback } from '../../helpers/analytics.js'
+import { profileStatsImageList } from '../../helpers/profileImageLists'
+import { bestAndWorstPhotosWithComments, photosFeedback } from '../../helpers/photosBestWorst.js'
+import { overallUserAnalyticsHorizontal } from '../../helpers/overallStats.js'
+import { bioFeedback } from '../../helpers/bioFeedback.js'
 import { profileBio } from '../../helpers/viewProfile.js'
 
 //mui

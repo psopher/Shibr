@@ -13,7 +13,7 @@ import RequestError from '../common/RequestError'
 // Helper Methods
 import { getCurrentProfFromLocalStorage, setCurrentProfToLocalStorage, setProfPicToLocalStorage } from '../../helpers/storage.js'
 import { getTokenFromLocalStorage, getPayload } from '../../helpers/auth'
-import { newProfileImageList } from '../../helpers/imageHandling'
+import { newProfileImageList } from '../../helpers/profileImageLists'
 import { genders } from '../../helpers/formOptions'
 import { handleChange } from '../../helpers/formMethods'
 
