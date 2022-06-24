@@ -50,12 +50,12 @@ const NewProfile = () => {
 
   // Get currentProfile from local storage
   const cp = getCurrentProfFromLocalStorage()[0]
-  // console.log('cp ->', cp)
+  console.log('cp ->', cp)
 
   // Set default values for the form
   const form = {
     name: cp && cp.name.length > 0 ? cp.name : '',
-    age: cp && cp.age.length > 0 ? cp.age : 6,
+    age: cp && cp.age > -1 && cp.age < 21 ? cp.age : 6,
     gender: cp && cp.gender.length > 0 ? cp.gender : '',
     school: cp && cp.school.length > 0 ? cp.school : '',
     bio: cp && cp.bio.length > 0 ? cp.bio : '',
