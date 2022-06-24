@@ -10,7 +10,7 @@ The assignment was to create a full stack website comprised of a backend that us
 I chose to create "Shibr Inulytics" because there are plenty of applications that allow people to post photos and get feedback on them, but none that do this for a full dating profile, and my contention is that a photo is different in the context of an entire profile than it is on its own. Moreover, doing this with Shibas is more fun than it would be for human dating profiles, though it's just the seed-data that's Shiba-related — the site could easily be switched to human dating profiles.  
 
 
-Are you curious to see the end result? [Check out the site.](https://plant-pedia.herokuapp.com/) 
+Are you curious to see the end result? [Check out the site.](https://shibr.herokuapp.com/) 
 
 ---
 ### Brief
