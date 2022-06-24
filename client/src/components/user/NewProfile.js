@@ -160,33 +160,8 @@ const NewProfile = () => {
         console.log(response)
         const createdProfileId = response.data.id
         // console.log('created profile id', createdProfileId)
-
-
-        // Modify User (current profile, profile picture)
-        const modificationsObj = {
-          'current_profile': createdProfileId,
-          'profile_image': newForm.images[0],
-        }
-        // console.log('modifications object ->', modificationsObj)
-
-        // Make the modifications to the User Model
-        try {
-          const putResponse = await axios.put(`/api/auth/users/${payload.sub}/`, modificationsObj, {
-            headers: {
-              Authorization: `Bearer ${getTokenFromLocalStorage()}`,
-            },
-          })
-          
-          // console.log('PUT response ->', putResponse)
-
-        } catch (error) {
-
-          setLoading(false)
-          console.log(error)
-          setPostErrors(true)
-        }
         
-
+        // ? Updating User profile pic and current profile happens on the back end
 
       } catch (error) {
         setLoading(false)

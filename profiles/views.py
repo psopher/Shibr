@@ -10,6 +10,10 @@ from django.template import loader
 from .models import Profile # model will be used to query the db
 from .serializers.common import ProfileSerializer
 from .serializers.populated import PopulatedProfileSerializer
+from jwt_auth.serializers.common import UserSettingsSerializer
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 # import permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -18,6 +22,14 @@ class ProfileListView(APIView):
   # Authentication required except for GET methods
   permission_classes = (IsAuthenticatedOrReadOnly, ) # one-tuple requires trailing comma
 
+  # Custom function
+  # Called when updating User after making new profile
+  def get_user(self, pk):
+    try:
+      return User.objects.get(pk=pk)
+    except User.DoesNotExist as e:
+      print(e)
+      raise NotFound({ 'detail': str(e) })
 
   # ENDPOINTS & METHODS:
   # GET /profiles/
@@ -48,6 +60,25 @@ class ProfileListView(APIView):
       deserialized_profile.save()
       # If we get to this point, the record has been saved
       # When saving, a data key is added that contains a python copy of the record that has been created
+
+
+      # Update the User
+      print('new profile data id ->', deserialized_profile.data['id'])
+      print('new profile data image 0 ->', deserialized_profile.data['images'][0])
+      print('new profile data owner ->', deserialized_profile.data['owner'])
+      modify_user_profile = {
+        'current_profile': deserialized_profile.data['id'],
+        'profile_image': deserialized_profile.data['images'][0],
+      }
+      user_to_update = self.get_user(pk=deserialized_profile.data['owner'])
+
+      # Partial = true and using the serializer that doesn't include validation is important for being able to modify a user without inputting the password and password_confirmation
+      deserialized_user = UserSettingsSerializer(instance=user_to_update, data=modify_user_profile, partial=True)
+      deserialized_user.is_valid()
+      print(deserialized_user.errors)
+      deserialized_user.save()  
+      
+
       return Response(deserialized_profile.data, status.HTTP_201_CREATED)
     except Exception as e:
       print(type(e))
