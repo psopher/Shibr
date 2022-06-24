@@ -24,5 +24,5 @@ urlpatterns = [
     path('api/feedback/', include('feedback.urls')),
     path('api/swipes/', include('swipes.urls')),
     path('api/matches/', include('matches.urls')),
-    re_path(r'^.*$', index)
+    re_path(r'^.*$', index),
 ]
