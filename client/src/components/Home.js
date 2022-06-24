@@ -380,10 +380,7 @@ const Home = () => {
 
 
       // Post Swipe
-      // After receiving the swipe Id, post feedback
-      // Create a new form so that you can pass swipe id
-      const newForm = { ...feedbackForm }
-      // console.log('new form ->', newForm)
+      // After receiving the swipe Id, backend posts feedback and updates User karma
 
       // POST Swipe
       try {
@@ -421,6 +418,8 @@ const Home = () => {
       setSwiped(false)
 
       setIterator(iterator + 1)
+
+      setKarma(karma + 1)
 
       setLoading(false)
 
