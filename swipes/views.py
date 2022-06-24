@@ -11,9 +11,14 @@ from .models import Swipe
 from profiles.models import Profile
 from profiles.serializers.common import ProfileSerializer
 from profiles.serializers.populated import PopulatedProfileSerializer
+
 from matches.serializers.common import MatchSerializer
 
+from feedback.serializers.common import FeedbackSerializer
+from feedback.models import Feedback
+
 from jwt_auth.serializers.populated import PopulatedUserSerializer
+from jwt_auth.serializers.common import UserSettingsSerializer
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -63,7 +68,14 @@ class SwipeListView(APIView):
     # print('request user ->', request.user)
     # print('request user id ->', request.user.id)
 
-    swipe_data = request.data
+    print('request data ->', request.data)
+    print('request data swipe ->', request.data['swipe'])
+    print('request data feedback ->', request.data['feedback'])
+    print('request data karma ->', request.data['karma'])
+
+    swipe_data = request.data['swipe']
+    feedback_data = request.data['feedback']
+    karma_data = request.data['karma']
 
     # If it's a right swipe, check to see if it's a match
     # Add the match if it's a new one
@@ -143,11 +155,28 @@ class SwipeListView(APIView):
           print('MATCH WAS ADDED!!!')
 
     # Posting the swipe
-    swipe_to_add = SwipeSerializer(data=request.data)
+    swipe_to_add = SwipeSerializer(data=swipe_data)
     # print('swipe to add ->', swipe_to_add)
     try:
       swipe_to_add.is_valid(True)
       swipe_to_add.save()
+
+      # Add feedback
+      feedback_data['owner'] = request.user.id
+      feedback_data['swipe_id'] = swipe_to_add.data['id']
+      # print('feedback data ->', feedback_data) 
+      feedback_to_add = FeedbackSerializer(data=feedback_data)
+      feedback_to_add.is_valid(True)
+      feedback_to_add.save()
+
+      # Update User karma
+      user_to_update = self.get_user(pk=request.user.id)
+      deserialized_user = UserSettingsSerializer(instance=user_to_update, data=karma_data, partial=True)
+      deserialized_user.is_valid()
+      # print(deserialized_user.errors)
+      deserialized_user.save()  
+
+      # Return the swipe object
       return Response(swipe_to_add.data, status.HTTP_201_CREATED)
     except ValidationError:
       return Response(swipe_to_add.errors, status.HTTP_422_UNPROCESSABLE_ENTITY)

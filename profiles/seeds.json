@@ -242,7 +242,7 @@
     "age": 8,
     "school": "New York Puppy University",
     "gender": "Male",
-    "images": "[\"https://res.cloudinary.com/drgegagha/image/upload/v1654545411/shibr/bagel-3_zecry7.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545411/shibr/bagel-3_zecry7.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545411/shibr/bagel-5_l2knkg.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545411/shibr/bagel-2_acqea2.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545412/shibr/bagel-6_ed3mkv.png\"]",
+    "images": "[\"https://res.cloudinary.com/drgegagha/image/upload/v1654545411/shibr/bagel-1_cgrwqm.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545411/shibr/bagel-3_zecry7.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545411/shibr/bagel-5_l2knkg.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545411/shibr/bagel-2_acqea2.png\", \"https://res.cloudinary.com/drgegagha/image/upload/v1654545412/shibr/bagel-6_ed3mkv.png\"]",
     "owner": 19
   }
 },

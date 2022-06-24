@@ -373,6 +373,18 @@ const Home = () => {
         'right_swipe': isRightSwipe,
       }
 
+      const postObj = {
+        'swipe': {
+          'swiper_id': user.id,
+          'swiped_profile_id': profiles[iterator].id,
+          'right_swipe': isRightSwipe,
+        },
+        'feedback': { ...feedbackForm },
+        'karma': {
+          'karma': karma >= 5 ? 5 : karma + 1,
+        },
+      }
+
       // console.log('swipe object ->', swipeObj)
 
 
@@ -386,68 +398,12 @@ const Home = () => {
       try {
         setLoading(true)
 
-        const response = await axios.post('/api/swipes/', swipeObj, {
+        const response = await axios.post('/api/swipes/', postObj, {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
         console.log(response)
-        
-        // the Swipe ID for the new swipe 
-        const createdSwipeId = response.data.id
-        // console.log('created swipe id', createdSwipeId)
-
-        // Add swipe id to form
-        newForm.swipe_id = createdSwipeId
-        // console.log('new form with created swipe id ->', createdSwipeId)
-
-        try {
-          const feedbackResponse = await axios.post('/api/feedback/', newForm, {
-            headers: {
-              Authorization: `Bearer ${getTokenFromLocalStorage()}`,
-            },
-          })
-          
-          // console.log('POST feedback response ->', feedbackResponse)
-
-          // The POST request was successful
-          
-          // Update Karma for user account
-          console.log('karma ->', karma)
-          if (karma < 5) {
-            console.log('this runs')
-
-            const modificationsObj = {
-              'karma': karma + 1,
-            }
-            try {
-              const putResponse = await axios.put(`/api/auth/users/${payload.sub}/`, modificationsObj, {
-                headers: {
-                  Authorization: `Bearer ${getTokenFromLocalStorage()}`,
-                },
-              })
-              // console.log('PUT response ->', putResponse)
-              // Update karma state
-              setKarma(karma + 1)
-
-            } catch (error) {
-
-              setLoading(false)
-              console.log(error)
-              setPostErrors(true)
-            }
-          }
-
-
-
-        } catch (error) {
-
-          setLoading(false)
-          console.log(error)
-          setPostErrors(true)
-        }
-        
-
 
       } catch (error) {
         setLoading(false)
@@ -459,6 +415,18 @@ const Home = () => {
 
 
       // ? Should these be here or inside the third axios request?
+      //Default feedback form
+      setFeedbackForm({
+        'best_image_index': -1,
+        'best_image_comments': [],
+        'worst_image_index': -1,
+        'worst_image_comments': [],
+        'bio_overall': '',
+        'bio_good_comments': [],
+        'bio_bad_comments': [],
+        'swipe_id': -1,
+      })
+      
       setSwiped(false)
 
       setIterator(iterator + 1)
