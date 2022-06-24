@@ -16,6 +16,7 @@ import { getProfilesList } from '../../helpers/allProfilesList.js'
 import { bioFeedback } from '../../helpers/bioFeedback.js'
 import { overallUserAnalyticsHorizontal } from '../../helpers/overallStats.js'
 import { socialMediaMatches } from '../../helpers/socialMatches.js'
+import { findCurrentProfile } from '../../helpers/commonSnippets.js'
 
 //mui
 import Container from '@mui/material/Container'
@@ -150,8 +151,9 @@ const UserAccount = () => {
 
         // order the profiles from newest to oldest so the current profile will always show first
         setAccountProfiles([ ...retrievedUser.profiles ].reverse())
-        
-        const cp = retrievedUser.profiles.filter(profile => profile.id === retrievedUser.current_profile)
+
+        // const cp = retrievedUser.profiles.filter(profile => profile.id === retrievedUser.current_profile)
+        const cp = findCurrentProfile(retrievedUser.profiles, retrievedUser)
         // console.log('cp ->', cp[0])
         setAccountCurrentProfile({ ...cp[0] })
 

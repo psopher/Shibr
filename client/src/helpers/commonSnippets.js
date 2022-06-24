@@ -10,3 +10,12 @@ export const getRightSwipesNumber = (swipesArray) => {
   const rightSwipesArray = swipesArray.filter(swipe => swipe.right_swipe)
   return rightSwipesArray.length
 } 
+
+export const findCurrentProfile = (profiles, retrievedUser) => {
+  console.log('FIND CURRENT PROFILE RUNS')
+
+  const current = profiles.filter(profile => profile.id === retrievedUser.current_profile)
+  
+
+  return current
+}

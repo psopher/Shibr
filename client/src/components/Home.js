@@ -16,6 +16,7 @@ import { bioSwipeFeedback } from '../helpers/bioFeedback.js'
 import { photoFeedback, getFeedbackImageList } from '../helpers/photosBestWorst.js'
 import { setCurrentProfToLocalStorage, setProfPicToLocalStorage, setSettingsToLocalStorage } from '../helpers/storage'
 import { getPayload, userIsAuthenticated, getTokenFromLocalStorage } from '../helpers/auth.js'
+import { findCurrentProfile } from '../helpers/commonSnippets.js'
 
 //mui
 import Container from '@mui/material/Container'
@@ -97,9 +98,7 @@ const Home = () => {
 
     const swipedProfileIdsArray = []
     for (let i = 0; i < retrievedUser.swipes.length; i++ ) {
-      // if (retrievedUser.swipes[i].swiped_profile_id.id === profile.id) {
       swipedProfileIdsArray.push(retrievedUser.swipes[i].swiped_profile_id.id)
-      // }
     }
     console.log('swiped profile ids array ->', swipedProfileIdsArray)
 
@@ -114,16 +113,8 @@ const Home = () => {
       ) 
     })
 
-    return profileAfterFilters //array of profiles that fit the specified parameters
-  }
-
-  // Returns the user's current profile
-  const findCurrentProfile = (profiles, retrievedUser) => {
-    console.log('FIND CURRENT PROFILE RUNS')
-
-    const current = profiles.filter(profile => profile.id === retrievedUser.current_profile)
-
-    return current
+    //array of profiles that fit the specified parameters
+    return profileAfterFilters
   }
 
   useEffect(() => {
@@ -159,7 +150,7 @@ const Home = () => {
 
           // Current Profile
           const currentProfile = findCurrentProfile(data, retrievedUser)
-          // console.log(currentProfile)
+          // console.log('currentProfile ->', currentProfile)
           setCurrentProfile(currentProfile)
           window.localStorage.removeItem('currentProf')
           setCurrentProfToLocalStorage(currentProfile)
