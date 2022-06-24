@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import django_on_heroku
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -149,3 +150,5 @@ REST_FRAMEWORK = {
     'jwt_auth.authentication.JWTAuthentication'
   ]
 }
+
+django_on_heroku.settings(locals())
