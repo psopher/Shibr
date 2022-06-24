@@ -16,7 +16,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined'
 
 // Retrieves a profile with the bio underneath the first image
 // Called on home.js
-export const getProfile = (profile, fromHome = false, karma = 0, handleLeftSwipe, handleRightSwipe) => {
+export const getProfile = (profile, fromHome = false, karma = 0, handleSwipe) => {
   return (
     <>
       <Container key={'1'} maxWidth='xs' sx={{ my: 4 }}>
@@ -54,14 +54,14 @@ export const getProfile = (profile, fromHome = false, karma = 0, handleLeftSwipe
 
           {/* Buttons */}
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', mt: 4, mb: 4 }}>
-            <Box onClick={handleLeftSwipe} sx={{ ml: 6, mr: 6, boxShadow: 4, border: 2, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
-              <IconButton aria-label="swipe-left" size="large" >
-                <CloseOutlinedIcon fontSize="large" sx={{ color: 'secondary.main' }} />
+            <Box onClick={handleSwipe} className='swipe-left' sx={{ ml: 6, mr: 6, boxShadow: 4, border: 2, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
+              <IconButton aria-label="swipe-left" className='swipe-left' size="large" >
+                <CloseOutlinedIcon fontSize="large" className='swipe-left' sx={{ color: 'secondary.main' }} />
               </IconButton>
             </Box>
-            <Box onClick={handleRightSwipe} sx={{ ml: 6, mr: 6, boxShadow: 4, border: 2, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
-              <IconButton aria-label="swipe-right" size="large" >
-                <FavoriteOutlinedIcon fontSize="large" sx={{ color: 'primary.main' }} />
+            <Box onClick={handleSwipe} className='swipe-right' sx={{ ml: 6, mr: 6, boxShadow: 4, border: 2, borderRadius: '50%', display: 'flex', alignItems: 'center' }} >
+              <IconButton aria-label="swipe-right" className='swipe-right' size="large" >
+                <FavoriteOutlinedIcon fontSize="large" className='swipe-right' sx={{ color: 'primary.main' }} />
               </IconButton>
             </Box>
           </Box>

@@ -320,9 +320,12 @@ const Home = () => {
     e.target.classList.toggle('styled')
   }
 
-  // Handle left swiping
-  const handleLeftSwipe = (e) => {
-    console.log('HANDLE LEFT SWIPE RUNS')
+  const handleSwipe = (e) => {
+    console.log('HANDLE SWIPE RUNS')
+    // console.log('e.target is ->', e.currentTarget)
+    // console.log('e.target is classList ->', e.currentTarget.classList)
+    // console.log('e.target is classList 0 ->', e.currentTarget.classList[0])
+
     window.scrollTo(0, 0)
     if (!userIsAuthenticated()) {
       navigate('/login')
@@ -331,21 +334,9 @@ const Home = () => {
       navigate(`/account/${payload.sub}/new-profile`)
     }
 
-    setSwiped(true)
-  }
-
-  // handle right swiping
-  const handleRightSwipe = (e) => {
-    console.log('HANDLE RIGHT SWIPE RUNS')
-    window.scrollTo(0, 0)
-    if (!userIsAuthenticated()) {
-      navigate('/login')
+    if (e.currentTarget.classList[0] === 'swipe-right') {
+      setIsRightSwipe(true)
     }
-    if (!currentProfile) {
-      navigate(`/account/${payload.sub}/new-profile`)
-    }
-
-    setIsRightSwipe(true)
     setSwiped(true)
   }
 
@@ -534,7 +525,7 @@ const Home = () => {
                   {/* <Container > */}
                   <Paper sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', backgroundColor: 'cream', boxShadow: 4, borderRadius: 4 }} >
                     {/* Image List */}
-                    {getProfile(profiles[iterator], true, karma, handleLeftSwipe, handleRightSwipe)}
+                    {getProfile(profiles[iterator], true, karma, handleSwipe)}
                   </Paper>
                 </Container>
               </>
