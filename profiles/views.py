@@ -51,11 +51,13 @@ class ProfileListView(APIView):
     # to get the request body, we use the data key on the request object
     # this process of passing python into a serializer to convert to a QuerySet is known as deserialization
     deserialized_profile = ProfileSerializer(data=request.data)
+    # print('deserialized profile -> ', deserialized_profile)
     # serializers give us methods to check validity of the data being passed into the database
     # checks the model, makes sure it passes validation
     # method we use is is_valid -> raises an exception if not valid
     try:
       deserialized_profile.is_valid()
+      # print('deserialized profile errors -> ', deserialized_profile.errors)
       # if we get to this point, validation has passed. If is_valid fails, it will throw an exception
       deserialized_profile.save()
       # If we get to this point, the record has been saved

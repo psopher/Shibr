@@ -16,7 +16,7 @@ import { getTokenFromLocalStorage, getPayload } from '../../helpers/auth'
 import { newProfileImageList } from '../../helpers/profileImageLists'
 import { genders } from '../../helpers/formOptions'
 import { handleChange } from '../../helpers/formMethods'
-import { makeSquareImage } from '../../helpers/imageHandling'
+import { makeSquareImage, getCloudinaryLinksForImages } from '../../helpers/imageHandling'
 
 //mui
 import Container from '@mui/material/Container'
@@ -136,19 +136,12 @@ const NewProfile = () => {
       // console.log('newForm pre Cloudinary ->', newForm)
 
       // Upload images to Cloudinary and wait for the response
-      const cloudinaryImageLinks = []
-      for (let i = 0; i < formData.images.length; i++) {
-        if (formData.images[i] !== '') {
-          const data = new FormData()
-          data.append('file', formData.images[i])
-          data.append('upload_preset', preset)
-          const res = await axios.post(uploadURL, data)
+      const cloudinaryImageLinks = await getCloudinaryLinksForImages(formData.images, uploadURL, preset)
+      
+      console.log('cloudinary image links', cloudinaryImageLinks)
 
-          cloudinaryImageLinks.push(res.data.url)
-        }
-      }
       newForm = { ...newForm, images: cloudinaryImageLinks }
-      // console.log('newForm post Cloudinary ->', newForm)
+      console.log('newForm post Cloudinary ->', newForm)
 
       // POST Profile
       try {

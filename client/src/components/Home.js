@@ -373,7 +373,6 @@ const Home = () => {
       // Post Swipe
       // After receiving the swipe Id, backend posts feedback and updates User karma
 
-      // POST Swipe
       try {
         setLoading(true)
 
@@ -393,7 +392,6 @@ const Home = () => {
       }
 
 
-      // ? Should these be here or inside the third axios request?
       //Default feedback form
       setFeedbackForm({
         'best_image_index': -1,

@@ -1,4 +1,10 @@
 
+// React
+import React, { useState } from 'react'
+// Axios
+import axios from 'axios'
+
+
 export const makeSquareImage = (index, file, formData, setFormData) => {
 
   // Give the selected image a blob URL
@@ -51,6 +57,20 @@ export const makeSquareImage = (index, file, formData, setFormData) => {
     newPhotos[index] = squareImageURL
     setFormData({ ...formData, images: [ ...newPhotos ] })
   }
+}
 
 
+export const getCloudinaryLinksForImages = async (imagesArray = [], uploadURL, preset) => {
+  const cloudinaryImageLinks = []
+  for (let i = 0; i < imagesArray.length; i++) {
+    if (imagesArray[i] !== '') {
+      const data = new FormData()
+      data.append('file', imagesArray[i])
+      data.append('upload_preset', preset)
+      const res = await axios.post(uploadURL, data)
+
+      cloudinaryImageLinks.push(res.data.url)
+    }
+  }
+  return cloudinaryImageLinks
 }
